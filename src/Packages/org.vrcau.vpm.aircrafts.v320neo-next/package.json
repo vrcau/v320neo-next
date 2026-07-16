@@ -1,0 +1,24 @@
+{
+  "name": "org.vrcau.vpm.aircrafts.v320neo-next",
+  "displayName": "VAU v320neo Next",
+  "version": "0.1.0",
+  "description": "Main package of v320neo, including script and prefab.",
+  "hideInEditor": false,
+  "keywords": [
+    "aircraft",
+    "vrchat",
+    "udon",
+    "a320"
+  ],
+  "license": "MIT",
+  "vpmDependencies": {
+    "com.vrchat.worlds": "^3.7.1",
+    "com.yuxiaviation.v320neo.fdmi.assets": "0.1.0-indev.1"
+  },
+  "author": {
+    "name": "VRChat Aerospace University",
+    "url": "https://vrcau.org/"
+  },
+  "unity": "2022.3",
+  "unityRelease": "22f1"
+}
