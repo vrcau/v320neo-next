@@ -12,8 +12,6 @@
   ],
   "license": "MIT",
   "vpmDependencies": {
-    "com.vrchat.worlds": "^3.7.1",
-    "com.yuxiaviation.v320neo.fdmi.assets": "0.1.0-indev.1"
   },
   "author": {
     "name": "VRChat Aerospace University",
