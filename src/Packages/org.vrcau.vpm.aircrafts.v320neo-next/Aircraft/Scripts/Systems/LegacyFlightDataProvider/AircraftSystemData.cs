@@ -6,6 +6,7 @@ using JetBrains.Annotations;
 using SaccFlightAndVehicles;
 using UdonSharp;
 using UnityEngine;
+using VAU.V320NeoNext.Runtime.Systems.AuxiliaryPowerUnit;
 
 namespace Avionics.Systems.Common {
     [UdonBehaviourSyncMode(BehaviourSyncMode.Manual)]
@@ -26,7 +27,7 @@ namespace Avionics.Systems.Common {
         public SaccAirVehicle SAVControl;
 
         public DependenciesInjector _dependenciesInjector;
-        // public SFEXT_AuxiliaryPowerUnit APU;
+        public SFEXT_AuxiliaryPowerUnit APU;
         public DFUNC_a320_Brake Brake;
 
         public DFUNC_Canopy Canopy;
@@ -67,11 +68,11 @@ namespace Avionics.Systems.Common {
         [PublicAPI] public bool isCabinDoorOpen => Canopy.CanopyOpen;
         [PublicAPI] public bool isParkBreakSet => Brake.ParkBreakSet;
 
-        // [PublicAPI] public bool isApuStarted =>
-        //     Mathf.Approximately(APU.apuAudioSource.volume, 1.0f);
-        //
-        // [PublicAPI] public bool isApuRunning =>
-        //     (bool)APU.GetProgramVariable("run");
+        [PublicAPI] public bool isApuStarted =>
+            Mathf.Approximately(APU.apuAudioSource.volume, 1.0f);
+        
+        [PublicAPI] public bool isApuRunning =>
+            (bool)APU.GetProgramVariable("run");
 
         //synced float n1 n2 egt ect ff throttleLeveler
         //synced bool reversing, starter, fuel，fire
@@ -92,7 +93,7 @@ namespace Avionics.Systems.Common {
 
         #region Flaps
         //电 水 气 液压
-        // [PublicAPI] public bool hasBleedAir => APU.started || isEngine1Running || isEngine2Running;//是否有起动供气
+        [PublicAPI] public bool hasBleedAir => APU.started || isEngine1Running || isEngine2Running;//是否有起动供气
 
         #endregion
 

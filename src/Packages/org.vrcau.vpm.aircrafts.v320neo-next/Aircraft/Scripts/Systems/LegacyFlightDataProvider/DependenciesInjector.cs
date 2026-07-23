@@ -6,6 +6,7 @@ using SaccFlightAndVehicles;
 using UdonSharp;
 using UnityEditor;
 using UnityEngine;
+using VAU.V320NeoNext.Runtime.Systems.AuxiliaryPowerUnit;
 using YuxiFlightInstruments.BasicFlightData;
 
 namespace A320VAU.Common {
@@ -23,7 +24,7 @@ namespace A320VAU.Common {
         public SFEXT_a320_AdvancedEngine engine1;
         public SFEXT_a320_AdvancedEngine engine2;
 
-        // public SFEXT_AuxiliaryPowerUnit apu;
+        public SFEXT_AuxiliaryPowerUnit apu;
 
         public DFUNC_a320_FlapController flaps;
 
@@ -85,7 +86,7 @@ namespace A320VAU.Common {
             saccAirVehicle = GetComponentInChildren<SaccAirVehicle>(true);
 
             flightData = GetComponentInChildren<YFI_FlightDataInterface>(true);
-            // apu = GetComponentInChildren<SFEXT_AuxiliaryPowerUnit>(true);
+            apu = GetComponentInChildren<SFEXT_AuxiliaryPowerUnit>(true);
             flaps = GetComponentInChildren<DFUNC_a320_FlapController>(true);
 
             brake = GetComponentInChildren<DFUNC_a320_Brake>(true);

@@ -407,9 +407,7 @@ namespace A320VAU.SFEXT {
             throttleLeveler = airVehicle.ThrottleInput;
             //throttleInput = reverserInterlocked ? 0.0f : (airVehicle.ThrottleOverridden > 0 && Input.GetAxis(gripAxis) < 0.75f ? airVehicle.ThrottleOverride : airVehicle.ThrottleInput);
 
-            // TODO: ADD BLEED AIR BACK
-            // var isStarterAvailable = starter && aircraftSystemData.hasBleedAir;
-            var isStarterAvailable = starter;
+            var isStarterAvailable = starter && aircraftSystemData.hasBleedAir;
             var isN2Runnning = fuel && n2 >= minN2 && !stall;
             var targetN2 = isStarterAvailable || isN2Runnning
                 ? Mathf.Lerp(fuel ? idleN2 : minN2 * 1.1f, takeOffN2, throttleInput) *
