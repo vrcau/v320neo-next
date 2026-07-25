@@ -23312,9 +23312,9 @@ MonoBehaviour:
   - 1
   - 1.1
   - 1.2
-  - 1.3
-  - 1.4
-  - 1.5
+  - 2.6
+  - 2.8
+  - 3
   liftMultiplier:
   - 1
   - 1.15
@@ -26469,7 +26469,7 @@ MonoBehaviour:
   Crash_Damage_Speed: 10
   Crash_Death_Speed: 50
   GroundEffectMaxDistance: 2.1
-  GroundEffectStrength: 20
+  GroundEffectStrength: 60
   GroundEffectLiftMax: 300000
   VTOLAngleTurnRate: 90
   VTOLDefaultValue: 0
