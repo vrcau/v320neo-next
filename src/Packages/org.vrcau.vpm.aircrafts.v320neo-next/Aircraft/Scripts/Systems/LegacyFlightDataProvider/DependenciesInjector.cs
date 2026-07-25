@@ -1,4 +1,5 @@
-﻿using A320VAU.Brake;
+﻿using A320VAU.Avionics;
+using A320VAU.Brake;
 using A320VAU.DFUNC;
 using A320VAU.SFEXT;
 using Avionics.Systems.Common;
@@ -7,6 +8,7 @@ using UdonSharp;
 using UnityEditor;
 using UnityEngine;
 using VAU.V320NeoNext.Runtime.Systems.AuxiliaryPowerUnit;
+using VirtualCNS;
 using YuxiFlightInstruments.BasicFlightData;
 
 namespace A320VAU.Common {
@@ -33,30 +35,30 @@ namespace A320VAU.Common {
         public SFEXT_a320_AdvancedGear rightLadingGear;
         public SFEXT_a320_AdvancedGear frontLadingGear;
         public DFUNC_a320_Brake brake;
-        // public AutoBrake autoBrake;
+        public AutoBrake autoBrake;
 
         // public DFUNC_a320_LandingLight landingLight;
         public DFUNC_Canopy canopy;
-        // public DFUNC_a320_AutoThrust autoThrust;
+        public DFUNC_a320_AutoThrust autoThrust;
         public DFUNC_AltHold altHold;
 
-        // public GPWS gpws;
-        // public RadioAltimeter.RadioAltimeter radioAltimeter;
+        public GPWS gpws;
+        public RadioAltimeter.RadioAltimeter radioAltimeter;
 
         public AircraftSystemData equipmentData;
 
-        // public FMGC.FMGC fmgc;
-        //
-        // public AirbusAvionicsTheme airbusAvionicsTheme;
-        //
-        // public FWS.FWS fws;
-        //
-        // public FCU.FCU fcu;
-        //
-        // public SystemEventBus systemEventBus;
-        //
-        // [Header("World")]
-        // public NavaidDatabase navaidDatabase;
+        public FMGC.FMGC fmgc;
+        
+        public AirbusAvionicsTheme airbusAvionicsTheme;
+        
+        public FWS.FWS fws;
+        
+        public FCU.FCU fcu;
+        
+        public SystemEventBus systemEventBus;
+        
+        [Header("World")]
+        public NavaidDatabase navaidDatabase;
 
         [Header("Engines Dependencies Search Settings")]
         public string engine1Name = "AdvancedEngineL";
@@ -74,7 +76,7 @@ namespace A320VAU.Common {
         }
 
         private void Start() {
-            // navaidDatabase = GameObject.Find(nameof(NavaidDatabase)).GetComponent<NavaidDatabase>();
+            navaidDatabase = GameObject.Find(nameof(NavaidDatabase)).GetComponent<NavaidDatabase>();
         }
 
         public static DependenciesInjector GetInstance(UdonSharpBehaviour behaviour) {
@@ -92,27 +94,27 @@ namespace A320VAU.Common {
             brake = GetComponentInChildren<DFUNC_a320_Brake>(true);
             // landingLight = GetComponentInChildren<DFUNC_a320_LandingLight>(true);
             canopy = GetComponentInChildren<DFUNC_Canopy>(true);
-            // autoThrust = GetComponentInChildren<DFUNC_a320_AutoThrust>(true);
+            autoThrust = GetComponentInChildren<DFUNC_a320_AutoThrust>(true);
             altHold = GetComponentInChildren<DFUNC_AltHold>(true);
-            // autoBrake = GetComponentInChildren<AutoBrake>(true);
+            autoBrake = GetComponentInChildren<AutoBrake>(true);
 
-            // gpws = GetComponentInChildren<GPWS>(true);
-            // radioAltimeter = GetComponentInChildren<RadioAltimeter.RadioAltimeter>(true);
+            gpws = GetComponentInChildren<GPWS>(true);
+            radioAltimeter = GetComponentInChildren<RadioAltimeter.RadioAltimeter>(true);
 
             equipmentData = GetComponentInChildren<AircraftSystemData>(true);
 
-            // fmgc = GetComponentInChildren<FMGC.FMGC>(true);
+            fmgc = GetComponentInChildren<FMGC.FMGC>(true);
 
-            // airbusAvionicsTheme = GetComponentInChildren<AirbusAvionicsTheme>(true);
+            airbusAvionicsTheme = GetComponentInChildren<AirbusAvionicsTheme>(true);
 
-            // fws = GetComponentInChildren<FWS.FWS>(true);
+            fws = GetComponentInChildren<FWS.FWS>(true);
 
-            // fcu = GetComponentInChildren<FCU.FCU>(true);
+            fcu = GetComponentInChildren<FCU.FCU>(true);
 
-            // systemEventBus = GetComponentInChildren<SystemEventBus>(true);
+            systemEventBus = GetComponentInChildren<SystemEventBus>(true);
 
             // Worlds
-            // navaidDatabase = GetNavaidDatabase();
+            navaidDatabase = GetNavaidDatabase();
 
             // Engines
             var engines = GetComponentsInChildren<SFEXT_a320_AdvancedEngine>(true);
@@ -136,20 +138,20 @@ namespace A320VAU.Common {
         #endif
         }
 
-        // private static NavaidDatabase GetNavaidDatabase() {
-        //     var navaidDatabaseObject = GameObject.Find(nameof(NavaidDatabase));
-        //     if (navaidDatabaseObject == null) {
-        //         Debug.LogError("Can't find NavaidDatabase GameObject: NavaidDatabase");
-        //         return null;
-        //     }
-        //
-        //     var navaidDatabase = navaidDatabaseObject.GetComponent<NavaidDatabase>();
-        //     if (navaidDatabase == null)
-        //         Debug.LogError($"Can't find NavaidDatabase Component on GameObject: {navaidDatabaseObject.name}",
-        //             navaidDatabaseObject);
-        //
-        //     return navaidDatabase;
-        // }
+        private static NavaidDatabase GetNavaidDatabase() {
+            var navaidDatabaseObject = GameObject.Find(nameof(NavaidDatabase));
+            if (navaidDatabaseObject == null) {
+                Debug.LogError("Can't find NavaidDatabase GameObject: NavaidDatabase");
+                return null;
+            }
+        
+            var navaidDatabase = navaidDatabaseObject.GetComponent<NavaidDatabase>();
+            if (navaidDatabase == null)
+                Debug.LogError($"Can't find NavaidDatabase Component on GameObject: {navaidDatabaseObject.name}",
+                    navaidDatabaseObject);
+        
+            return navaidDatabase;
+        }
     }
 
 #if !COMPILER_UDONSHARP && UNITY_EDITOR

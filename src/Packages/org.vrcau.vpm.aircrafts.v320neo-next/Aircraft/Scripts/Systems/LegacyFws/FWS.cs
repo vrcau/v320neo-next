@@ -1,0 +1,307 @@
+﻿using A320VAU.Common;
+using A320VAU.ECAM;
+using Avionics.Systems.Common;
+using UdonSharp;
+using UnityEngine;
+
+namespace A320VAU.FWS {
+    [UdonBehaviourSyncMode(BehaviourSyncMode.Manual)]
+    [DefaultExecutionOrder(2045)] // after FWS Warning Data
+    public class FWS : UdonSharpBehaviour {
+    #region Aircraft Systems
+
+        public ADIRU.ADIRU adiru;
+        public AircraftSystemData equipmentData;
+        public RadioAltimeter.RadioAltimeter radioAltimeter;
+        public AutoBrake autoBrake;
+
+    #endregion
+
+    #region FWS Data (OEB) (Checklist and warnings)
+
+        [HideInInspector] public FWSWarningMessageData[] fwsWarningMessageDatas;
+        private FWSWarningData _fwsWarningData;
+
+    #endregion
+
+    #region ECAM and Warning Light/Audio
+
+        public GameObject MasterWarningLight;
+        public GameObject MasterCautionLight;
+        public GameObject Eng1FireLight;
+        public GameObject Eng2FireLight;
+        public GameObject APUFireLight;
+
+        [Header("ECAM and warning Light/Audio")]
+        public ECAMDisplay ECAMController;
+
+        [HideInInspector] public AudioClip Caution; // looking for master warning? check out the FWS GameObject
+
+    #endregion
+
+    #region FWS Warning
+
+        [HideInInspector] public bool _hasWarningVisibleChange;
+        [HideInInspector] public bool _hasWarningDataVisibleChange;
+
+    #endregion
+
+        public AudioSource audioSource;
+
+        private const float FWS_UPDATE_INTERVAL = 0.1f;
+        private float _lastFwsUpdate;
+
+        private void Start() {
+            var injector = DependenciesInjector.GetInstance(this);
+            adiru = injector.adiru;
+            radioAltimeter = injector.radioAltimeter;
+            autoBrake = injector.autoBrake;
+
+            fwsWarningMessageDatas = GetComponentsInChildren<FWSWarningMessageData>();
+            _fwsWarningData = GetComponentInChildren<FWSWarningData>();
+
+            ResetWarning();
+        }
+
+        private void LateUpdate() {
+            var radioAltitude = radioAltimeter.radioAltitude;
+
+            if (radioAltimeter.isAvailable) {
+                UpdateMinimumCallout(radioAltitude);
+                UpdateAltitudeCallout(radioAltitude);
+            }
+
+            UpdateFWS();
+        }
+
+        private void OnEnable() {
+            _lastAltitudeCalloutIndex = -1;
+            _lastMinimumCalloutIndex = -1;
+        }
+
+        private void OnDisable() {
+            //对于不接入sacc event的航电脚本，似乎可以通过OnDisable认为飞机被坠毁/重置？
+            //但是这个方法会导致处于警报状态时上下飞机后报警也被重置？
+            ResetWarning();
+        }
+
+        private void UpdateFWS() {
+            if (Time.time - _lastFwsUpdate < FWS_UPDATE_INTERVAL) return;
+            _lastFwsUpdate = Time.time;
+
+            _fwsWarningData.Monitor(this); // the core of the FWS
+
+            if (!_hasWarningVisibleChange) return; // return if there is nothing need to update
+
+            // Get Updated Warnings and Warning Level (e.g Master Caution/Warning)
+            if (_hasWarningDataVisibleChange) {
+                var hasMasterWarning = false;
+                var hasMasterCaution = false;
+                var hasEng1Fire = false;
+                var hasEng2Fire = false;
+                foreach (var memo in fwsWarningMessageDatas) {
+                    if (memo.isVisible && memo.Type == WarningType.Primary) {
+                        //警告灯
+                        switch (memo.Level) {
+                            case WarningLevel.Immediate:
+                                hasMasterWarning = true;
+                                break;
+                            case WarningLevel.None:
+                                // doing nothing
+                                break;
+                            default:
+                                hasMasterCaution = true;
+                                break;
+                        }
+                        //火警灯
+                        if (memo.Id == "ENGINE1_FIRE") {
+                            hasEng1Fire = true;
+                        }
+                        if (memo.Id == "ENGINE2_FIRE") {
+                            hasEng2Fire = true;
+                        }
+                    }
+                }
+
+                if (hasMasterWarning) {
+                    audioSource.Play();
+                    MasterWarningLight.SetActive(true);
+                }
+
+                if (hasMasterCaution) {
+                    MasterCautionLight.SetActive(true);
+                    audioSource.PlayOneShot(Caution);
+                }
+
+                if (!hasMasterCaution && !hasMasterWarning) {
+                    audioSource.Stop();
+                    MasterWarningLight.SetActive(false);
+                    MasterCautionLight.SetActive(false);
+                }
+
+                Eng1FireLight.SetActive(hasEng1Fire);
+                Eng2FireLight.SetActive(hasEng2Fire);
+            }
+
+            ECAMController.UpdateMemo();
+        }
+
+        // ReSharper disable once UnusedMember.Global
+        public void OnMasterWarningPushed() {
+            audioSource.Stop();
+            MasterWarningLight.SetActive(false);
+            MasterCautionLight.SetActive(false);
+        }
+        public void ResetWarning() {
+            audioSource.Stop();
+            MasterWarningLight.SetActive(false);
+            MasterCautionLight.SetActive(false);
+            Eng1FireLight.SetActive(false);
+            Eng2FireLight.SetActive(false);
+    }
+
+        private static bool Contains(string[] array, string item) {
+            foreach (var temp in array)
+                if (temp == item)
+                    return true;
+
+            return false;
+        }
+
+    #region AltitudeCallout
+
+        [Header("Altitude Callout")]
+        public float[] altitudeCalloutIndexs = {
+            2500f, 2000f, 1000f, 500f, 400f, 300f, 200f, 100f, 50f, 40f, 30f, 20f, 10f, 5f
+        };
+
+        public AudioClip[] altitudeCallouts = new AudioClip[14];
+
+        public AudioClip retardCallout;
+        public AudioClip hundredAboveCallout;
+        public AudioClip minimumCallout;
+
+        public float decisionHeight = 200f;
+        // public float MinimumDescentAltitude = 200f;
+
+        private int _lastAltitudeCalloutIndex = -1;
+        private int _lastMinimumCalloutIndex = -1;
+
+    #endregion
+
+    #region Mininmum Callout
+
+        private void UpdateMinimumCallout(float radioAltitude) {
+            var minimumCalloutIndex = GetMinimumCalloutIndex(radioAltitude);
+
+            if (_lastMinimumCalloutIndex != -1 && minimumCalloutIndex > _lastMinimumCalloutIndex) {
+                switch (minimumCalloutIndex) {
+                    // HUNDRED ABOVE
+                    case 1:
+                        SendCustomEventDelayedSeconds(nameof(CalloutHundredAbove), 1);
+                        break;
+                    // MINIMUM
+                    case 2:
+                        SendCustomEventDelayedSeconds(nameof(CalloutMinimum), 1);
+                        break;
+                }
+            }
+
+            _lastMinimumCalloutIndex = minimumCalloutIndex;
+        }
+
+        public void CalloutHundredAbove() {
+            audioSource.PlayOneShot(hundredAboveCallout);
+        }
+
+        public void CalloutMinimum() {
+            audioSource.PlayOneShot(minimumCallout);
+        }
+
+        private int GetMinimumCalloutIndex(float radioAltitude) {
+            if (radioAltitude < decisionHeight) return 2;
+            if (radioAltitude < decisionHeight + 100f) return 1;
+
+            return 0;
+        }
+
+    #endregion
+
+    #region Altitude Callout
+
+        public void CalloutRetard() {
+            _isRetardCalloutActive = true;
+
+            var radioAltitude = radioAltimeter.radioAltitude;
+
+            if (Time.time - _lastCalloutRetard < 0.5f)
+                return;
+
+            // RETARD
+            if (radioAltitude < 20f &&
+                (int)equipmentData.throttleLevelerSlot < (int)ThrottleLevelerSlot.IDLE) {
+                audioSource.PlayOneShot(retardCallout);
+
+                SendCustomEventDelayedSeconds(nameof(CalloutRetard), 1);
+                _lastCalloutRetard = Time.time;
+            }
+            else {
+                _isRetardCalloutActive = false;
+            }
+        }
+
+        private float _lastCallout;
+
+        private bool _isRetardCalloutActive;
+
+        private float _lastCalloutRetard;
+
+        private void UpdateAltitudeCallout(float radioAltitude) {
+            var altitudeCalloutIndex = GetAltitudeCalloutIndex(radioAltitude);
+
+            if (_lastAltitudeCalloutIndex != -1 && altitudeCalloutIndex > _lastAltitudeCalloutIndex) {
+                audioSource.PlayOneShot(altitudeCallouts[altitudeCalloutIndex]);
+
+                // RETARD
+                if (!_isRetardCalloutActive && altitudeCalloutIndex >= 10) {
+                    SendCustomEventDelayedSeconds(nameof(CalloutRetard), 1);
+                }
+
+                _lastCallout = Time.time;
+            }
+            else if (altitudeCalloutIndex != _lastAltitudeCalloutIndex) {
+                _lastCallout = Time.time;
+            }
+            else {
+                // Repeat when after 11s (>50ft) / 4s (<50ft)
+                var diff = Time.time - _lastCallout;
+                var lastCalloutLength = altitudeCallouts[_lastAltitudeCalloutIndex].length;
+                if (!equipmentData.isAircraftGrounded) {
+                    if (altitudeCalloutIndex != -1 && (
+                            (radioAltitude > 50f && diff > 11f + lastCalloutLength)
+                            ||
+                            (radioAltitude < 50f && diff > 4f + lastCalloutLength)
+                        ) && Mathf.Abs(radioAltitude - altitudeCalloutIndexs[altitudeCalloutIndex]) < 10) {
+                        audioSource.PlayOneShot(altitudeCallouts[altitudeCalloutIndex]);
+                        _lastCallout = Time.time;
+                    }
+                }
+                else {
+                    _lastCallout = Time.time;
+                }
+            }
+
+            _lastAltitudeCalloutIndex = altitudeCalloutIndex;
+        }
+
+        private int GetAltitudeCalloutIndex(float radioAltitude) {
+            for (var index = altitudeCalloutIndexs.Length - 1; index != -1; index--)
+                if (radioAltitude < altitudeCalloutIndexs[index])
+                    return index;
+
+            return -1;
+        }
+
+    #endregion
+    }
+}
