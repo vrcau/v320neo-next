@@ -7738,8 +7738,8 @@ MonoBehaviour:
   maxSteerAngle: 74
   minSteerAngle: 5
   steerResponse: 1
-  brakeTorque: 10000
-  brakeResponse: 1
+  brakeTorque: 0
+  brakeResponse: 0
   autoLimitGroundSpeed: 1
   autoLimitGroundSpeedOnDesktop: 1
   transitionIndicator: {fileID: 0}
@@ -19219,7 +19219,7 @@ MonoBehaviour:
   maxSteerAngle: 0
   minSteerAngle: 0
   steerResponse: 1
-  brakeTorque: 15000
+  brakeTorque: 160000
   brakeResponse: 1
   autoLimitGroundSpeed: 1
   autoLimitGroundSpeedOnDesktop: 1
@@ -19232,7 +19232,7 @@ MonoBehaviour:
   maxExtensionSpeed: 250
   maxRetractionSpeed: 220
   maxExtendedSpeed: 280
-  brakeMaxGroundSpeed: 60
+  brakeMaxGroundSpeed: 99999
   mtbTransitionFail: 7200
   mtbTransitionFailOnOverspeed: 10
   mtbTransitionBraek: 28800
@@ -21076,7 +21076,7 @@ MonoBehaviour:
   maxSteerAngle: 0
   minSteerAngle: 0
   steerResponse: 1
-  brakeTorque: 15000
+  brakeTorque: 160000
   brakeResponse: 1
   autoLimitGroundSpeed: 1
   autoLimitGroundSpeedOnDesktop: 1
@@ -21089,7 +21089,7 @@ MonoBehaviour:
   maxExtensionSpeed: 250
   maxRetractionSpeed: 220
   maxExtendedSpeed: 280
-  brakeMaxGroundSpeed: 60
+  brakeMaxGroundSpeed: 99999
   mtbTransitionFail: 7200
   mtbTransitionFailOnOverspeed: 10
   mtbTransitionBraek: 28800
