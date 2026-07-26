@@ -28197,7 +28197,7 @@ MonoBehaviour:
   AirFriction: 0.00009
   PitchStrength: 3.0746667
   PitchThrustVecMulti: 0
-  PitchFriction: 0
+  PitchFriction: 20
   PitchConstantFriction: 20
   PitchResponse: 10
   ReversingPitchStrengthMulti: 2
