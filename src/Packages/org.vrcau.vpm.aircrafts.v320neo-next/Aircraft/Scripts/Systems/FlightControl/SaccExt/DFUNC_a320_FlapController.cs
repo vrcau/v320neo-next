@@ -264,6 +264,24 @@ namespace A320VAU.DFUNC {
                 OnLeverChanged();
             }
         }
+        
+        public void RequestFlapsUp()
+        {
+            if (isOwner)
+            {
+                leverIndex = (leverIndex - 1) % flapLeverDetent;
+                OnLeverChanged();
+            }
+        }
+
+        public void RequestFlapsDown()
+        {
+            if (isOwner)
+            {
+                leverIndex = (leverIndex + 1) % flapLeverDetent;
+                OnLeverChanged();
+            }
+        }
 
         private void OnLeverChanged() {
             if(isOwner)
