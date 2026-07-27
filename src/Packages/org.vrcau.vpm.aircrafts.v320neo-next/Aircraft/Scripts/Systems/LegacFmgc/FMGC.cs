@@ -1,26 +1,27 @@
 ﻿using A320VAU.Common;
 using UdonSharp;
 using UnityEngine;
+using UnityEngine.Serialization;
 using VirtualCNS;
 
 namespace A320VAU.FMGC {
     [UdonBehaviourSyncMode(BehaviourSyncMode.Manual)]
     [DefaultExecutionOrder(2050)]// after FWS
-    public class FMGC : UdonSharpBehaviour {
-        public NavaidDatabase navaidDatabase;
+    public class FMGC : UdonSharpBehaviour
+    {
+        public NavaidDatabase NavaidDatabase => injector.navaidDatabase;
 
         public FMGCRadNav radNav;
         public FMGCFlightPhase flightPhase;
         public FMGCFlightPlan flightPlan;
         public FMGCPerformance performance;
 
-        private DependenciesInjector _injector;
+        public DependenciesInjector injector;
 
         private void Start() {
-            _injector = DependenciesInjector.GetInstance(this);
+            injector = DependenciesInjector.GetInstance(this);
 
-            navaidDatabase = _injector.navaidDatabase;
-            if (!navaidDatabase)
+            if (!NavaidDatabase)
                 Debug.LogError("You don't have a NavaidDatabase in your scene, FMGC won't work.", this);
 
             radNav = GetComponentInChildren<FMGCRadNav>();

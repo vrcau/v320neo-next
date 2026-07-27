@@ -19,7 +19,7 @@ namespace A320VAU.MCDU {
         private void Start() {
             _fmgc = DependenciesInjector.GetInstance(this).fmgc;
 
-            _navaidDatabase = _fmgc.navaidDatabase;
+            _navaidDatabase = _fmgc.NavaidDatabase;
             _vor1 = _fmgc.radNav.VOR1;
             _vor2 = _fmgc.radNav.VOR2;
             _ils = _fmgc.radNav.ILS;
