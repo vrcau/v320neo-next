@@ -37,7 +37,7 @@ namespace A320VAU.Common {
         public DFUNC_a320_Brake brake;
         public AutoBrake autoBrake;
 
-        // public DFUNC_a320_LandingLight landingLight;
+        public DFUNC_a320_LandingLight landingLight;
         public DFUNC_Canopy canopy;
         public DFUNC_a320_AutoThrust autoThrust;
         public DFUNC_AltHold altHold;
@@ -92,7 +92,7 @@ namespace A320VAU.Common {
             flaps = GetComponentInChildren<DFUNC_a320_FlapController>(true);
 
             brake = GetComponentInChildren<DFUNC_a320_Brake>(true);
-            // landingLight = GetComponentInChildren<DFUNC_a320_LandingLight>(true);
+            landingLight = GetComponentInChildren<DFUNC_a320_LandingLight>(true);
             canopy = GetComponentInChildren<DFUNC_Canopy>(true);
             autoThrust = GetComponentInChildren<DFUNC_a320_AutoThrust>(true);
             altHold = GetComponentInChildren<DFUNC_AltHold>(true);
