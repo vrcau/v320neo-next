@@ -158,7 +158,7 @@ namespace A320VAU {
                 }
             }
             else {
-                if ((_aircraftSystemData.throttleLevelerSlot != ThrottleLevelerSlot.CLB ||
+                if ((_aircraftSystemData.throttleLevelerSlot != ThrottleLevelerSlot.CLB &&
                      _aircraftSystemData.throttleLevelerSlot != ThrottleLevelerSlot.Manuel) && Cruise) {
                     isAutoThrustArm = true;
 
