@@ -64566,7 +64566,7 @@ MonoBehaviour:
   DisallowTaxiRotationWhileStill: 1
   TaxiFullTurningSpeed: 0
   WheelSuspension: 0
-  Lift: 11.393
+  Lift: 0.00018988333
   SidewaysLift: 0.2
   MaxLift: 12.5
   VelLift: 0.000064
