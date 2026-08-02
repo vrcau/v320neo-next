@@ -28827,7 +28827,7 @@ MonoBehaviour:
     SerializationNodes: []
   _udonSharpBackingUdonBehaviour: {fileID: 1237044181884526028}
   EntityControl: {fileID: 3979190132806479119}
-  IsPilotSeat: 1
+  IsPilotSeat: 0
   PassengerFunctions: {fileID: 0}
   EnableInSeat: []
   DisableInSeat: []
@@ -45796,7 +45796,7 @@ MonoBehaviour:
     SerializationNodes: []
   _udonSharpBackingUdonBehaviour: {fileID: 1917362748867509643}
   EntityControl: {fileID: 3979190132806479119}
-  IsPilotSeat: 1
+  IsPilotSeat: 0
   PassengerFunctions: {fileID: 0}
   EnableInSeat: []
   DisableInSeat: []
@@ -64313,7 +64313,7 @@ MonoBehaviour:
     SerializationNodes: []
   _udonSharpBackingUdonBehaviour: {fileID: 7413539796962195357}
   EntityControl: {fileID: 3979190132806479119}
-  IsPilotSeat: 1
+  IsPilotSeat: 0
   PassengerFunctions: {fileID: 0}
   EnableInSeat: []
   DisableInSeat: []
@@ -111401,7 +111401,7 @@ MonoBehaviour:
     SerializationNodes: []
   _udonSharpBackingUdonBehaviour: {fileID: 2184016956501270901}
   EntityControl: {fileID: 3979190132806479119}
-  IsPilotSeat: 1
+  IsPilotSeat: 0
   PassengerFunctions: {fileID: 0}
   EnableInSeat: []
   DisableInSeat: []
