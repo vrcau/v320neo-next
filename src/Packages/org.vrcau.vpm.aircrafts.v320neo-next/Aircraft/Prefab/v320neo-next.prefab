@@ -58426,7 +58426,7 @@ MonoBehaviour:
   _udonSharpBackingUdonBehaviour: {fileID: 7826605931651636844}
   BasicFlightData: {fileID: 1599060652796089226}
   radioAltimeter: {fileID: 779023235862565368}
-  initialTrim: -0.1
+  initialTrim: -0.3
   trim: 0
   critiaclAOA: 8
   targetLoadFactor: 1
@@ -58447,7 +58447,7 @@ MonoBehaviour:
   hapticFrequency: 0.1
   debugControllerTransform: {fileID: 0}
   trimMode: 0
-  TrimActive: 1
+  TrimActive: 0
   TrimActiveLastFrame: 0
   afloorProtect: 0
   lowSpeedMode: 0

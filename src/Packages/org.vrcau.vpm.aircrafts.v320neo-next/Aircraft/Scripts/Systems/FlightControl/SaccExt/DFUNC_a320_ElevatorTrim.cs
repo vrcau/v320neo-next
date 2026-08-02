@@ -9,26 +9,26 @@ using YuxiFlightInstruments.BasicFlightData;
 //to satisfy vau320's demand, add autotrim
 //to optimize change vellift in SAV to trim
 //2024-09-29 尝试一个新东西，先把这个脚本作用在JoystickOverridde上，（FBW？）
-namespace A320VAU.DFUNC {
+namespace A320VAU.DFUNC
+{
     [UdonBehaviourSyncMode(BehaviourSyncMode.Continuous)]
-    public class DFUNC_a320_ElevatorTrim : UdonSharpBehaviour {
-
+    public class DFUNC_a320_ElevatorTrim : UdonSharpBehaviour
+    {
         public YFI_FlightDataInterface BasicFlightData;
         public RadioAltimeter.RadioAltimeter radioAltimeter;
+
         [Header("配平输入")]
         //[Tooltip("最大配平强度，作用于velLift变量，对于320而言就是10 （-10-10，-10时机头会稍微往下掉）")]
         //[Range(0, 50)] public float trimStrength = 10;
         //[Tooltip("配平强度偏置，最终的VelLift =trimStrength *x +  trimBias")]
         //[Range(0, 50)] public float trimBias = 8;
-        
         private float prevTrim;
-        
-        public float initialTrim = -0.1f;
-        [UdonSynced] public float trim;//当前配平位置，-1~1
-        public float critiaclAOA = 20f;//临界攻角，sav.pitchaoa低于该数值时，触发afloorProtect;
 
-        [Header("controller")]
-        public float targetLoadFactor = 1;
+        public float initialTrim = -0.1f;
+        [UdonSynced] public float trim; //当前配平位置，-1~1
+        public float critiaclAOA = 20f; //临界攻角，sav.pitchaoa低于该数值时，触发afloorProtect;
+
+        [Header("controller")] public float targetLoadFactor = 1;
         public float targetAoa = 0;
 
         public float TrimError = 0;
@@ -38,37 +38,40 @@ namespace A320VAU.DFUNC {
 
         [Header("Controllor value for curise")]
         public float kp1 = 0.04f; //载荷系数控制率 0.6 0.015 俯仰角控制率 0.02 0.001
+
         public float ki1 = 0.0015f;
         public float kd1 = 0.0001f;
 
         [Header("Controllor value for low speed (below 220kts)")]
         //低空小表速，使用另一套更稳定的参数
-        public float kp2 = 0.25f; 
+        public float kp2 = 0.25f;
+
         public float ki2 = 0.4f;
         public float kd2 = 0.0003f;
 
 
-        [Header("animation")]
-        public string animatorParameterName = "elevtrim";
+        [Header("animation")] public string animatorParameterName = "elevtrim";
 
-        [Header("Haptics")]
-        public Vector3 vrInputAxis = Vector3.forward;
+        [Header("Haptics")] public Vector3 vrInputAxis = Vector3.forward;
         [Range(0, 1)] public float hapticDuration = 0.2f;
         [Range(0, 1)] public float hapticAmplitude = 0.5f;
         [Range(0, 1)] public float hapticFrequency = 0.1f;
 
-        [Header("Debug")]
-        public Transform debugControllerTransform;
+        [Header("Debug")] public Transform debugControllerTransform;
+
         [Tooltip("0-直接法则 1-飞行模式 2-地面模式 3-拉平模式")]
         public int trimMode = 1; //0-直接法则 1-飞行模式 2-地面模式 3-拉平模式
-        public bool TrimActive = true; //当侧杆(SFEXT_O_JoystickGrabbed/SFEXT_O_JoystickDropped)以及AP(JoystickOverride)无输入时，配平才激活
+
+        public bool TrimActive; //当侧杆(SFEXT_O_JoystickGrabbed/SFEXT_O_JoystickDropped)以及AP(JoystickOverride)无输入时，配平才激活
+
         public bool TrimActiveLastFrame = false;
         public bool afloorProtect = false;
         public bool lowSpeedMode = false;
 
         public Vector3 FBWRotationInputs;
 
-        private void ResetStatus() {
+        private void ResetStatus()
+        {
             //自动配平默认开启
             trimMode = 0;
             Dial_Funcon.SetActive(TrimActive);
@@ -81,11 +84,10 @@ namespace A320VAU.DFUNC {
             TrimErrorDerivative = 0;
             TrimErrorLastFrame = 0;
             targetAoa = 0;
-    }
+        }
 
-        private void PilotUpdate() {
-
-
+        private void PilotUpdate()
+        {
             //计算配平值
             float DeltaTime = Time.deltaTime;
 
@@ -94,75 +96,85 @@ namespace A320VAU.DFUNC {
             //飞行模式
             if (TrimActive &&
                 !SAVControl.Taxiing &&
-                radioAltimeter.radioAltitude >= 50 ) {
-
-                if (trimMode != 1) {
+                radioAltimeter.radioAltitude >= 50)
+            {
+                if (trimMode != 1)
+                {
                     trimMode = 1;
                     TrimError = TrimErrorIntergrate = TrimErrorDerivative = 0f;
                     Debug.Log("[FBW]Flight Mode");
                 }
-                
-                if(SAVControl.JoystickOverridden != 0) {
+
+                if (SAVControl.JoystickOverridden != 0)
+                {
                     trim = initialTrim;
                 }
-                else { 
-                    if (SAVControl.AngleOfAttackPitch < critiaclAOA) {
+                else
+                {
+                    if (SAVControl.AngleOfAttackPitch < critiaclAOA)
+                    {
                         afloorProtect = false;
                         targetLoadFactor = StickInputtoLoadFactor(pitchInputs, DeltaTime);
                         TrimError = (targetLoadFactor - BasicFlightData.verticalG);
-                        TrimErrorIntergrate = Mathf.Clamp(TrimError * DeltaTime + TrimErrorIntergrate, -1, 1);//处理积分饱和
+                        TrimErrorIntergrate = Mathf.Clamp(TrimError * DeltaTime + TrimErrorIntergrate, -1, 1); //处理积分饱和
                         TrimErrorDerivative = (TrimError - TrimErrorLastFrame) / DeltaTime;
                     }
-                    else {
+                    else
+                    {
                         afloorProtect = true;
                         targetAoa = StickInputtoAoa(pitchInputs, DeltaTime);
-                        TrimError = targetAoa - BasicFlightData.AOAPitch;//todo:afloor控制律
+                        TrimError = targetAoa - BasicFlightData.AOAPitch; //todo:afloor控制律
                         TrimErrorIntergrate = 0;
                         TrimErrorDerivative = 0;
                     }
-       
+
                     var kp = kp1;
                     var ki = ki1;
                     var kd = kd1;
 
                     lowSpeedMode = SAVControl.AirSpeed < 110f;
-                    if (lowSpeedMode) {
+                    if (lowSpeedMode)
+                    {
                         kp = kp2;
                         ki = ki2;
                         kd = kd2;
                     }
 
-                        //trim = Mathf.MoveTowards(trim, Mathf.Clamp(kp * TrimError + ki * TrimErrorIntergrate, -1, 1), 0.1f);
-                        trim = Mathf.Clamp(kp * TrimError + ki * TrimErrorIntergrate + kd * TrimErrorDerivative, -1, 1);
+                    //trim = Mathf.MoveTowards(trim, Mathf.Clamp(kp * TrimError + ki * TrimErrorIntergrate, -1, 1), 0.1f);
+                    trim = Mathf.Clamp(kp * TrimError + ki * TrimErrorIntergrate + kd * TrimErrorDerivative, -1, 1);
                     TrimErrorLastFrame = TrimError;
                 }
-
             }
 
             //地面模式
-            else if (TrimActive && SAVControl.Taxiing) {
-                if (trimMode != 2) {
+            else if (TrimActive && SAVControl.Taxiing)
+            {
+                if (trimMode != 2)
+                {
                     trimMode = 2;
                     TrimError = TrimErrorIntergrate = TrimErrorDerivative = 0f;
                     Debug.Log("[FBW]Ground Mode");
                 }
+
                 trim = initialTrim;
                 targetLoadFactor = StickInputtoLoadFactor(pitchInputs, DeltaTime);
             }
 
             //拉平模式
             else if (TrimActive &&
-                radioAltimeter.radioAltitude < 50 &&
-                !SAVControl.Taxiing &&
-                BasicFlightData.verticalSpeed < -0.6 &&
-                SAVControl.JoystickOverridden == 0) {
-
+                     radioAltimeter.radioAltitude < 50 &&
+                     !SAVControl.Taxiing &&
+                     BasicFlightData.verticalSpeed < -0.6 &&
+                     SAVControl.JoystickOverridden == 0)
+            {
                 var targetTrim = initialTrim;
-                if (trimMode != 3) {
+                if (trimMode != 3)
+                {
                     trimMode = 3;
                     Debug.Log("[FBW]Touchdown Mode");
                     targetTrim = trim - 0.05f;
                 }
+
                 //俯仰角控制率
                 /*
                 targetPitch = -2f;
@@ -174,37 +186,43 @@ namespace A320VAU.DFUNC {
                 TrimError = TrimErrorIntergrate = TrimErrorDerivative = 0f;
                 trim = Mathf.MoveTowards(trim, targetTrim, DeltaTime * 0.025f);
             }
-            
+
             //手动配平
-            else if (!TrimActive) {
+            else if (!TrimActive)
+            {
                 var input = GetSliderInput();
                 trim = Mathf.Clamp(trim + input, -1, 1);
                 if (!Mathf.Approximately(input, 0) &&
                     Time.frameCount % Mathf.FloorToInt(hapticDuration / Time.fixedDeltaTime) == 0) PlayHapticEvent();
             }
-            
-
         }
 
-        private float StickInputtoLoadFactor(float pitchInputs, float deltaTime) {
+        private float StickInputtoLoadFactor(float pitchInputs, float deltaTime)
+        {
             var maxLoad = 2f;
             var minLoad = 0f;
 
-            var maxLoadRate = 1f * deltaTime;//每秒最大变化1g
+            var maxLoadRate = 1f * deltaTime; //每秒最大变化1g
             //SAV脚本中已经做了输入的平方化，所以这里直接线性转换为载荷目标
-            if (pitchInputs > 0.01) {//推杆 
+            if (pitchInputs > 0.01)
+            {
+                //推杆 
                 targetLoadFactor = Mathf.MoveTowards(targetLoadFactor,
-                   (minLoad - 1f) * Mathf.Pow(pitchInputs, 2) + 1,
+                    (minLoad - 1f) * Mathf.Pow(pitchInputs, 2) + 1,
                     maxLoadRate);
             }
-            else if ((pitchInputs < -0.01)) {//拉杆 
+            else if ((pitchInputs < -0.01))
+            {
+                //拉杆 
                 targetLoadFactor = Mathf.MoveTowards(targetLoadFactor,
-                     (maxLoad - 1f) * Mathf.Pow(pitchInputs, 2) + 1,
+                    (maxLoad - 1f) * Mathf.Pow(pitchInputs, 2) + 1,
                     maxLoadRate);
             }
-            else {
+            else
+            {
                 targetLoadFactor = Mathf.MoveTowards(targetLoadFactor, 1, maxLoadRate);
             }
+
             if (trimMode != 1)
                 //飞行模式以外给一个比较小的载荷目标约束，避免离地时模式切换导致配平位置突变
                 return Mathf.Clamp(targetLoadFactor, 1f - 0.5f, 1f + 0.5f);
@@ -212,46 +230,82 @@ namespace A320VAU.DFUNC {
                 return targetLoadFactor;
         }
 
-        private float StickInputtoAoa(float pitchInputs, float deltaTime) {
-           
-            var maxLoadRate = 10f * deltaTime;//每秒最大变化1单位
+        private float StickInputtoAoa(float pitchInputs, float deltaTime)
+        {
+            var maxLoadRate = 10f * deltaTime; //每秒最大变化1单位
             //SAV脚本中已经做了输入的平方化，所以这里直接线性转换为载荷目标
-            if (pitchInputs > 0.01) {//推杆 
+            if (pitchInputs > 0.01)
+            {
+                //推杆 
                 targetAoa = Mathf.MoveTowards(targetAoa,
                     -(critiaclAOA) * Mathf.Pow(pitchInputs, 2),
                     maxLoadRate);
             }
-            else if ((pitchInputs < -0.01)) {//拉杆
+            else if ((pitchInputs < -0.01))
+            {
+                //拉杆
                 targetAoa = Mathf.MoveTowards(targetAoa,
                     (critiaclAOA) * Mathf.Pow(pitchInputs, 2),
                     maxLoadRate);
             }
-            else {
+            else
+            {
                 targetAoa = Mathf.MoveTowards(targetAoa, 1, maxLoadRate);
             }
+
             //if (trimMode != 1) return Mathf.Clamp(targetAoa, -3, 3);
             //else
-                return targetAoa;
+            return targetAoa;
         }
-        
-        private void LocalUpdate() {
+
+        private void LocalUpdate()
+        {
             var trimChanged = !Mathf.Approximately(trim, prevTrim);
             prevTrim = trim;
-            if (trimChanged) {
+            if (trimChanged)
+            {
                 SetDirty();
                 if (vehicleAnimator) vehicleAnimator.SetFloat(animatorParameterName, Remap01(trim, -1, 1));
                 //SAVControl.SetProgramVariable("VelLiftStart", trim * trimStrength + trimBias);
-                DebugOut.text = "FBW[WIP]\n[F6]\n" + (trim).ToString("f2") + (TrimActive ? "\nAuto": "\n");
+                DebugOut.text = "FBW[WIP]\n[F6]\n" + (trim).ToString("f2") + (TrimActive ? "\nAuto" : "\n");
             }
         }
 
-        private void FixedUpdate() {
+        private void FixedUpdate()
+        {
             if (!isOwner) return;
 
             var rotlift = Mathf.Clamp(SAVControl.AirSpeed / rotMultiMaxSpeed, -1, 1);
             //var DeltaTime = Time.fixedDeltaTime;
-            vehicleRigidbody.AddForceAtPosition((trim * SAVControl.PitchStrength) * rotlift * SAVControl.Atmosphere * -transform.up, transform.position, ForceMode.Force);
-            
+            // vehicleRigidbody.AddForceAtPosition((trim * SAVControl.PitchStrength) * rotlift * SAVControl.Atmosphere * -transform.up, transform.position, ForceMode.Force);
+            var vehicleTransform = SAVControl.VehicleTransform;
+            var downspeed = -Vector3.Dot(SAVControl.AirVel, vehicleTransform.up);
+
+            var angleOfAttackPitch = Vector3.SignedAngle(
+                vehicleTransform.forward, Vector3.ProjectOnPlane(SAVControl.AirVel, vehicleTransform.right),
+                vehicleTransform.right
+            ) - SAVControl.ZeroLiftAoA;
+            float absPitch = Mathf.Abs(angleOfAttackPitch);
+            if (absPitch > 90) absPitch = 180 - absPitch; //flying backwards
+            var aoALiftPitch =
+                absPitch / SAVControl.MaxAngleOfAttackPitch; //angle of attack as 0-1 float, for backwards and forwards
+            aoALiftPitch = 1 - Mathf.Pow(aoALiftPitch, SAVControl.AoaCurveStrength); //give it a curve
+
+            float aoALiftPitchMin =
+                absPitch * 0.0111111111f /* same as divide by 90 */; //linear version to 90 for high aoa
+            aoALiftPitchMin = Mathf.Clamp01((1 - aoALiftPitchMin) * SAVControl.HighPitchAoaMinControl);
+            aoALiftPitch = Mathf.Clamp(aoALiftPitch, aoALiftPitchMin, 1);
+            aoALiftPitch = Mathf.Clamp(aoALiftPitch, SAVControl.HighPitchAoaMinLift, 1);
+
+            var pitchForce = (vehicleTransform.up * trim +
+                              vehicleTransform.up *
+                              (downspeed * SAVControl.VelStraightenStrPitch * aoALiftPitch * rotlift)) *
+                             (SAVControl.Atmosphere * SAVControl.VehicleRigidbody.mass);
+            Debug.Log("pitchForce: " + pitchForce);
+            vehicleRigidbody.AddForceAtPosition(
+                pitchForce,
+                SAVControl.PitchMoment.position, ForceMode.Force);
+
             //尝试了不同的作用力方式
             //1.改VelLiftStart
             //SAVControl.SetProgramVariable("VelLiftStart", trim * trimStrength + trimBias);
@@ -270,27 +324,34 @@ namespace A320VAU.DFUNC {
             //FBWRotationInputs.z = 0;
             //SAVControl.SetProgramVariable("JoystickOverride", FBWRotationInputs);
         }
-        public void TrimUp() {
+
+        public void TrimUp()
+        {
             trim += desktopStep;
         }
 
-        public void TrimDown() {
+        public void TrimDown()
+        {
             trim -= desktopStep;
         }
 
-        private void PlayHapticEvent() {
+        private void PlayHapticEvent()
+        {
             var hand = trackingTarget == VRCPlayerApi.TrackingDataType.LeftHand
                 ? VRC_Pickup.PickupHand.Left
                 : VRC_Pickup.PickupHand.Right;
             Networking.LocalPlayer.PlayHapticEventInHand(hand, hapticDuration, hapticAmplitude, hapticFrequency);
         }
 
-        private void ToggleAutoTrim() {
-            if (!TrimActive) {
+        private void ToggleAutoTrim()
+        {
+            if (!TrimActive)
+            {
                 TrimActive = true;
                 Debug.Log("[FBW]AUTO TRIM");
             }
-            else {
+            else
+            {
                 TrimActive = false;
                 Debug.Log("[FBW]MAN TRIM");
             }
@@ -301,11 +362,12 @@ namespace A320VAU.DFUNC {
             TrimErrorIntergrate = 0;
         }
 
-        private float Remap01(float value, float oldMin, float oldMax) {
+        private float Remap01(float value, float oldMin, float oldMax)
+        {
             return (value - oldMin) / (oldMax - oldMin);
         }
 
-    #region DFUNC
+        #region DFUNC
 
         public float controllerSensitivity = 0.5f;
         public KeyCode desktopUp = KeyCode.T, desktopDown = KeyCode.Y;
@@ -331,29 +393,34 @@ namespace A320VAU.DFUNC {
         private float rotMultiMaxSpeed;
         private float triggerTapTime = 1;
 
-        public void DFUNC_LeftDial() {
+        public void DFUNC_LeftDial()
+        {
             triggerAxis = "Oculus_CrossPlatform_PrimaryIndexTrigger";
             trackingTarget = VRCPlayerApi.TrackingDataType.LeftHand;
         }
 
-        public void DFUNC_RightDial() {
+        public void DFUNC_RightDial()
+        {
             triggerAxis = "Oculus_CrossPlatform_SecondaryIndexTrigger";
             trackingTarget = VRCPlayerApi.TrackingDataType.RightHand;
         }
 
-        public void DFUNC_Selected() {
+        public void DFUNC_Selected()
+        {
             gameObject.SetActive(true);
             isSelected = true;
             prevTriggered = false;
         }
 
-        public void DFUNC_Deselected() {
+        public void DFUNC_Deselected()
+        {
             gameObject.SetActive(trimMode > 0);
             isSelected = false;
             triggerTapTime = 1;
         }
 
-        public void SFEXT_L_EntityStart() {
+        public void SFEXT_L_EntityStart()
+        {
             controlsRoot = SAVControl.ControlsRoot;
             rotMultiMaxSpeed = SAVControl.RotMultiMaxSpeed;
             if (!controlsRoot) controlsRoot = entityControl.transform;
@@ -361,69 +428,80 @@ namespace A320VAU.DFUNC {
             ResetStatus();
         }
 
-        public void SFEXT_O_PilotEnter() {
+        public void SFEXT_O_PilotEnter()
+        {
             isPilot = true;
             isOwner = true;
             isSelected = false;
             prevTriggered = false;
         }
 
-        public void SFEXT_O_PilotExit() {
+        public void SFEXT_O_PilotExit()
+        {
             isPilot = false;
             triggerTapTime = 1;
             isSelected = false;
         }
 
-        public void SFEXT_O_TakeOwnership() {
+        public void SFEXT_O_TakeOwnership()
+        {
             isOwner = true;
         }
 
-        public void SFEXT_O_LoseOwnership() {
+        public void SFEXT_O_LoseOwnership()
+        {
             isOwner = false;
         }
 
-        public void SFEXT_G_PilotEnter() {
+        public void SFEXT_G_PilotEnter()
+        {
             hasPilot = true;
             gameObject.SetActive(true);
         }
 
-        public void SFEXT_G_PilotExit() {
+        public void SFEXT_G_PilotExit()
+        {
             hasPilot = false;
         }
 
-        public void SFEXT_G_Explode() {
+        public void SFEXT_G_Explode()
+        {
             ResetStatus();
         }
 
-        public void SFEXT_G_RespawnButton() {
+        public void SFEXT_G_RespawnButton()
+        {
             ResetStatus();
         }
 
 
-
-        private void OnEnable() {
+        private void OnEnable()
+        {
             triggerLastFrame = true;
         }
 
-        private void OnDisable() {
+        private void OnDisable()
+        {
             isSelected = false;
         }
 
-        private void Update() {
+        private void Update()
+        {
             isDirty = false;
             if (isPilot) PilotUpdate();
             LocalUpdate();
             if (!hasPilot && !isDirty) gameObject.SetActive(false);
         }
 
-        public override void PostLateUpdate() {
-            if (isPilot) 
+        public override void PostLateUpdate()
+        {
+            if (isPilot)
             {
                 prevTriggered = triggered;
                 triggered = (isSelected && Input.GetAxis(triggerAxis) > 0.75f) || debugControllerTransform;
                 triggerTapTime += Time.deltaTime;
-                
-                if (triggered) 
+
+                if (triggered)
                 {
                     var trackingPosition =
                         controlsRoot.InverseTransformPoint(Networking.LocalPlayer.GetTrackingData(trackingTarget)
@@ -431,7 +509,7 @@ namespace A320VAU.DFUNC {
                     if (debugControllerTransform)
                         trackingPosition = controlsRoot.InverseTransformPoint(debugControllerTransform.position);
 
-                    if (prevTriggered) 
+                    if (prevTriggered)
                     {
                         sliderInput =
                             Mathf.Clamp(
@@ -453,7 +531,8 @@ namespace A320VAU.DFUNC {
 
                     prevTrackingPosition = trackingPosition;
                 }
-                else {
+                else
+                {
                     sliderInput = 0;
                 }
 
@@ -464,15 +543,17 @@ namespace A320VAU.DFUNC {
             }
         }
 
-        private void SetDirty() {
+        private void SetDirty()
+        {
             isDirty = true;
         }
 
-        private float GetSliderInput() {
+        private float GetSliderInput()
+        {
             //使用了sav的标记方法，UP=-1 DOWN=1
             return -sliderInput;
         }
 
-    #endregion
+        #endregion
     }
 }
