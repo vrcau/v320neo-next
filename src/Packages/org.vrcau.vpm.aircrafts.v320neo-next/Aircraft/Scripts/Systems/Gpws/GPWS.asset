@@ -19,7 +19,7 @@ MonoBehaviour:
   compiledVersion: 2
   behaviourSyncMode: 1
   hasInteractEvent: 0
-  scriptID: 7129873549520660301
+  scriptID: 1613950774072549763
   serializationData:
     SerializedBytes: 
     ReferencedUnityObjects: []
@@ -557,7 +557,8 @@ MonoBehaviour:
       Data: 26|System.RuntimeType, mscorlib
     - Name: 
       Entry: 1
-      Data: A320VAU.ADIRU.ADIRU, VAU.V320NeoNext.Runtime
+      Data: VAU.V320NeoNext.Runtime.Systems.LegacyFlightDataProvider.LegacyADRIRU.ADIRU,
+        VAU.V320NeoNext.Runtime
     - Name: 
       Entry: 8
       Data: 
@@ -617,7 +618,7 @@ MonoBehaviour:
       Data: 30|System.RuntimeType, mscorlib
     - Name: 
       Entry: 1
-      Data: A320VAU.RadioAltimeter.RadioAltimeter, VAU.V320NeoNext.Runtime
+      Data: VAU.V320NeoNext.Runtime.Systems.RadioAltimeter.RadioAltimeter, VAU.V320NeoNext.Runtime
     - Name: 
       Entry: 8
       Data: 
@@ -671,7 +672,8 @@ MonoBehaviour:
       Data: 33|System.RuntimeType, mscorlib
     - Name: 
       Entry: 1
-      Data: A320VAU.DFUNC.DFUNC_a320_FlapController, VAU.V320NeoNext.Runtime
+      Data: VAU.V320NeoNext.Runtime.Systems.FlightControl.SaccExt.DFUNC_a320_FlapController,
+        VAU.V320NeoNext.Runtime
     - Name: 
       Entry: 8
       Data: 
@@ -725,7 +727,8 @@ MonoBehaviour:
       Data: 36|System.RuntimeType, mscorlib
     - Name: 
       Entry: 1
-      Data: Avionics.Systems.Common.AircraftSystemData, VAU.V320NeoNext.Runtime
+      Data: VAU.V320NeoNext.Runtime.Systems.LegacyFlightDataProvider.AircraftSystemData,
+        VAU.V320NeoNext.Runtime
     - Name: 
       Entry: 8
       Data: 

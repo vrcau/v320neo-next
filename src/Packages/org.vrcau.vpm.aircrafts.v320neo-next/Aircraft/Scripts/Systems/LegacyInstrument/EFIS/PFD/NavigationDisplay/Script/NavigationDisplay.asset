@@ -19,7 +19,7 @@ MonoBehaviour:
   compiledVersion: 2
   behaviourSyncMode: 1
   hasInteractEvent: 0
-  scriptID: -1681595856563711820
+  scriptID: 4474491338188414417
   serializationData:
     SerializedBytes: 
     ReferencedUnityObjects: []
@@ -176,7 +176,7 @@ MonoBehaviour:
       Data: 10|System.RuntimeType, mscorlib
     - Name: 
       Entry: 1
-      Data: A320VAU.FMGC.FMGC, VAU.V320NeoNext.Runtime
+      Data: VAU.V320NeoNext.Runtime.Systems.LegacFmgc.FMGC, VAU.V320NeoNext.Runtime
     - Name: 
       Entry: 8
       Data: 
@@ -290,7 +290,8 @@ MonoBehaviour:
       Data: 17|System.RuntimeType, mscorlib
     - Name: 
       Entry: 1
-      Data: A320VAU.Common.DependenciesInjector, VAU.V320NeoNext.Runtime
+      Data: VAU.V320NeoNext.Runtime.Systems.LegacyFlightDataProvider.DependenciesInjector,
+        VAU.V320NeoNext.Runtime
     - Name: 
       Entry: 8
       Data: 

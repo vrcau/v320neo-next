@@ -1,23 +1,23 @@
-﻿using System;
-using A320VAU.Common;
-using A320VAU.FMGC;
-using UdonSharp;
+﻿using UdonSharp;
+using VAU.V320NeoNext.Runtime.Systems.LegacFmgc;
+using VAU.V320NeoNext.Runtime.Systems.LegacyFlightDataProvider;
+using VAU.V320NeoNext.Runtime.Systems.LegacyInstrument.MCDU.Scripts;
 
-namespace A320VAU.MCDU {
+namespace VAU.V320NeoNext.Runtime.Systems.LegacyInstrument.MCDU.Pages.Performance {
     [UdonBehaviourSyncMode(BehaviourSyncMode.Manual)]
     public partial class PerformancePage : MCDUPage {
         private DependenciesInjector _injector;
 
-        private FMGC.FMGC _fmgc;
+        private FMGC _fmgc;
 
-        private MCDU _mcdu;
+        private Scripts.MCDU _mcdu;
 
         private void Start() {
             _injector = DependenciesInjector.GetInstance(this);
             _fmgc = _injector.fmgc;
         }
 
-        public override void OnPageInit(MCDU mcdu) {
+        public override void OnPageInit(Scripts.MCDU mcdu) {
             _mcdu = mcdu;
 
             TakeoffUI();

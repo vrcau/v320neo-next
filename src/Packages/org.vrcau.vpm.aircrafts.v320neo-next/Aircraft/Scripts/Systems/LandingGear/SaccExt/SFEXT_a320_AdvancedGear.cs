@@ -2,18 +2,14 @@ using System;
 using SaccFlightAndVehicles;
 using UdonSharp;
 using UnityEngine;
-using UnityEngine.UI;
+using VAU.V320NeoNext.Runtime.Systems.LegacyFlightDataProvider;
 using VRC.SDKBase;
-
 using Random = UnityEngine.Random;
-using YuxiFlightInstruments;
-using YuxiFlightInstruments.BasicFlightData;
-using A320VAU.Brake;
 
 //note:this code is original from https://github.com/esnya/EsnyaSFAddons
 //to satisfy vau320's demand, moditied SteerAngle limiter
 
-namespace A320VAU.SFEXT {
+namespace VAU.V320NeoNext.Runtime.Systems.LandingGear.SaccExt {
     [UdonBehaviourSyncMode(BehaviourSyncMode.Continuous)]
     [DefaultExecutionOrder(160)]//after electrical bus
     public class SFEXT_a320_AdvancedGear : UdonSharpBehaviour {

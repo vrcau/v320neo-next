@@ -1,7 +1,7 @@
 ﻿using UdonSharp;
 using UnityEngine;
 
-namespace A320VAU.RadioAltimeter {
+namespace VAU.V320NeoNext.Runtime.Systems.RadioAltimeter {
     [UdonBehaviourSyncMode(BehaviourSyncMode.None)]
     [DefaultExecutionOrder(2030)]
     public class RadioAltimeter : UdonSharpBehaviour {

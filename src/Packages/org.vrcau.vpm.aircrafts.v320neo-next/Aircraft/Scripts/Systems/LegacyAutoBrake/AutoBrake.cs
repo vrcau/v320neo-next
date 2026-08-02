@@ -1,12 +1,12 @@
-﻿using A320VAU.Brake;
-using A320VAU.Common;
-using Avionics.Systems.Common;
-using JetBrains.Annotations;
+﻿using JetBrains.Annotations;
 using SaccFlightAndVehicles;
 using UdonSharp;
 using UnityEngine;
+using VAU.V320NeoNext.Runtime.Systems.LandingGear.SaccExt;
+using VAU.V320NeoNext.Runtime.Systems.LegacyFlightDataProvider;
+using VAU.V320NeoNext.Runtime.Systems.LegacyFlightDataProvider.LegacyADRIRU;
 
-namespace A320VAU {
+namespace VAU.V320NeoNext.Runtime.Systems.LegacyAutoBrake {
     [UdonBehaviourSyncMode(BehaviourSyncMode.Manual)]
     public class AutoBrake : UdonSharpBehaviour {
         public Animator indicatorAnimator;
@@ -14,7 +14,7 @@ namespace A320VAU {
         private DependenciesInjector _dependenciesInjector;
         private SaccAirVehicle _saccAirVehicle;
         private AircraftSystemData _aircraftSystemData;
-        private ADIRU.ADIRU _adiru;
+        private ADIRU _adiru;
 
         public DFUNC_a320_Brake brake;
 

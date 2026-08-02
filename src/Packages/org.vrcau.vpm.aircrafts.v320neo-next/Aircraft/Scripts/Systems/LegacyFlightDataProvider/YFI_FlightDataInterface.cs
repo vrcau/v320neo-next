@@ -1,11 +1,9 @@
-﻿using UnityEngine;
+﻿using SaccFlightAndVehicles;
 using UdonSharp;
-using VRC.SDKBase;
-using VRC.Udon;
+using UnityEngine;
 using UnityEngine.UI;
-using SaccFlightAndVehicles;
 
-namespace YuxiFlightInstruments.BasicFlightData
+namespace VAU.V320NeoNext.Runtime.Systems.LegacyFlightDataProvider
 {
     [UdonBehaviourSyncMode(BehaviourSyncMode.None)]
     [DefaultExecutionOrder(100)]//after all SaccAirVehicle default script

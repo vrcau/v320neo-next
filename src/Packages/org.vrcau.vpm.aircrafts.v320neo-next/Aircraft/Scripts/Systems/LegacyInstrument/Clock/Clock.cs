@@ -1,10 +1,10 @@
 ﻿using System;
-using A320VAU.Utils;
 using UdonSharp;
 using UnityEngine;
 using UnityEngine.UI;
+using VAU.V320NeoNext.Runtime.Systems.LegacyInstrument.Utils;
 
-namespace A320VAU.Clock {
+namespace VAU.V320NeoNext.Runtime.Systems.LegacyInstrument.Clock {
     [UdonBehaviourSyncMode(BehaviourSyncMode.Manual)]
     public class Clock : UdonSharpBehaviour {
         private readonly float UPDATE_INTERVAL = UpdateIntervalUtil.GetUpdateIntervalFromSeconds(1);

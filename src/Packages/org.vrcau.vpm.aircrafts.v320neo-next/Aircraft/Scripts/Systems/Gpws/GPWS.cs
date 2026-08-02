@@ -1,11 +1,11 @@
-﻿using A320VAU.Common;
-using A320VAU.DFUNC;
-using Avionics.Systems.Common;
-using UdonSharp;
+﻿using UdonSharp;
 using UnityEngine;
+using VAU.V320NeoNext.Runtime.Systems.FlightControl.SaccExt;
+using VAU.V320NeoNext.Runtime.Systems.LegacyFlightDataProvider;
+using VAU.V320NeoNext.Runtime.Systems.LegacyFlightDataProvider.LegacyADRIRU;
 
 // https://github.com/esnya/EsnyaSFAddons/blob/d2984ab062190521d701c9b4651c84abc6e424b9/Packages/com.nekometer.esnya.esnya-sf-addons/Scripts/Avionics/GPWS.cs
-namespace A320VAU.Avionics {
+namespace VAU.V320NeoNext.Runtime.Systems.Gpws {
     //[RequireComponent(typeof(AudioSource))]
     [UdonBehaviourSyncMode(BehaviourSyncMode.None)]
     [DefaultExecutionOrder(2031)] // After 320 Radio Altimeter
@@ -73,7 +73,7 @@ namespace A320VAU.Avionics {
         public float initialClimbThreshold = 1333;
         public float smoothing = 1.0f;
 
-        private ADIRU.ADIRU _adiru;
+        private ADIRU _adiru;
         private RadioAltimeter.RadioAltimeter _radioAltimeter;
         private DFUNC_a320_FlapController advancedFlaps;
 

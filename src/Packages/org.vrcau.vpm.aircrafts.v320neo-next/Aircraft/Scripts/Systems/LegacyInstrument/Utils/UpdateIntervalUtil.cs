@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace A320VAU.Utils {
+namespace VAU.V320NeoNext.Runtime.Systems.LegacyInstrument.Utils {
     public class UpdateIntervalUtil {
         public static float GetUpdateIntervalFromFPS(int fps) {
             return 1f / fps;

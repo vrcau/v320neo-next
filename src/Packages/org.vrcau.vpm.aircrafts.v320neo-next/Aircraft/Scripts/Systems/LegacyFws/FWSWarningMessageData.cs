@@ -1,8 +1,7 @@
 ﻿using UdonSharp;
 using UnityEngine;
-using UnityEngine.Serialization;
 
-namespace A320VAU.FWS {
+namespace VAU.V320NeoNext.Runtime.Systems.LegacyFws {
     [UdonBehaviourSyncMode(BehaviourSyncMode.Manual)]
     public class FWSWarningMessageData : UdonSharpBehaviour {
         public string Id;

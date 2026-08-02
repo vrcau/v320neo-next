@@ -19,7 +19,7 @@ MonoBehaviour:
   compiledVersion: 2
   behaviourSyncMode: 1
   hasInteractEvent: 0
-  scriptID: -3677414155132072718
+  scriptID: -527010200714531856
   serializationData:
     SerializedBytes: 
     ReferencedUnityObjects: []
@@ -59,7 +59,8 @@ MonoBehaviour:
       Data: 3|System.RuntimeType, mscorlib
     - Name: 
       Entry: 1
-      Data: A320VAU.ADIRU.ADR, VAU.V320NeoNext.Runtime
+      Data: VAU.V320NeoNext.Runtime.Systems.LegacyFlightDataProvider.LegacyADRIRU.ADR,
+        VAU.V320NeoNext.Runtime
     - Name: 
       Entry: 8
       Data: 
@@ -119,7 +120,8 @@ MonoBehaviour:
       Data: 7|System.RuntimeType, mscorlib
     - Name: 
       Entry: 1
-      Data: A320VAU.ADIRU.IRS, VAU.V320NeoNext.Runtime
+      Data: VAU.V320NeoNext.Runtime.Systems.LegacyFlightDataProvider.LegacyADRIRU.IRS,
+        VAU.V320NeoNext.Runtime
     - Name: 
       Entry: 8
       Data: 
@@ -173,7 +175,8 @@ MonoBehaviour:
       Data: 10|System.RuntimeType, mscorlib
     - Name: 
       Entry: 1
-      Data: A320VAU.ADIRU.InertialReferenceMode, VAU.V320NeoNext.Runtime
+      Data: VAU.V320NeoNext.Runtime.Systems.LegacyFlightDataProvider.LegacyADRIRU.InertialReferenceMode,
+        VAU.V320NeoNext.Runtime
     - Name: 
       Entry: 8
       Data: 
@@ -233,7 +236,8 @@ MonoBehaviour:
       Data: 14|System.RuntimeType, mscorlib
     - Name: 
       Entry: 1
-      Data: A320VAU.ADIRU.AlignState, VAU.V320NeoNext.Runtime
+      Data: VAU.V320NeoNext.Runtime.Systems.LegacyFlightDataProvider.LegacyADRIRU.AlignState,
+        VAU.V320NeoNext.Runtime
     - Name: 
       Entry: 8
       Data: 
@@ -389,7 +393,8 @@ MonoBehaviour:
       Data: 22|System.RuntimeType, mscorlib
     - Name: 
       Entry: 1
-      Data: A320VAU.Common.DependenciesInjector, VAU.V320NeoNext.Runtime
+      Data: VAU.V320NeoNext.Runtime.Systems.LegacyFlightDataProvider.DependenciesInjector,
+        VAU.V320NeoNext.Runtime
     - Name: 
       Entry: 8
       Data: 

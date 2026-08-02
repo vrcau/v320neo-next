@@ -1,13 +1,14 @@
-﻿using A320VAU.Common;
-using A320VAU.Utils;
-using JetBrains.Annotations;
+﻿using JetBrains.Annotations;
 using UdonSharp;
 using UnityEngine;
 using UnityEngine.UI;
-using Varneon.VUdon.ArrayExtensions;
+using VAU.V320NeoNext.Runtime.Extensions;
+using VAU.V320NeoNext.Runtime.Systems.LegacyFlightDataProvider;
+using VAU.V320NeoNext.Runtime.Systems.LegacyFlightDataProvider.LegacyADRIRU;
+using VAU.V320NeoNext.Runtime.Systems.LegacyInstrument.Utils;
 using VirtualCNS;
 
-namespace A320VAU.ND.Pages {
+namespace VAU.V320NeoNext.Runtime.Systems.LegacyInstrument.EFIS.ND.Script {
     [UdonBehaviourSyncMode(BehaviourSyncMode.None)]
     [DefaultExecutionOrder(1000)] // After Virtual-CNS NavaidDatabase
     public class MapDisplay : UdonSharpBehaviour {
@@ -20,7 +21,7 @@ namespace A320VAU.ND.Pages {
         public EFISVisibilityType defaultVisibilityType = EFISVisibilityType.NONE;
 
         private DependenciesInjector _injector;
-        private ADIRU.ADIRU _adiru; // Temp workaround
+        private ADIRU _adiru; // Temp workaround
 
         private GameObject[] _markers = { };
         private NavaidDatabase _navaidDatabase;

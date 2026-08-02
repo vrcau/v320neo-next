@@ -1,14 +1,12 @@
 ﻿using System;
-using A320VAU.Common;
-using A320VAU.SFEXT;
-using Avionics.Systems.Common;
 using SaccFlightAndVehicles;
 using UdonSharp;
 using UnityEngine;
-using UnityEngine.UI;
+using VAU.V320NeoNext.Runtime.Systems.Engine.SaccExt;
+using VAU.V320NeoNext.Runtime.Systems.LegacyFlightDataProvider;
 using VRC.SDKBase;
 
-namespace A320VAU {
+namespace VAU.V320NeoNext.Runtime.Systems.AutoThrust.SaccExt {
     [UdonBehaviourSyncMode(BehaviourSyncMode.None)]
     public class DFUNC_a320_AutoThrust : UdonSharpBehaviour {
         public SFEXT_a320_AdvancedEngine[] engines = { };

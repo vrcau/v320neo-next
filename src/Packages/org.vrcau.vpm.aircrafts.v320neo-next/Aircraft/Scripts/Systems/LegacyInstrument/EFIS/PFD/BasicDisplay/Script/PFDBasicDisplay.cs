@@ -1,23 +1,23 @@
-﻿using A320VAU.Common;
-using A320VAU.Utils;
-using Avionics.Systems.Common;
-using JetBrains.Annotations;
+﻿using JetBrains.Annotations;
 using UdonSharp;
 using UnityEngine;
 using UnityEngine.UI;
+using VAU.V320NeoNext.Runtime.Systems.LegacyFlightDataProvider;
+using VAU.V320NeoNext.Runtime.Systems.LegacyFlightDataProvider.LegacyADRIRU;
+using VAU.V320NeoNext.Runtime.Systems.LegacyInstrument.Utils;
 using VRC.SDKBase;
 
-namespace A320VAU.PFD {
+namespace VAU.V320NeoNext.Runtime.Systems.LegacyInstrument.EFIS.PFD.BasicDisplay.Script {
     [UdonBehaviourSyncMode(BehaviourSyncMode.Manual)]//PFD需要网络同步！（LS按键，FD按键之类）
     public class PFDBasicDisplay : UdonSharpBehaviour {
     #region Aircraft Systems
 
         private DependenciesInjector _injector;
 
-        private ADIRU.ADIRU _adiru;
+        private ADIRU _adiru;
         private RadioAltimeter.RadioAltimeter _radioAltimeter;
         private AircraftSystemData _aircraftSystemData;
-        private FCU.FCU _fcu;
+        private FCU.Scripts.FCU _fcu;
         //private DFUNC_a320_FlapController _flaps;
         private SystemEventBus _eventBus;
 

@@ -1,11 +1,7 @@
-﻿
-using UdonSharp;
+﻿using UdonSharp;
 using UnityEngine;
-using VRC.SDKBase;
-using VRC.Udon;
-using YuxiFlightInstruments.BasicFlightData;
 
-namespace A320VAU.AtmosphereModel
+namespace VAU.V320NeoNext.Runtime.Systems.LegacyFlightDataProvider
 {
     [UdonBehaviourSyncMode(BehaviourSyncMode.None)]
     [DefaultExecutionOrder(101)]

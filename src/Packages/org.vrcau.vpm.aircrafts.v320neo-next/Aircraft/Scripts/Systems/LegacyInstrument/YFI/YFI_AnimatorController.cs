@@ -1,10 +1,8 @@
-using System.Collections;
-using System.Collections.Generic;
 using UdonSharp;
 using UnityEngine;
-using YuxiFlightInstruments.BasicFlightData;
+using VAU.V320NeoNext.Runtime.Systems.LegacyFlightDataProvider;
 
-namespace VAU.V320NeoNext.Runtime
+namespace VAU.V320NeoNext.Runtime.Systems.LegacyInstrument.YFI
 {
     public class YFI_AnimatorController : UdonSharpBehaviour
     {

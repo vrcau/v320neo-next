@@ -19,7 +19,7 @@ MonoBehaviour:
   compiledVersion: 2
   behaviourSyncMode: 4
   hasInteractEvent: 0
-  scriptID: -2821820181392236500
+  scriptID: -1615740124275214656
   serializationData:
     SerializedBytes: 
     ReferencedUnityObjects: []
@@ -113,7 +113,8 @@ MonoBehaviour:
       Data: 6|System.RuntimeType, mscorlib
     - Name: 
       Entry: 1
-      Data: A320VAU.Common.DependenciesInjector, VAU.V320NeoNext.Runtime
+      Data: VAU.V320NeoNext.Runtime.Systems.LegacyFlightDataProvider.DependenciesInjector,
+        VAU.V320NeoNext.Runtime
     - Name: 
       Entry: 8
       Data: 
@@ -227,7 +228,8 @@ MonoBehaviour:
       Data: 13|System.RuntimeType, mscorlib
     - Name: 
       Entry: 1
-      Data: Avionics.Systems.Common.AircraftSystemData, VAU.V320NeoNext.Runtime
+      Data: VAU.V320NeoNext.Runtime.Systems.LegacyFlightDataProvider.AircraftSystemData,
+        VAU.V320NeoNext.Runtime
     - Name: 
       Entry: 8
       Data: 
@@ -281,7 +283,8 @@ MonoBehaviour:
       Data: 16|System.RuntimeType, mscorlib
     - Name: 
       Entry: 1
-      Data: A320VAU.ADIRU.ADIRU, VAU.V320NeoNext.Runtime
+      Data: VAU.V320NeoNext.Runtime.Systems.LegacyFlightDataProvider.LegacyADRIRU.ADIRU,
+        VAU.V320NeoNext.Runtime
     - Name: 
       Entry: 8
       Data: 
@@ -335,7 +338,8 @@ MonoBehaviour:
       Data: 19|System.RuntimeType, mscorlib
     - Name: 
       Entry: 1
-      Data: A320VAU.Brake.DFUNC_a320_Brake, VAU.V320NeoNext.Runtime
+      Data: VAU.V320NeoNext.Runtime.Systems.LandingGear.SaccExt.DFUNC_a320_Brake,
+        VAU.V320NeoNext.Runtime
     - Name: 
       Entry: 8
       Data: 
@@ -911,7 +915,7 @@ MonoBehaviour:
       Data: 49|System.RuntimeType, mscorlib
     - Name: 
       Entry: 1
-      Data: A320VAU.AutoBrakeMode, VAU.V320NeoNext.Runtime
+      Data: VAU.V320NeoNext.Runtime.Systems.LegacyAutoBrake.AutoBrakeMode, VAU.V320NeoNext.Runtime
     - Name: 
       Entry: 8
       Data: 

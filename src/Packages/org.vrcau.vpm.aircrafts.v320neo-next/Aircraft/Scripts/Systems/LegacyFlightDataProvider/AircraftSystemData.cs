@@ -1,14 +1,13 @@
-﻿using A320VAU.Brake;
-using A320VAU.Common;
-using A320VAU.SFEXT;
-using A320VAU.DFUNC;
-using JetBrains.Annotations;
+﻿using JetBrains.Annotations;
 using SaccFlightAndVehicles;
 using UdonSharp;
 using UnityEngine;
 using VAU.V320NeoNext.Runtime.Systems.AuxiliaryPowerUnit;
+using VAU.V320NeoNext.Runtime.Systems.Engine.SaccExt;
+using VAU.V320NeoNext.Runtime.Systems.FlightControl.SaccExt;
+using VAU.V320NeoNext.Runtime.Systems.LandingGear.SaccExt;
 
-namespace Avionics.Systems.Common {
+namespace VAU.V320NeoNext.Runtime.Systems.LegacyFlightDataProvider {
     [UdonBehaviourSyncMode(BehaviourSyncMode.Manual)]
     
     [DefaultExecutionOrder(2000)]

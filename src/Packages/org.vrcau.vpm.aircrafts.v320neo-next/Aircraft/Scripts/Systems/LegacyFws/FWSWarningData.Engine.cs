@@ -1,4 +1,4 @@
-﻿namespace A320VAU.FWS {
+﻿namespace VAU.V320NeoNext.Runtime.Systems.LegacyFws {
     public partial class FWSWarningData {
         private void SetupEngine() {
             ENGINE1_FIRE = GetWarningMessageData(nameof(ENGINE1_FIRE));

@@ -1,11 +1,10 @@
-﻿using A320VAU.Common;
-using Avionics.Systems.Common;
-using UdonSharp;
+﻿using UdonSharp;
 using UnityEngine;
 using UnityEngine.UI;
 using VAU.V320NeoNext.Runtime.Systems.AuxiliaryPowerUnit;
+using VAU.V320NeoNext.Runtime.Systems.LegacyFlightDataProvider;
 
-namespace A320VAU.ECAM {
+namespace VAU.V320NeoNext.Runtime.Systems.LegacyInstrument.ECAM.Pages.Scripts {
     [UdonBehaviourSyncMode(BehaviourSyncMode.None)]
     public class ApuPage : ECAMPage {
         private DependenciesInjector _injector;

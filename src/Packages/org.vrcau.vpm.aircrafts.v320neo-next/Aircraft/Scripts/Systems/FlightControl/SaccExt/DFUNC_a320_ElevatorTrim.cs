@@ -2,14 +2,14 @@ using SaccFlightAndVehicles;
 using TMPro;
 using UdonSharp;
 using UnityEngine;
+using VAU.V320NeoNext.Runtime.Systems.LegacyFlightDataProvider;
 using VRC.SDKBase;
-using YuxiFlightInstruments.BasicFlightData;
 
 //note:this code is original from https://github.com/esnya/EsnyaSFAddons
 //to satisfy vau320's demand, add autotrim
 //to optimize change vellift in SAV to trim
 //2024-09-29 尝试一个新东西，先把这个脚本作用在JoystickOverridde上，（FBW？）
-namespace A320VAU.DFUNC
+namespace VAU.V320NeoNext.Runtime.Systems.FlightControl.SaccExt
 {
     [UdonBehaviourSyncMode(BehaviourSyncMode.Continuous)]
     public class DFUNC_a320_ElevatorTrim : UdonSharpBehaviour

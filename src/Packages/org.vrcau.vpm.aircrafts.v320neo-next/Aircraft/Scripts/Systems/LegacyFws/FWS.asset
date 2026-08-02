@@ -19,7 +19,7 @@ MonoBehaviour:
   compiledVersion: 2
   behaviourSyncMode: 4
   hasInteractEvent: 0
-  scriptID: 3963331202076430401
+  scriptID: 5572028015628543269
   serializationData:
     SerializedBytes: 
     ReferencedUnityObjects: []
@@ -59,7 +59,8 @@ MonoBehaviour:
       Data: 3|System.RuntimeType, mscorlib
     - Name: 
       Entry: 1
-      Data: A320VAU.ADIRU.ADIRU, VAU.V320NeoNext.Runtime
+      Data: VAU.V320NeoNext.Runtime.Systems.LegacyFlightDataProvider.LegacyADRIRU.ADIRU,
+        VAU.V320NeoNext.Runtime
     - Name: 
       Entry: 8
       Data: 
@@ -119,7 +120,8 @@ MonoBehaviour:
       Data: 7|System.RuntimeType, mscorlib
     - Name: 
       Entry: 1
-      Data: Avionics.Systems.Common.AircraftSystemData, VAU.V320NeoNext.Runtime
+      Data: VAU.V320NeoNext.Runtime.Systems.LegacyFlightDataProvider.AircraftSystemData,
+        VAU.V320NeoNext.Runtime
     - Name: 
       Entry: 8
       Data: 
@@ -173,7 +175,7 @@ MonoBehaviour:
       Data: 10|System.RuntimeType, mscorlib
     - Name: 
       Entry: 1
-      Data: A320VAU.RadioAltimeter.RadioAltimeter, VAU.V320NeoNext.Runtime
+      Data: VAU.V320NeoNext.Runtime.Systems.RadioAltimeter.RadioAltimeter, VAU.V320NeoNext.Runtime
     - Name: 
       Entry: 8
       Data: 
@@ -227,7 +229,7 @@ MonoBehaviour:
       Data: 13|System.RuntimeType, mscorlib
     - Name: 
       Entry: 1
-      Data: A320VAU.AutoBrake, VAU.V320NeoNext.Runtime
+      Data: VAU.V320NeoNext.Runtime.Systems.LegacyAutoBrake.AutoBrake, VAU.V320NeoNext.Runtime
     - Name: 
       Entry: 8
       Data: 
@@ -281,7 +283,7 @@ MonoBehaviour:
       Data: 16|System.RuntimeType, mscorlib
     - Name: 
       Entry: 1
-      Data: A320VAU.FWS.FWSWarningMessageData[], VAU.V320NeoNext.Runtime
+      Data: VAU.V320NeoNext.Runtime.Systems.LegacyFws.FWSWarningMessageData[], VAU.V320NeoNext.Runtime
     - Name: 
       Entry: 8
       Data: 
@@ -347,7 +349,7 @@ MonoBehaviour:
       Data: 21|System.RuntimeType, mscorlib
     - Name: 
       Entry: 1
-      Data: A320VAU.FWS.FWSWarningData, VAU.V320NeoNext.Runtime
+      Data: VAU.V320NeoNext.Runtime.Systems.LegacyFws.FWSWarningData, VAU.V320NeoNext.Runtime
     - Name: 
       Entry: 8
       Data: 
@@ -647,7 +649,8 @@ MonoBehaviour:
       Data: 35|System.RuntimeType, mscorlib
     - Name: 
       Entry: 1
-      Data: A320VAU.ECAM.ECAMDisplay, VAU.V320NeoNext.Runtime
+      Data: VAU.V320NeoNext.Runtime.Systems.LegacyInstrument.ECAM.Script.ECAMDisplay,
+        VAU.V320NeoNext.Runtime
     - Name: 
       Entry: 8
       Data: 

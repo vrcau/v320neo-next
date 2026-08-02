@@ -1,14 +1,14 @@
-﻿using System;
-using A320VAU.Common;
-using A320VAU.ND.Pages;
-using A320VAU.Utils;
-using JetBrains.Annotations;
+﻿using JetBrains.Annotations;
 using UdonSharp;
 using UnityEngine;
 using UnityEngine.UI;
+using VAU.V320NeoNext.Runtime.Systems.LegacFmgc;
+using VAU.V320NeoNext.Runtime.Systems.LegacyFlightDataProvider;
+using VAU.V320NeoNext.Runtime.Systems.LegacyFlightDataProvider.LegacyADRIRU;
+using VAU.V320NeoNext.Runtime.Systems.LegacyInstrument.Utils;
 using VirtualCNS;
 
-namespace A320VAU.ND {
+namespace VAU.V320NeoNext.Runtime.Systems.LegacyInstrument.EFIS.ND.Script {
     [UdonBehaviourSyncMode(BehaviourSyncMode.Manual)]
     public class NDDisplay : UdonSharpBehaviour {
         private const float MAX_SLIP_ANGLE = 50;
@@ -19,7 +19,7 @@ namespace A320VAU.ND {
         public Animator IndicatorAnimator;
         public CDIAnimationDriver CDIAnimator;
         [FieldChangeCallback(nameof(NDMode))] public NDMode _ndMode;
-        private FMGC.FMGC _fmgc;
+        private FMGC _fmgc;
 
         private DependenciesInjector _injector;
 
@@ -31,7 +31,7 @@ namespace A320VAU.ND {
 
         private NavSelector _currentNavDataSource; //当前仪表上主界面导航信息来源
 
-        private ADIRU.ADIRU _adiru;
+        private ADIRU _adiru;
         private SystemEventBus _eventBus;
 
         public NDMode NDMode {

@@ -1,17 +1,22 @@
-﻿using A320VAU.Avionics;
-using A320VAU.Brake;
-using A320VAU.DFUNC;
-using A320VAU.SFEXT;
-using Avionics.Systems.Common;
-using SaccFlightAndVehicles;
+﻿using SaccFlightAndVehicles;
 using UdonSharp;
 using UnityEditor;
 using UnityEngine;
+using VAU.V320NeoNext.Runtime.Systems.AutoThrust.SaccExt;
 using VAU.V320NeoNext.Runtime.Systems.AuxiliaryPowerUnit;
+using VAU.V320NeoNext.Runtime.Systems.Engine.SaccExt;
+using VAU.V320NeoNext.Runtime.Systems.FlightControl.SaccExt;
+using VAU.V320NeoNext.Runtime.Systems.Gpws;
+using VAU.V320NeoNext.Runtime.Systems.LandingGear.SaccExt;
+using VAU.V320NeoNext.Runtime.Systems.LandingLight.SaccExt;
+using VAU.V320NeoNext.Runtime.Systems.LegacFmgc;
+using VAU.V320NeoNext.Runtime.Systems.LegacyAutoBrake;
+using VAU.V320NeoNext.Runtime.Systems.LegacyFlightDataProvider.LegacyADRIRU;
+using VAU.V320NeoNext.Runtime.Systems.LegacyFws;
+using VAU.V320NeoNext.Runtime.Systems.LegacyInstrument.FCU.Scripts;
 using VirtualCNS;
-using YuxiFlightInstruments.BasicFlightData;
 
-namespace A320VAU.Common {
+namespace VAU.V320NeoNext.Runtime.Systems.LegacyFlightDataProvider {
     [UdonBehaviourSyncMode(BehaviourSyncMode.None)]
     public class DependenciesInjector : UdonSharpBehaviour {
         [Header("Aircraft Systems")]
@@ -21,7 +26,7 @@ namespace A320VAU.Common {
 
         public YFI_FlightDataInterface flightData;
 
-        public ADIRU.ADIRU adiru;
+        public ADIRU adiru;
 
         public SFEXT_a320_AdvancedEngine engine1;
         public SFEXT_a320_AdvancedEngine engine2;
@@ -47,13 +52,13 @@ namespace A320VAU.Common {
 
         public AircraftSystemData equipmentData;
 
-        public FMGC.FMGC fmgc;
+        public FMGC fmgc;
         
         public AirbusAvionicsTheme airbusAvionicsTheme;
         
-        public FWS.FWS fws;
+        public FWS fws;
         
-        public FCU.FCU fcu;
+        public FCU fcu;
         
         public SystemEventBus systemEventBus;
         
@@ -103,13 +108,13 @@ namespace A320VAU.Common {
 
             equipmentData = GetComponentInChildren<AircraftSystemData>(true);
 
-            fmgc = GetComponentInChildren<FMGC.FMGC>(true);
+            fmgc = GetComponentInChildren<FMGC>(true);
 
             airbusAvionicsTheme = GetComponentInChildren<AirbusAvionicsTheme>(true);
 
-            fws = GetComponentInChildren<FWS.FWS>(true);
+            fws = GetComponentInChildren<FWS>(true);
 
-            fcu = GetComponentInChildren<FCU.FCU>(true);
+            fcu = GetComponentInChildren<FCU>(true);
 
             systemEventBus = GetComponentInChildren<SystemEventBus>(true);
 

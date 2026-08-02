@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace A320VAU.FWS {
+namespace VAU.V320NeoNext.Runtime.Systems.LegacyFws {
     public partial class FWSWarningData {
         private void SetupConfig() {
             FLAPS_NOT_IN_TAKEOFF_CONFIG = GetWarningMessageData(nameof(FLAPS_NOT_IN_TAKEOFF_CONFIG));

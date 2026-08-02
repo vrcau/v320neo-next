@@ -1,6 +1,6 @@
-﻿using A320VAU.Common;
+﻿using VAU.V320NeoNext.Runtime.Systems.LegacyFlightDataProvider;
 
-namespace A320VAU.MCDU {
+namespace VAU.V320NeoNext.Runtime.Systems.LegacyInstrument.MCDU.Pages.Performance {
     public partial class PerformancePage {
         public void ClimbUI() {
             _mcdu.titleLineText.text = "CLB";

@@ -2,7 +2,7 @@
 using UdonSharp;
 using VirtualCNS;
 
-namespace A320VAU.FMGC {
+namespace VAU.V320NeoNext.Runtime.Systems.LegacFmgc {
     [UdonBehaviourSyncMode(BehaviourSyncMode.Manual)]
     public class FMGCRadNav : UdonSharpBehaviour {
         public FMGC fmgc;

@@ -1,10 +1,8 @@
-﻿using System;
-using A320VAU.Common;
-using UdonSharp;
+﻿using UdonSharp;
 using UnityEngine;
-using Random = UnityEngine.Random;
+using VAU.V320NeoNext.Runtime.Systems.LegacyFlightDataProvider;
 
-namespace A320VAU.PFD {
+namespace VAU.V320NeoNext.Runtime.Systems.LegacyInstrument.DU.Script {
     [UdonBehaviourSyncMode(BehaviourSyncMode.None)]
     public class DU : UdonSharpBehaviour {
         private DependenciesInjector _injector;

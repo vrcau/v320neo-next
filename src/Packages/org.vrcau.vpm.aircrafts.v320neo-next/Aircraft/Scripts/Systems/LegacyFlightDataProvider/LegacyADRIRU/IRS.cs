@@ -1,10 +1,8 @@
-﻿using A320VAU.Common;
-using SaccFlightAndVehicles;
+﻿using SaccFlightAndVehicles;
 using UdonSharp;
 using UnityEngine;
-using YuxiFlightInstruments.BasicFlightData;
 
-namespace A320VAU.ADIRU {
+namespace VAU.V320NeoNext.Runtime.Systems.LegacyFlightDataProvider.LegacyADRIRU {
     [UdonBehaviourSyncMode(BehaviourSyncMode.None)]
     [DefaultExecutionOrder(2020)]// after ADR
     public class IRS : UdonSharpBehaviour {

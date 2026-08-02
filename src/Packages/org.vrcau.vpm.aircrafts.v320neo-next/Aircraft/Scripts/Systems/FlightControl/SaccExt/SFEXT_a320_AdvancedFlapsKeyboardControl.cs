@@ -1,8 +1,7 @@
-﻿using A320VAU.DFUNC;
-using UdonSharp;
+﻿using UdonSharp;
 using UnityEngine;
 
-namespace A320VAU.SFEXT {
+namespace VAU.V320NeoNext.Runtime.Systems.FlightControl.SaccExt {
     [UdonBehaviourSyncMode(BehaviourSyncMode.None)]
     public class SFEXT_a320_AdvancedFlapsKeyboardControl : UdonSharpBehaviour {
         public DFUNC_a320_FlapController advancedFlaps;

@@ -1,12 +1,13 @@
 ﻿using System;
-using A320VAU.Common;
-using A320VAU.Utils;
 using SaccFlightAndVehicles;
 using UdonSharp;
 using UnityEngine;
 using UnityEngine.UI;
+using VAU.V320NeoNext.Runtime.Systems.AutoThrust.SaccExt;
+using VAU.V320NeoNext.Runtime.Systems.LegacyFlightDataProvider;
+using VAU.V320NeoNext.Runtime.Systems.LegacyInstrument.Utils;
 
-namespace A320VAU.FCU {
+namespace VAU.V320NeoNext.Runtime.Systems.LegacyInstrument.FCU.Scripts {
     public class FCU : UdonSharpBehaviour {
         private DFUNC_AltHold _altHoldDFunc;
 

@@ -2,7 +2,7 @@
 using UdonSharp;
 using UnityEngine;
 
-namespace A320VAU.Common {
+namespace VAU.V320NeoNext.Runtime.Systems.LegacyFlightDataProvider {
     public class AirbusAvionicsTheme : UdonSharpBehaviour {
         public const string Danger = "#FC0019";
         public const string Amber = "#FD7D22";

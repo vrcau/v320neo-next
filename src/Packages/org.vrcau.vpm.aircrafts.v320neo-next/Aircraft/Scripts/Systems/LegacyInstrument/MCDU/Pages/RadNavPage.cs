@@ -1,14 +1,16 @@
-﻿using A320VAU.Common;
-using UdonSharp;
+﻿using UdonSharp;
+using VAU.V320NeoNext.Runtime.Systems.LegacFmgc;
+using VAU.V320NeoNext.Runtime.Systems.LegacyFlightDataProvider;
+using VAU.V320NeoNext.Runtime.Systems.LegacyInstrument.MCDU.Scripts;
 using VirtualCNS;
 
-namespace A320VAU.MCDU {
+namespace VAU.V320NeoNext.Runtime.Systems.LegacyInstrument.MCDU.Pages {
     [UdonBehaviourSyncMode(BehaviourSyncMode.Manual)]
     public class RadNavPage : MCDUPage {
         private NavSelector _adf;
-        private FMGC.FMGC _fmgc;
+        private FMGC _fmgc;
         private NavSelector _ils;
-        private MCDU _mcdu;
+        private Scripts.MCDU _mcdu;
         private NavaidDatabase _navaidDatabase;
 
         private NavSelector _vor1;
@@ -28,7 +30,7 @@ namespace A320VAU.MCDU {
             _initialized = true;
         }
 
-        public override void OnPageInit(MCDU mcdu) {
+        public override void OnPageInit(Scripts.MCDU mcdu) {
             _mcdu = mcdu;
 
             mcdu.titleLineText.text = "RADIO NAV";

@@ -1,10 +1,7 @@
-﻿using A320VAU.Common;
-using UdonSharp;
-using YuxiFlightInstruments.BasicFlightData;
-using A320VAU.AtmosphereModel;
+﻿using UdonSharp;
 using UnityEngine;
 
-namespace A320VAU.ADIRU {
+namespace VAU.V320NeoNext.Runtime.Systems.LegacyFlightDataProvider.LegacyADRIRU {
     [UdonBehaviourSyncMode(BehaviourSyncMode.None)]
     [DefaultExecutionOrder(2015)] //第一个启动的电器
     public class ADR : UdonSharpBehaviour {

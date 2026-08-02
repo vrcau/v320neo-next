@@ -1,6 +1,6 @@
 ﻿using UdonSharp;
 
-namespace A320VAU.MCDU {
+namespace VAU.V320NeoNext.Runtime.Systems.LegacyInstrument.MCDU.Scripts {
     [UdonBehaviourSyncMode(BehaviourSyncMode.Manual)]
     public class MCDUPage : UdonSharpBehaviour {
         public virtual void L1() { }

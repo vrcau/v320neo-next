@@ -19,7 +19,7 @@ MonoBehaviour:
   compiledVersion: 2
   behaviourSyncMode: 4
   hasInteractEvent: 0
-  scriptID: 5980039850227252798
+  scriptID: 2692334005285754434
   serializationData:
     SerializedBytes: 
     ReferencedUnityObjects: []
@@ -236,7 +236,8 @@ MonoBehaviour:
       Data: 14|System.RuntimeType, mscorlib
     - Name: 
       Entry: 1
-      Data: A320VAU.ND.NDMode, VAU.V320NeoNext.Runtime
+      Data: VAU.V320NeoNext.Runtime.Systems.LegacyInstrument.EFIS.ND.Script.NDMode,
+        VAU.V320NeoNext.Runtime
     - Name: 
       Entry: 8
       Data: 
@@ -296,7 +297,7 @@ MonoBehaviour:
       Data: 18|System.RuntimeType, mscorlib
     - Name: 
       Entry: 1
-      Data: A320VAU.FMGC.FMGC, VAU.V320NeoNext.Runtime
+      Data: VAU.V320NeoNext.Runtime.Systems.LegacFmgc.FMGC, VAU.V320NeoNext.Runtime
     - Name: 
       Entry: 8
       Data: 
@@ -350,7 +351,8 @@ MonoBehaviour:
       Data: 21|System.RuntimeType, mscorlib
     - Name: 
       Entry: 1
-      Data: A320VAU.Common.DependenciesInjector, VAU.V320NeoNext.Runtime
+      Data: VAU.V320NeoNext.Runtime.Systems.LegacyFlightDataProvider.DependenciesInjector,
+        VAU.V320NeoNext.Runtime
     - Name: 
       Entry: 8
       Data: 
@@ -404,7 +406,8 @@ MonoBehaviour:
       Data: 24|System.RuntimeType, mscorlib
     - Name: 
       Entry: 1
-      Data: A320VAU.ND.Pages.MapDisplay[], VAU.V320NeoNext.Runtime
+      Data: VAU.V320NeoNext.Runtime.Systems.LegacyInstrument.EFIS.ND.Script.MapDisplay[],
+        VAU.V320NeoNext.Runtime
     - Name: 
       Entry: 8
       Data: 
@@ -662,7 +665,8 @@ MonoBehaviour:
       Data: 37|System.RuntimeType, mscorlib
     - Name: 
       Entry: 1
-      Data: A320VAU.ADIRU.ADIRU, VAU.V320NeoNext.Runtime
+      Data: VAU.V320NeoNext.Runtime.Systems.LegacyFlightDataProvider.LegacyADRIRU.ADIRU,
+        VAU.V320NeoNext.Runtime
     - Name: 
       Entry: 8
       Data: 
@@ -716,7 +720,8 @@ MonoBehaviour:
       Data: 40|System.RuntimeType, mscorlib
     - Name: 
       Entry: 1
-      Data: A320VAU.Common.SystemEventBus, VAU.V320NeoNext.Runtime
+      Data: VAU.V320NeoNext.Runtime.Systems.LegacyFlightDataProvider.SystemEventBus,
+        VAU.V320NeoNext.Runtime
     - Name: 
       Entry: 8
       Data: 
@@ -1730,7 +1735,8 @@ MonoBehaviour:
       Data: 87|System.RuntimeType, mscorlib
     - Name: 
       Entry: 1
-      Data: A320VAU.ND.Pages.EFISVisibilityType, VAU.V320NeoNext.Runtime
+      Data: VAU.V320NeoNext.Runtime.Systems.LegacyInstrument.EFIS.ND.Script.EFISVisibilityType,
+        VAU.V320NeoNext.Runtime
     - Name: 
       Entry: 8
       Data: 

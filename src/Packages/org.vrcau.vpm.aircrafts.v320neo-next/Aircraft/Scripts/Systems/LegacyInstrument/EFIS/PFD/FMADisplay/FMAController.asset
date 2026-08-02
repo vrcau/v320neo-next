@@ -19,7 +19,7 @@ MonoBehaviour:
   compiledVersion: 2
   behaviourSyncMode: 1
   hasInteractEvent: 0
-  scriptID: -8011526331339342889
+  scriptID: 7356456344905979612
   serializationData:
     SerializedBytes: 
     ReferencedUnityObjects: []
@@ -59,7 +59,8 @@ MonoBehaviour:
       Data: 3|System.RuntimeType, mscorlib
     - Name: 
       Entry: 1
-      Data: Avionics.Systems.Common.AircraftSystemData, VAU.V320NeoNext.Runtime
+      Data: VAU.V320NeoNext.Runtime.Systems.LegacyFlightDataProvider.AircraftSystemData,
+        VAU.V320NeoNext.Runtime
     - Name: 
       Entry: 8
       Data: 
@@ -173,7 +174,8 @@ MonoBehaviour:
       Data: 10|System.RuntimeType, mscorlib
     - Name: 
       Entry: 1
-      Data: A320VAU.DFUNC_a320_AutoThrust, VAU.V320NeoNext.Runtime
+      Data: VAU.V320NeoNext.Runtime.Systems.AutoThrust.SaccExt.DFUNC_a320_AutoThrust,
+        VAU.V320NeoNext.Runtime
     - Name: 
       Entry: 8
       Data: 
@@ -227,7 +229,7 @@ MonoBehaviour:
       Data: 13|System.RuntimeType, mscorlib
     - Name: 
       Entry: 1
-      Data: A320VAU.AutoBrake, VAU.V320NeoNext.Runtime
+      Data: VAU.V320NeoNext.Runtime.Systems.LegacyAutoBrake.AutoBrake, VAU.V320NeoNext.Runtime
     - Name: 
       Entry: 8
       Data: 
@@ -281,7 +283,8 @@ MonoBehaviour:
       Data: 16|System.RuntimeType, mscorlib
     - Name: 
       Entry: 1
-      Data: A320VAU.Common.DependenciesInjector, VAU.V320NeoNext.Runtime
+      Data: VAU.V320NeoNext.Runtime.Systems.LegacyFlightDataProvider.DependenciesInjector,
+        VAU.V320NeoNext.Runtime
     - Name: 
       Entry: 8
       Data: 
@@ -1535,7 +1538,8 @@ MonoBehaviour:
       Data: 75|System.RuntimeType, mscorlib
     - Name: 
       Entry: 1
-      Data: A320VAU.PFD.ManThrType, VAU.V320NeoNext.Runtime
+      Data: VAU.V320NeoNext.Runtime.Systems.LegacyInstrument.EFIS.PFD.FMADisplay.ManThrType,
+        VAU.V320NeoNext.Runtime
     - Name: 
       Entry: 8
       Data: 
@@ -1601,7 +1605,8 @@ MonoBehaviour:
       Data: 80|System.RuntimeType, mscorlib
     - Name: 
       Entry: 1
-      Data: A320VAU.PFD.AutoBrakeMode, VAU.V320NeoNext.Runtime
+      Data: VAU.V320NeoNext.Runtime.Systems.LegacyInstrument.EFIS.PFD.FMADisplay.AutoBrakeMode,
+        VAU.V320NeoNext.Runtime
     - Name: 
       Entry: 8
       Data: 
@@ -1985,7 +1990,8 @@ MonoBehaviour:
       Data: 102|System.RuntimeType, mscorlib
     - Name: 
       Entry: 1
-      Data: A320VAU.PFD.ApproachAbility, VAU.V320NeoNext.Runtime
+      Data: VAU.V320NeoNext.Runtime.Systems.LegacyInstrument.EFIS.PFD.FMADisplay.ApproachAbility,
+        VAU.V320NeoNext.Runtime
     - Name: 
       Entry: 8
       Data: 
@@ -2046,7 +2052,8 @@ MonoBehaviour:
       Data: 106|System.RuntimeType, mscorlib
     - Name: 
       Entry: 1
-      Data: A320VAU.PFD.ApproachMinimumType, VAU.V320NeoNext.Runtime
+      Data: VAU.V320NeoNext.Runtime.Systems.LegacyInstrument.EFIS.PFD.FMADisplay.ApproachMinimumType,
+        VAU.V320NeoNext.Runtime
     - Name: 
       Entry: 8
       Data: 

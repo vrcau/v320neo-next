@@ -1,5 +1,8 @@
 ﻿using UdonSharp;
 
-public class AutoThrust : UdonSharpBehaviour
+namespace VAU.V320NeoNext.Runtime.Systems.LegacFmgc.FlightGuidance
 {
+    public class AutoThrust : UdonSharpBehaviour
+    {
+    }
 }

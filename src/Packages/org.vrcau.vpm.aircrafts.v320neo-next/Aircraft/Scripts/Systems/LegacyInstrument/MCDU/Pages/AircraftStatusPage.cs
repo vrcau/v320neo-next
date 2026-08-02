@@ -1,11 +1,12 @@
 ﻿using UdonSharp;
+using VAU.V320NeoNext.Runtime.Systems.LegacyInstrument.MCDU.Scripts;
 
-namespace A320VAU.MCDU {
+namespace VAU.V320NeoNext.Runtime.Systems.LegacyInstrument.MCDU.Pages {
     [UdonBehaviourSyncMode(BehaviourSyncMode.Manual)]
     public class AircraftStatusPage : MCDUPage {
-        private MCDU _mcdu;
+        private Scripts.MCDU _mcdu;
 
-        public override void OnPageInit(MCDU mcdu) {
+        public override void OnPageInit(Scripts.MCDU mcdu) {
             _mcdu = mcdu;
 
             mcdu.titleLineText.text = "V320-251N";

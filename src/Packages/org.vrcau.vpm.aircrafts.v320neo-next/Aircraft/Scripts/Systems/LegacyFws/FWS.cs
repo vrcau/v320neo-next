@@ -1,16 +1,17 @@
-﻿using A320VAU.Common;
-using A320VAU.ECAM;
-using Avionics.Systems.Common;
-using UdonSharp;
+﻿using UdonSharp;
 using UnityEngine;
+using VAU.V320NeoNext.Runtime.Systems.LegacyAutoBrake;
+using VAU.V320NeoNext.Runtime.Systems.LegacyFlightDataProvider;
+using VAU.V320NeoNext.Runtime.Systems.LegacyFlightDataProvider.LegacyADRIRU;
+using VAU.V320NeoNext.Runtime.Systems.LegacyInstrument.ECAM.Script;
 
-namespace A320VAU.FWS {
+namespace VAU.V320NeoNext.Runtime.Systems.LegacyFws {
     [UdonBehaviourSyncMode(BehaviourSyncMode.Manual)]
     [DefaultExecutionOrder(2045)] // after FWS Warning Data
     public class FWS : UdonSharpBehaviour {
     #region Aircraft Systems
 
-        public ADIRU.ADIRU adiru;
+        public ADIRU adiru;
         public AircraftSystemData equipmentData;
         public RadioAltimeter.RadioAltimeter radioAltimeter;
         public AutoBrake autoBrake;

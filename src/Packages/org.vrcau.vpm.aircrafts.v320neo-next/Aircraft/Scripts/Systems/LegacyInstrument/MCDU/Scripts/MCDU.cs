@@ -1,11 +1,11 @@
-﻿using A320VAU.Common;
-using A320VAU.Utils;
-using JetBrains.Annotations;
+﻿using JetBrains.Annotations;
 using UdonSharp;
 using UnityEngine;
 using UnityEngine.UI;
+using VAU.V320NeoNext.Runtime.Systems.LegacyFlightDataProvider;
+using VAU.V320NeoNext.Runtime.Systems.LegacyInstrument.Utils;
 
-namespace A320VAU.MCDU {
+namespace VAU.V320NeoNext.Runtime.Systems.LegacyInstrument.MCDU.Scripts {
     [UdonBehaviourSyncMode(BehaviourSyncMode.Manual)]
     public class MCDU : UdonSharpBehaviour {
         private SystemEventBus _eventBus;

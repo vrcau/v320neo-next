@@ -19,7 +19,7 @@ MonoBehaviour:
   compiledVersion: 2
   behaviourSyncMode: 1
   hasInteractEvent: 0
-  scriptID: 212951701378839067
+  scriptID: -8572159937880178129
   serializationData:
     SerializedBytes: 
     ReferencedUnityObjects: []
@@ -167,7 +167,8 @@ MonoBehaviour:
       Data: 9|System.RuntimeType, mscorlib
     - Name: 
       Entry: 1
-      Data: A320VAU.SFEXT.SFEXT_a320_AdvancedEngine[], VAU.V320NeoNext.Runtime
+      Data: VAU.V320NeoNext.Runtime.Systems.Engine.SaccExt.SFEXT_a320_AdvancedEngine[],
+        VAU.V320NeoNext.Runtime
     - Name: 
       Entry: 8
       Data: 

@@ -1,18 +1,17 @@
-﻿using A320VAU.Common;
-using A320VAU.Utils;
-using Avionics.Systems.Common;
-using UdonSharp;
+﻿using UdonSharp;
 using UnityEngine;
-using YuxiFlightInstruments.BasicFlightData;
+using VAU.V320NeoNext.Runtime.Systems.LegacyFlightDataProvider;
+using VAU.V320NeoNext.Runtime.Systems.LegacyFlightDataProvider.LegacyADRIRU;
+using VAU.V320NeoNext.Runtime.Systems.LegacyInstrument.Utils;
 
-namespace A320VAU.FMGC {
+namespace VAU.V320NeoNext.Runtime.Systems.LegacFmgc {
     [UdonBehaviourSyncMode(BehaviourSyncMode.Manual)]
     public class FMGCFlightPhase : UdonSharpBehaviour {
         public FMGC fmgc;
 
         private DependenciesInjector _injector;
         private AircraftSystemData _aircraftSystemData;
-        private ADIRU.ADIRU _adirud;
+        private ADIRU _adirud;
         private SystemEventBus _eventBus;
 
         public KeyCode activeApproachKey = KeyCode.Alpha9;

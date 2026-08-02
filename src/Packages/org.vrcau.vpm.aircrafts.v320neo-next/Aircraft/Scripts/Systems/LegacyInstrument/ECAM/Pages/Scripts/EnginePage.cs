@@ -1,10 +1,9 @@
-﻿using A320VAU.Common;
-using A320VAU.SFEXT;
-using UdonSharp;
-using UnityEngine;
+﻿using UdonSharp;
 using UnityEngine.UI;
+using VAU.V320NeoNext.Runtime.Systems.Engine.SaccExt;
+using VAU.V320NeoNext.Runtime.Systems.LegacyFlightDataProvider;
 
-namespace A320VAU.ECAM {
+namespace VAU.V320NeoNext.Runtime.Systems.LegacyInstrument.ECAM.Pages.Scripts {
     [UdonBehaviourSyncMode(BehaviourSyncMode.None)]
     public class EnginePage : ECAMPage {
         private DependenciesInjector _injector;

@@ -1,13 +1,10 @@
-﻿
+﻿using SaccFlightAndVehicles;
 using UdonSharp;
 using UnityEngine;
+using VAU.V320NeoNext.Runtime.Systems.LegacyFlightDataProvider.LegacyADRIRU;
 using VRC.SDKBase;
-using SaccFlightAndVehicles;
-using A320VAU.ADIRU;
-using UnityEngine.UIElements;
-using System.Collections.Generic;
 
-namespace A320VAU.DFUNC {
+namespace VAU.V320NeoNext.Runtime.Systems.FlightControl.SaccExt {
     [UdonBehaviourSyncMode(BehaviourSyncMode.Manual)]
     public class DFUNC_a320_FlapController : UdonSharpBehaviour {
         [Header("Specs")]
@@ -60,7 +57,7 @@ namespace A320VAU.DFUNC {
         public float response = 1f;
         public GameObject powerSource;
         [Header("Flight State")]
-        public ADIRU.ADIRU adiru;
+        public ADIRU adiru;
 
         [Header("Inputs")]
         public float controllerSensitivity = 10f;

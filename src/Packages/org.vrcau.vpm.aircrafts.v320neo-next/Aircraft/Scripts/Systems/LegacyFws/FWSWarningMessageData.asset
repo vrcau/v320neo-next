@@ -19,7 +19,7 @@ MonoBehaviour:
   compiledVersion: 2
   behaviourSyncMode: 4
   hasInteractEvent: 0
-  scriptID: -5896830532557123844
+  scriptID: 1205585597690287117
   serializationData:
     SerializedBytes: 
     ReferencedUnityObjects: []
@@ -161,7 +161,7 @@ MonoBehaviour:
       Data: 8|System.RuntimeType, mscorlib
     - Name: 
       Entry: 1
-      Data: A320VAU.FWS.WarningStyle, VAU.V320NeoNext.Runtime
+      Data: VAU.V320NeoNext.Runtime.Systems.LegacyFws.WarningStyle, VAU.V320NeoNext.Runtime
     - Name: 
       Entry: 8
       Data: 
@@ -317,7 +317,7 @@ MonoBehaviour:
       Data: 16|System.RuntimeType, mscorlib
     - Name: 
       Entry: 1
-      Data: A320VAU.FWS.WarningColor, VAU.V320NeoNext.Runtime
+      Data: VAU.V320NeoNext.Runtime.Systems.LegacyFws.WarningColor, VAU.V320NeoNext.Runtime
     - Name: 
       Entry: 8
       Data: 
@@ -431,7 +431,7 @@ MonoBehaviour:
       Data: 23|System.RuntimeType, mscorlib
     - Name: 
       Entry: 1
-      Data: A320VAU.FWS.DisplayZone, VAU.V320NeoNext.Runtime
+      Data: VAU.V320NeoNext.Runtime.Systems.LegacyFws.DisplayZone, VAU.V320NeoNext.Runtime
     - Name: 
       Entry: 8
       Data: 
@@ -485,7 +485,7 @@ MonoBehaviour:
       Data: 26|System.RuntimeType, mscorlib
     - Name: 
       Entry: 1
-      Data: A320VAU.FWS.WarningType, VAU.V320NeoNext.Runtime
+      Data: VAU.V320NeoNext.Runtime.Systems.LegacyFws.WarningType, VAU.V320NeoNext.Runtime
     - Name: 
       Entry: 8
       Data: 
@@ -539,7 +539,7 @@ MonoBehaviour:
       Data: 29|System.RuntimeType, mscorlib
     - Name: 
       Entry: 1
-      Data: A320VAU.FWS.WarningLevel, VAU.V320NeoNext.Runtime
+      Data: VAU.V320NeoNext.Runtime.Systems.LegacyFws.WarningLevel, VAU.V320NeoNext.Runtime
     - Name: 
       Entry: 8
       Data: 
@@ -593,7 +593,7 @@ MonoBehaviour:
       Data: 32|System.RuntimeType, mscorlib
     - Name: 
       Entry: 1
-      Data: A320VAU.FWS.SystemPage, VAU.V320NeoNext.Runtime
+      Data: VAU.V320NeoNext.Runtime.Systems.LegacyFws.SystemPage, VAU.V320NeoNext.Runtime
     - Name: 
       Entry: 8
       Data: 
@@ -647,7 +647,7 @@ MonoBehaviour:
       Data: 35|System.RuntimeType, mscorlib
     - Name: 
       Entry: 1
-      Data: A320VAU.FWS.WarningMessageLine[], VAU.V320NeoNext.Runtime
+      Data: VAU.V320NeoNext.Runtime.Systems.LegacyFws.WarningMessageLine[], VAU.V320NeoNext.Runtime
     - Name: 
       Entry: 8
       Data: 

@@ -1,14 +1,14 @@
-﻿using A320VAU.Common;
-using A320VAU.FWS;
-using A320VAU.Utils;
-using Avionics.Systems.Common;
-using JetBrains.Annotations;
+﻿using JetBrains.Annotations;
 using UdonSharp;
 using UnityEngine;
 using UnityEngine.UI;
-using YuxiFlightInstruments.BasicFlightData;
+using VAU.V320NeoNext.Runtime.Systems.LegacyFlightDataProvider;
+using VAU.V320NeoNext.Runtime.Systems.LegacyFlightDataProvider.LegacyADRIRU;
+using VAU.V320NeoNext.Runtime.Systems.LegacyFws;
+using VAU.V320NeoNext.Runtime.Systems.LegacyInstrument.ECAM.Pages.Scripts;
+using VAU.V320NeoNext.Runtime.Systems.LegacyInstrument.Utils;
 
-namespace A320VAU.ECAM {
+namespace VAU.V320NeoNext.Runtime.Systems.LegacyInstrument.ECAM.Script {
     [UdonBehaviourSyncMode(BehaviourSyncMode.NoVariableSync)]
     [DefaultExecutionOrder(2040)] //after autobrk
     public class ECAMDisplay : UdonSharpBehaviour {
@@ -16,10 +16,10 @@ namespace A320VAU.ECAM {
 
         private DependenciesInjector _injector;
 
-        private ADIRU.ADIRU _adiru;
+        private ADIRU _adiru;
         private AircraftSystemData _aircraftSystemData;
         private AirbusAvionicsTheme _airbusAvionicsTheme;
-        private FWS.FWS _fws;
+        private FWS _fws;
         private SystemEventBus _eventBus;
 
     #endregion

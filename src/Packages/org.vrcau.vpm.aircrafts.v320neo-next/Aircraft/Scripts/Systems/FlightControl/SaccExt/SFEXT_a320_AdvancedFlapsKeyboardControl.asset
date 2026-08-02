@@ -19,7 +19,7 @@ MonoBehaviour:
   compiledVersion: 2
   behaviourSyncMode: 1
   hasInteractEvent: 0
-  scriptID: 8434205511746388129
+  scriptID: 418987722763570642
   serializationData:
     SerializedBytes: 
     ReferencedUnityObjects: []
@@ -59,7 +59,8 @@ MonoBehaviour:
       Data: 3|System.RuntimeType, mscorlib
     - Name: 
       Entry: 1
-      Data: A320VAU.DFUNC.DFUNC_a320_FlapController, VAU.V320NeoNext.Runtime
+      Data: VAU.V320NeoNext.Runtime.Systems.FlightControl.SaccExt.DFUNC_a320_FlapController,
+        VAU.V320NeoNext.Runtime
     - Name: 
       Entry: 8
       Data: 

@@ -1,9 +1,8 @@
-using A320VAU.SFEXT;
 using SaccFlightAndVehicles;
 using UdonSharp;
 using UnityEngine;
 
-namespace A320VAU.DFUNC {
+namespace VAU.V320NeoNext.Runtime.Systems.Engine.SaccExt {
     [UdonBehaviourSyncMode(BehaviourSyncMode.None)]
     public class DFUNC_a320_AdvancedThrustReverser : UdonSharpBehaviour {
         public KeyCode keyboardControl = KeyCode.R;

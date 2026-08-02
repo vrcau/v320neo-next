@@ -1,14 +1,14 @@
 using System;
-using A320VAU.SFEXT;
 using SaccFlightAndVehicles;
 using UdonSharp;
 using UnityEngine;
 using VAU.V320NeoNext.Runtime.Systems.AuxiliaryPowerUnit;
+using VAU.V320NeoNext.Runtime.Systems.Engine.SaccExt;
 using VRC.SDKBase;
 
 //note:this code is original from https://github.com/esnya/EsnyaSFAddons
 //to satisfy vau320's demand, add eletrical start
-namespace A320VAU.DFUNC {
+namespace VAU.V320NeoNext.Runtime.AuxiliarySaccDfunc {
     [UdonBehaviourSyncMode(BehaviourSyncMode.Manual)]
     [DefaultExecutionOrder(1000)] // After SaccAirVehicle
     public class DFUNC_a320_AutoStarter : UdonSharpBehaviour {

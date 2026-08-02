@@ -1,11 +1,9 @@
-﻿using System;
-using A320VAU.Common;
-using Avionics.Systems.Common;
-using UdonSharp;
+﻿using UdonSharp;
 using UnityEngine;
 using VAU.V320NeoNext.Runtime.Systems.AuxiliaryPowerUnit;
+using VAU.V320NeoNext.Runtime.Systems.LegacyFlightDataProvider;
 
-namespace A320VAU {
+namespace VAU.V320NeoNext.Runtime.Systems.LegacyInstrument.Button.APU {
     [UdonBehaviourSyncMode(BehaviourSyncMode.Manual)]
     public class APUPanel : UdonSharpBehaviour {
         private SFEXT_AuxiliaryPowerUnit _auxiliaryPowerUnit;

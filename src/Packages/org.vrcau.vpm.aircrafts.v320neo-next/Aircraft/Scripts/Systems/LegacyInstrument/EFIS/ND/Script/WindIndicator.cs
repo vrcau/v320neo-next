@@ -1,18 +1,16 @@
-﻿using System;
-using A320VAU.Common;
-using A320VAU.Utils;
-using SaccFlightAndVehicles;
-using UdonSharp;
+﻿using UdonSharp;
 using UnityEngine;
 using UnityEngine.UI;
-using VirtualCNS;
+using VAU.V320NeoNext.Runtime.Systems.LegacyFlightDataProvider;
+using VAU.V320NeoNext.Runtime.Systems.LegacyFlightDataProvider.LegacyADRIRU;
+using VAU.V320NeoNext.Runtime.Systems.LegacyInstrument.Utils;
 
-namespace A320VAU.ND {
+namespace VAU.V320NeoNext.Runtime.Systems.LegacyInstrument.EFIS.ND.Script {
     [UdonBehaviourSyncMode(BehaviourSyncMode.None)]
     public class WindIndicator : UdonSharpBehaviour {
         private DependenciesInjector _dependenciesInjector;
 
-        private ADIRU.ADIRU _adiru;
+        private ADIRU _adiru;
 
         public Transform windDirectionIndicator;
         public Text windDirectionText;

@@ -1,18 +1,16 @@
 using System;
-using Avionics.Systems.Common;
 using SaccFlightAndVehicles;
 using UdonSharp;
 using UnityEngine;
+using VAU.V320NeoNext.Runtime.Systems.LegacyFlightDataProvider;
 using VRC.SDKBase;
 using VRC.Udon.Common.Interfaces;
-using A320VAU.AtmosphereModel;
 using Random = UnityEngine.Random;
-using YuxiFlightInstruments.BasicFlightData;
 
 //note:this script is original from https://github.com/esnya/EsnyaSFAddons
 //to satisfy vau320's demand, moditied startup charcrastic and add force point
 
-namespace A320VAU.SFEXT {
+namespace VAU.V320NeoNext.Runtime.Systems.Engine.SaccExt {
     [UdonBehaviourSyncMode(BehaviourSyncMode.Continuous)]
     [DefaultExecutionOrder(1000)] // After SoundController
     public class SFEXT_a320_AdvancedEngine : UdonSharpBehaviour {

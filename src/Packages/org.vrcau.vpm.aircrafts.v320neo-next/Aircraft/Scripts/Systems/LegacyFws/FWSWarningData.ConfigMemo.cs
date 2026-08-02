@@ -1,7 +1,7 @@
 ﻿using UdonSharp;
-using UnityEngine;
+using VAU.V320NeoNext.Runtime.Systems.LegacyAutoBrake;
 
-namespace A320VAU.FWS {
+namespace VAU.V320NeoNext.Runtime.Systems.LegacyFws {
     public partial class FWSWarningData : UdonSharpBehaviour {
         private void SetupConfigMemo() {
             TAKEOFF_MEMO = GetWarningMessageData(nameof(TAKEOFF_MEMO));

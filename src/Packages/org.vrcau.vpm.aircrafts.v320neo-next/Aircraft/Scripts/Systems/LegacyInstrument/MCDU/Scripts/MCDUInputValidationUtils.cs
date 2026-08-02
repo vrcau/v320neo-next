@@ -1,4 +1,4 @@
-﻿namespace A320VAU.MCDU {
+﻿namespace VAU.V320NeoNext.Runtime.Systems.LegacyInstrument.MCDU.Scripts {
     public class MCDUInputValidationUtils {
         public static bool ValidateNavaid(string navaid) {
             return navaid.Length <= 5;

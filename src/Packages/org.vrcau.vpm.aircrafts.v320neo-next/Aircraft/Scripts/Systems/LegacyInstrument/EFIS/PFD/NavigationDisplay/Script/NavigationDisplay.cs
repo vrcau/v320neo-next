@@ -1,10 +1,11 @@
-﻿using A320VAU.Common;
-using UdonSharp;
+﻿using UdonSharp;
 using UnityEngine;
 using UnityEngine.UI;
+using VAU.V320NeoNext.Runtime.Systems.LegacFmgc;
+using VAU.V320NeoNext.Runtime.Systems.LegacyFlightDataProvider;
 using VirtualCNS;
 
-namespace A320VAU.PFD {
+namespace VAU.V320NeoNext.Runtime.Systems.LegacyInstrument.EFIS.PFD.NavigationDisplay.Script {
     [UdonBehaviourSyncMode(BehaviourSyncMode.None)]
     [DefaultExecutionOrder(90)] // After Nav Selector, Before Instruments
     public class NavigationDisplay : UdonSharpBehaviour {
@@ -14,7 +15,7 @@ namespace A320VAU.PFD {
         public Text NaviInfo;
 
         public int updateIntervalFrames = 10;
-        private FMGC.FMGC _fmgc;
+        private FMGC _fmgc;
         private NavSelector _ils;
         private DependenciesInjector _injector;
         private int updateIntervalOffsetFrames;

@@ -2,10 +2,9 @@
 using SaccFlightAndVehicles;
 using UdonSharp;
 using UnityEngine;
-using Varneon.VUdon.ArrayExtensions;
-using YuxiFlightInstruments.BasicFlightData;
+using VAU.V320NeoNext.Runtime.Extensions;
 
-namespace A320VAU.Common {
+namespace VAU.V320NeoNext.Runtime.Systems.LegacyFlightDataProvider {
     [UdonBehaviourSyncMode(BehaviourSyncMode.None)]
     [DefaultExecutionOrder(151)] //after YFI electrical bus
     public class SystemEventBus : UdonSharpBehaviour {

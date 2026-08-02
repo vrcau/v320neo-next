@@ -1,13 +1,13 @@
-﻿using System;
-using A320VAU.Common;
-using A320VAU.Utils;
-using Avionics.Systems.Common;
-using SaccFlightAndVehicles;
+﻿using SaccFlightAndVehicles;
 using UdonSharp;
 using UnityEngine;
 using UnityEngine.UI;
+using VAU.V320NeoNext.Runtime.Systems.AutoThrust.SaccExt;
+using VAU.V320NeoNext.Runtime.Systems.LegacyAutoBrake;
+using VAU.V320NeoNext.Runtime.Systems.LegacyFlightDataProvider;
+using VAU.V320NeoNext.Runtime.Systems.LegacyInstrument.Utils;
 
-namespace A320VAU.PFD {
+namespace VAU.V320NeoNext.Runtime.Systems.LegacyInstrument.EFIS.PFD.FMADisplay {
     [UdonBehaviourSyncMode(BehaviourSyncMode.None)]
     public class FMAController : UdonSharpBehaviour {
         private AircraftSystemData _aircraftSystemData;
@@ -95,19 +95,19 @@ namespace A320VAU.PFD {
             }
 
             switch (_autoBrake.currentAutoBrakeMode) {
-                case A320VAU.AutoBrakeMode.Low:
+                case LegacyAutoBrake.AutoBrakeMode.Low:
                     IsAutoBrakeArm = true;
                     AutoBrakeMode = AutoBrakeMode.LOW;
                     break;
-                case A320VAU.AutoBrakeMode.Med:
+                case LegacyAutoBrake.AutoBrakeMode.Med:
                     IsAutoBrakeArm = true;
                     AutoBrakeMode = AutoBrakeMode.MED;
                     break;
-                case A320VAU.AutoBrakeMode.Max:
+                case LegacyAutoBrake.AutoBrakeMode.Max:
                     IsAutoBrakeArm = true;
                     AutoBrakeMode = AutoBrakeMode.MAX;
                     break;
-                case A320VAU.AutoBrakeMode.None:
+                case LegacyAutoBrake.AutoBrakeMode.None:
                     IsAutoBrakeArm = false;
                     AutoBrakeMode = AutoBrakeMode.None;
                     break;

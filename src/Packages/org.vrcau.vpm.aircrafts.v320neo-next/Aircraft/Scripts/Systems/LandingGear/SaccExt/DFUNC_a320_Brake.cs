@@ -1,13 +1,12 @@
 ﻿using System;
-using Avionics.Systems.Common;
 using SaccFlightAndVehicles;
 using UdonSharp;
 using UnityEngine;
+using VAU.V320NeoNext.Runtime.Systems.LegacyFlightDataProvider;
 using VRC.SDKBase;
 using VRC.Udon.Common.Interfaces;
-using YuxiFlightInstruments.BasicFlightData;
 
-namespace A320VAU.Brake {
+namespace VAU.V320NeoNext.Runtime.Systems.LandingGear.SaccExt {
     [UdonBehaviourSyncMode(BehaviourSyncMode.Manual)]
     [DefaultExecutionOrder(2010)]//after AircraftSystemData
     public class DFUNC_a320_Brake : UdonSharpBehaviour {

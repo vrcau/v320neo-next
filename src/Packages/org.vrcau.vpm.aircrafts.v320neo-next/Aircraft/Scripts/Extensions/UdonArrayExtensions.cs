@@ -26,7 +26,7 @@ using System;
 using UnityEngine;
 
 // https://github.com/Varneon/VUdon-ArrayExtensions/blob/c619f783d97ca4c97e8f83289d2cbfa78a2a5853/Packages/com.varneon.vudon.array-extensions/Runtime/UdonArrayExtensions.cs
-namespace Varneon.VUdon.ArrayExtensions
+namespace VAU.V320NeoNext.Runtime.Extensions
 {
     /// <summary>
     /// Array extension methods for adding partial feature set from List&lt;T&gt; and System.Linq, including replacements to methods not supported by Udon/UdonSharp and additional custom methods to UdonSharp

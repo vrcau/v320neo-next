@@ -4,7 +4,7 @@ using UnityEngine;
 using VRC.SDKBase;
 using VRC.Udon.Common.Interfaces;
 
-namespace A320VAU.DFUNC {
+namespace VAU.V320NeoNext.Runtime.Systems.LandingLight.SaccExt {
     [UdonBehaviourSyncMode(BehaviourSyncMode.NoVariableSync)]
     public class DFUNC_a320_LandingLight : UdonSharpBehaviour {
         public GameObject lightObj;

@@ -1,9 +1,7 @@
-﻿using System;
-using A320VAU.Common;
-using UdonSharp;
-using UnityEngine.Serialization;
+﻿using UdonSharp;
+using VAU.V320NeoNext.Runtime.Systems.LegacyFlightDataProvider;
 
-namespace A320VAU.FMGC {
+namespace VAU.V320NeoNext.Runtime.Systems.LegacFmgc {
     [UdonBehaviourSyncMode(BehaviourSyncMode.Manual)]
     public class FMGCPerformance : UdonSharpBehaviour {
         public FMGC fmgc;
