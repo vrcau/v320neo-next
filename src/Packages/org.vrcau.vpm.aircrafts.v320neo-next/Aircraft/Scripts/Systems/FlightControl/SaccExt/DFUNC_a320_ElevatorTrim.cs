@@ -301,7 +301,6 @@ namespace VAU.V320NeoNext.Runtime.Systems.FlightControl.SaccExt
                               vehicleTransform.up *
                               (downspeed * SAVControl.VelStraightenStrPitch * aoALiftPitch * rotlift)) *
                              (SAVControl.Atmosphere * SAVControl.VehicleRigidbody.mass);
-            Debug.Log("pitchForce: " + pitchForce);
             vehicleRigidbody.AddForceAtPosition(
                 pitchForce,
                 SAVControl.PitchMoment.position, ForceMode.Force);
