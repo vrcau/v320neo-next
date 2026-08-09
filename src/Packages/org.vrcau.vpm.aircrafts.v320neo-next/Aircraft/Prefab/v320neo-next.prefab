@@ -218,7 +218,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 672849809462424646}
-  - component: {fileID: 1772747560457407741}
   m_Layer: 0
   m_Name: Model
   m_TagString: Untagged
@@ -240,30 +239,8 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 2085189474177163678}
-  - {fileID: 4225160353763884161}
   m_Father: {fileID: 3137950450949946295}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!95 &1772747560457407741
-Animator:
-  serializedVersion: 5
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 33126325447203993}
-  m_Enabled: 1
-  m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: 21cee08710a2ad14296c2a6fd04b07ec, type: 2}
-  m_CullingMode: 0
-  m_UpdateMode: 0
-  m_ApplyRootMotion: 0
-  m_LinearVelocityBlending: 0
-  m_StabilizeFeet: 0
-  m_WarningMessage: 
-  m_HasTransformHierarchy: 1
-  m_AllowConstantClipSamplingOptimization: 1
-  m_KeepAnimatorStateOnDisable: 0
-  m_WriteDefaultValuesOnDisable: 0
 --- !u!1 &39738393242111487
 GameObject:
   m_ObjectHideFlags: 0
@@ -17739,7 +17716,7 @@ MonoBehaviour:
   aircraftSystemData: {fileID: 5753112468076433217}
   autoBrakeInput: 0
   Airbrake_snd: {fileID: 6575032339217947500}
-  BrakeAnimator: {fileID: 1772747560457407741}
+  BrakeAnimator: {fileID: 1561089686252911106}
   KeyboardControl: 98
   ParkBreakControl: 110
   ParkBreakSet: 0
@@ -57525,7 +57502,7 @@ MonoBehaviour:
   _udonSharpBackingUdonBehaviour: {fileID: 6786660129426247768}
   saccAirVehicle: {fileID: 7941525626698614549}
   saccEffectController: {fileID: 7144799519643246917}
-  overrideAnimator: {fileID: 1772747560457407741}
+  overrideAnimator: {fileID: 1561089686252911106}
 --- !u!114 &6786660129426247768
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -90920,6 +90897,38 @@ Transform:
   m_Children: []
   m_Father: {fileID: 7300566875020326924}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &6955027760702213426
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 5324726449436982092}
+  m_Layer: 0
+  m_Name: PlaneBody
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &5324726449436982092
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6955027760702213426}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 4225160353763884161}
+  m_Father: {fileID: 2085189474177163678}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &6976977028282156864
 GameObject:
   m_ObjectHideFlags: 0
@@ -122515,14 +122524,46 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
-    m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedGameObjects:
+    - targetCorrespondingSourceObject: {fileID: -8679921383154817045, guid: e92b92caf7c46eb46bda373d7c0b68d6, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 5324726449436982092}
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: e92b92caf7c46eb46bda373d7c0b68d6, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1561089686252911106}
   m_SourcePrefab: {fileID: 100100000, guid: e92b92caf7c46eb46bda373d7c0b68d6, type: 3}
 --- !u!4 &918792062866081553 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -7513524556231933596, guid: e92b92caf7c46eb46bda373d7c0b68d6, type: 3}
   m_PrefabInstance: {fileID: 1980086000944924277}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &1710176451435100964 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: e92b92caf7c46eb46bda373d7c0b68d6, type: 3}
+  m_PrefabInstance: {fileID: 1980086000944924277}
+  m_PrefabAsset: {fileID: 0}
+--- !u!95 &1561089686252911106
+Animator:
+  serializedVersion: 5
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1710176451435100964}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 21cee08710a2ad14296c2a6fd04b07ec, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
 --- !u!4 &2085189474177163678 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: e92b92caf7c46eb46bda373d7c0b68d6, type: 3}
@@ -122922,11 +122963,11 @@ PrefabInstance:
   serializedVersion: 2
   m_Modification:
     serializedVersion: 3
-    m_TransformParent: {fileID: 672849809462424646}
+    m_TransformParent: {fileID: 5324726449436982092}
     m_Modifications:
     - target: {fileID: -8679921383154817045, guid: 382670f1120f2a24d8bfa88847a96032, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -0
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 382670f1120f2a24d8bfa88847a96032, type: 3}
       propertyPath: m_LocalPosition.y
@@ -122946,11 +122987,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 382670f1120f2a24d8bfa88847a96032, type: 3}
       propertyPath: m_LocalRotation.y
-      value: 0
+      value: -0
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 382670f1120f2a24d8bfa88847a96032, type: 3}
       propertyPath: m_LocalRotation.z
-      value: 0
+      value: -0
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 382670f1120f2a24d8bfa88847a96032, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
@@ -122966,7 +123007,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: 382670f1120f2a24d8bfa88847a96032, type: 3}
       propertyPath: m_Name
-      value: Cockpit
+      value: interior_empty
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
