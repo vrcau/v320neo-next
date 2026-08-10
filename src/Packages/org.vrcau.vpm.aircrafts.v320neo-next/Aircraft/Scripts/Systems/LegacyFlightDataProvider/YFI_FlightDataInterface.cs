@@ -155,7 +155,7 @@ namespace VAU.V320NeoNext.Runtime.Systems.LegacyFlightDataProvider
             return;
         }
 
-        private void Update()
+        private void FixedUpdate()
         {
             if (!PlayerInVehicle)
             {

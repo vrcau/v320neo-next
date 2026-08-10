@@ -25,9 +25,6 @@ namespace VAU.V320NeoNext.Runtime.Systems.LegacyInstrument.EFIS.PFD.BasicDisplay
 
         private VRCPlayerApi _localPlayer;
 
-        private readonly float UPDATE_INTERVAL = UpdateIntervalUtil.GetUpdateIntervalFromFPS(20);
-        private float _lastUpdate;
-
         [Header("EFIS Indicator")]
         public GameObject flightDirectionIndicator;
 
@@ -185,9 +182,7 @@ namespace VAU.V320NeoNext.Runtime.Systems.LegacyInstrument.EFIS.PFD.BasicDisplay
 
     #region Update
 
-        private void LateUpdate() {
-            if (!UpdateIntervalUtil.CanUpdate(ref _lastUpdate, UPDATE_INTERVAL)) return;
-            
+        private void FixedUpdate() {
             //这里可以用来做仪表更新延迟之类的逻辑
             PitchAngle = _adiru.irs.pitch;
             BankAngle = _adiru.irs.bank;
@@ -264,8 +259,8 @@ namespace VAU.V320NeoNext.Runtime.Systems.LegacyInstrument.EFIS.PFD.BasicDisplay
 
             #region Speed Trend
             
-            var deltaT = Time.deltaTime;
-            deltaAirSpeed = deltaAirSpeed * 10f / deltaT;
+            var deltaT = Time.fixedDeltaTime;
+            deltaAirSpeed = deltaAirSpeed / deltaT * 10f ;
             IndicatorAnimator.SetFloat(SPEED_TREND, Remap01(Mathf.Abs(deltaAirSpeed)>5? deltaAirSpeed:0, -MAXSPDTRND, MAXSPDTRND));
             #endregion
 
@@ -454,7 +449,7 @@ namespace VAU.V320NeoNext.Runtime.Systems.LegacyInstrument.EFIS.PFD.BasicDisplay
                 }
                 else {
                     // prevent instant movement in desktop mode
-                    ownerRotationInputs = Vector3.MoveTowards(ownerRotationInputs, rotationInputs, 7 * Time.deltaTime);
+                    ownerRotationInputs = Vector3.MoveTowards(ownerRotationInputs, rotationInputs, 7 * Time.fixedDeltaTime);
                 }
 
                 IndicatorAnimator.SetFloat(INPUT_Y_HASH, ownerRotationInputs.x * 0.5f + 0.5f);
