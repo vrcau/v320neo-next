@@ -231,6 +231,7 @@ namespace VAU.V320NeoNext.Runtime.Systems.LegacyInstrument.EFIS.PFD.BasicDisplay
 
         public int GreenDotSpeed = 195;
 
+        private float _lastDeltaAirSpeed = 0f;
         private void UpdateAirspeed() {
             foreach (var item in disableOnGround) item.SetActive(!_aircraftSystemData.isAircraftGrounded);
             foreach (var item in enableOnGround) item.SetActive(_aircraftSystemData.isAircraftGrounded);
@@ -260,8 +261,9 @@ namespace VAU.V320NeoNext.Runtime.Systems.LegacyInstrument.EFIS.PFD.BasicDisplay
             #region Speed Trend
             
             var deltaT = Time.fixedDeltaTime;
-            deltaAirSpeed = deltaAirSpeed / deltaT * 10f ;
-            IndicatorAnimator.SetFloat(SPEED_TREND, Remap01(Mathf.Abs(deltaAirSpeed)>5? deltaAirSpeed:0, -MAXSPDTRND, MAXSPDTRND));
+            deltaAirSpeed = Mathf.Lerp(_lastDeltaAirSpeed, deltaAirSpeed / deltaT * 10f, 0.8f);
+            _lastDeltaAirSpeed = deltaAirSpeed;
+            IndicatorAnimator.SetFloat(SPEED_TREND, Remap01(Mathf.Abs(deltaAirSpeed)>2? deltaAirSpeed:0, -MAXSPDTRND, MAXSPDTRND));
             #endregion
 
             #region VMAX
