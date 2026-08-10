@@ -5946,7 +5946,7 @@ MonoBehaviour:
   SAVControl: {fileID: 7941525626698614549}
   Dial_Funcon: {fileID: 3708111455303995106}
   Dial_Funcon_Array: []
-  GearAnimator: {fileID: 0}
+  GearAnimator: {fileID: 1561089686252911106}
   LandingGearDragMulti: 1.02
   AllowToggleGrounded: 0
   GearCheckDistance: 2
@@ -6324,7 +6324,7 @@ MonoBehaviour:
   SoundControl: {fileID: 1273408180332607746}
   Dial_Funcon: {fileID: 4568115909696560272}
   Dial_Funcon_Array: []
-  CanopyAnimator: {fileID: 0}
+  CanopyAnimator: {fileID: 1561089686252911106}
   CanopyOpenTime: 0
   CanopyCloseTime: 1
   EffectedSeats: []
