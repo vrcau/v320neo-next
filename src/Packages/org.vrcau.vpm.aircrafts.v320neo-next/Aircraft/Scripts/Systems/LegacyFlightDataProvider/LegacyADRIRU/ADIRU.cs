@@ -27,7 +27,7 @@ namespace VAU.V320NeoNext.Runtime.Systems.LegacyFlightDataProvider.LegacyADRIRU 
         }
 
         private void LateUpdate() {
-            var wind = _saccAirVehicle.Wind;
+            var wind = _saccAirVehicle.FinalWind;
 
             windSpeed = wind.magnitude;
 
