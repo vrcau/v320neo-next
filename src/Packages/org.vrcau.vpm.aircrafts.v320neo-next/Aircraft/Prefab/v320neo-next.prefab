@@ -23945,7 +23945,7 @@ MonoBehaviour:
     PrefabModifications: []
     SerializationNodes: []
   _udonSharpBackingUdonBehaviour: {fileID: 6860587737730265336}
-  keyboardControl: 114
+  keyboardControl: 120
   Dial_Funcon: {fileID: 4262441025166433727}
 --- !u!114 &6860587737730265336
 MonoBehaviour:
@@ -40058,7 +40058,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -103, y: 92.4}
+  m_AnchoredPosition: {x: -103, y: 81}
   m_SizeDelta: {x: 135.6, y: 80}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &1835716925664108871
@@ -40089,9 +40089,9 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 'FBW[WIP]
+  m_text: 'TRIM[PdUp/Dn]
 
-    [F6]
+    AUTO SW [F6]
 
     0.0'
   m_isRightToLeft: 0
@@ -58770,8 +58770,8 @@ MonoBehaviour:
   lowSpeedMode: 0
   FBWRotationInputs: {x: 0, y: 0, z: 0}
   controllerSensitivity: 0.5
-  desktopUp: 116
-  desktopDown: 121
+  desktopUp: 280
+  desktopDown: 281
   desktopStep: 0.02
   desktopEnableAuto: 287
   Dial_Funcon: {fileID: 9167781398953451252}
@@ -105198,7 +105198,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &1235261070858357350
 Transform:
   m_ObjectHideFlags: 0
@@ -110237,7 +110237,7 @@ MonoBehaviour:
       m_Calls: []
   m_text: 'REV
 
-    [R]'
+    [X]'
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -110462,7 +110462,7 @@ MonoBehaviour:
 
     LIGHT
 
-    [F5]'
+    [F6]'
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -121957,7 +121957,7 @@ MonoBehaviour:
   Rfunc2: {fileID: 0}
   Rfunc2key: 0
   Rfunc3: {fileID: 1968102284611630082}
-  Rfunc3key: 286
+  Rfunc3key: 287
   Rfunc4: {fileID: 0}
   Rfunc4key: 0
   Rfunc5: {fileID: 8397340840038700154}

@@ -84,6 +84,7 @@ namespace VAU.V320NeoNext.Runtime.Systems.FlightControl.SaccExt
             TrimErrorDerivative = 0;
             TrimErrorLastFrame = 0;
             targetAoa = 0;
+            DoTrimAnimatorAndUiUpdate();
         }
 
         private void PilotUpdate()
@@ -264,11 +265,16 @@ namespace VAU.V320NeoNext.Runtime.Systems.FlightControl.SaccExt
             prevTrim = trim;
             if (trimChanged)
             {
-                SetDirty();
-                if (vehicleAnimator) vehicleAnimator.SetFloat(animatorParameterName, Remap01(trim, -1, 1));
-                //SAVControl.SetProgramVariable("VelLiftStart", trim * trimStrength + trimBias);
-                DebugOut.text = "FBW[WIP]\n[F6]\n" + (trim).ToString("f2") + (TrimActive ? "\nAuto" : "\n");
+                DoTrimAnimatorAndUiUpdate();
             }
+        }
+
+        private void DoTrimAnimatorAndUiUpdate()
+        {
+            SetDirty();
+            if (vehicleAnimator) vehicleAnimator.SetFloat(animatorParameterName, Remap01(trim, -1, 1));
+            //SAVControl.SetProgramVariable("VelLiftStart", trim * trimStrength + trimBias);
+            DebugOut.text = "TRIM[PdUp/Dn]\nAUTO SW [F6]\n" + (trim).ToString("f2") + (TrimActive ? "\nAuto" : "\n");
         }
 
         private void FixedUpdate()
@@ -369,7 +375,7 @@ namespace VAU.V320NeoNext.Runtime.Systems.FlightControl.SaccExt
         #region DFUNC
 
         public float controllerSensitivity = 0.5f;
-        public KeyCode desktopUp = KeyCode.T, desktopDown = KeyCode.Y;
+        public KeyCode desktopUp = KeyCode.PageUp, desktopDown = KeyCode.PageDown;
 
         public float desktopStep = 0.02f;
 
