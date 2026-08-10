@@ -32,7 +32,7 @@ namespace VAU.V320NeoNext.Runtime.Systems.LegacyFlightDataProvider.LegacyADRIRU 
             windSpeed = wind.magnitude;
 
             var xzWindDirection = Vector3.ProjectOnPlane(wind, Vector3.up).normalized;
-            windDirection = (Vector3.SignedAngle(Vector3.forward, xzWindDirection, Vector3.up) + 540) % 360;
+            windDirection = (Vector3.SignedAngle(Vector3.back, xzWindDirection, Vector3.up) + 540) % 360;
         }
     }
 
