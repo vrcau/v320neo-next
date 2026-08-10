@@ -274,7 +274,7 @@ namespace VAU.V320NeoNext.Runtime.Systems.FlightControl.SaccExt
             SetDirty();
             if (vehicleAnimator) vehicleAnimator.SetFloat(animatorParameterName, Remap01(trim, -1, 1));
             //SAVControl.SetProgramVariable("VelLiftStart", trim * trimStrength + trimBias);
-            DebugOut.text = "TRIM[PdUp/Dn]\nAUTO SW [F6]\n" + (trim).ToString("f2") + (TrimActive ? "\nAuto" : "\n");
+            DebugOut.text = $"TRIM[PdUp/Dn]\nAUTO SW [{desktopEnableAuto}]\n" + (trim).ToString("f2") + (TrimActive ? "\nAuto" : "\n");
         }
 
         private void FixedUpdate()
@@ -379,7 +379,7 @@ namespace VAU.V320NeoNext.Runtime.Systems.FlightControl.SaccExt
 
         public float desktopStep = 0.02f;
 
-        public KeyCode desktopEnableAuto = KeyCode.F6;
+        public KeyCode desktopEnableAuto = KeyCode.F7;
         public GameObject Dial_Funcon;
         public TextMeshProUGUI DebugOut;
         private string triggerAxis;

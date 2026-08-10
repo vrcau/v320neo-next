@@ -58773,7 +58773,7 @@ MonoBehaviour:
   desktopUp: 280
   desktopDown: 281
   desktopStep: 0.02
-  desktopEnableAuto: 287
+  desktopEnableAuto: 288
   Dial_Funcon: {fileID: 9167781398953451252}
   DebugOut: {fileID: 2505657804574682610}
   entityControl: {fileID: 3979190132806479119}
