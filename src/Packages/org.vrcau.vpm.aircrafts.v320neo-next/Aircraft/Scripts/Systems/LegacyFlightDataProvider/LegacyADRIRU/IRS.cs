@@ -45,7 +45,8 @@ namespace VAU.V320NeoNext.Runtime.Systems.LegacyFlightDataProvider.LegacyADRIRU 
 
             groundSpeed = _flightDataInterface.groundSpeed;
 
-            position = _saccAirVehicle.CenterOfMass.position;
+            var centerPosition = _saccAirVehicle.CenterOfMass.position;
+            position = new Vector2(centerPosition.x, centerPosition.z);
 
             velocity = (Vector3)_flightDataInterface.GetProgramVariable("currentVelocity");
         }

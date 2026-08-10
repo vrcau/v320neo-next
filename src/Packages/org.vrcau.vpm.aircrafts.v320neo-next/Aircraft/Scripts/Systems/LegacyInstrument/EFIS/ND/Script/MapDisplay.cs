@@ -31,8 +31,11 @@ namespace VAU.V320NeoNext.Runtime.Systems.LegacyInstrument.EFIS.ND.Script {
         [PublicAPI] public EFISVisibilityType VisibilityType { get; private set; }
         [PublicAPI] public int Range { get; private set; }
 
+        private RectTransform _rectTransform;
+
         private void Start() {
             _injector = DependenciesInjector.GetInstance(this);
+            _rectTransform = GetComponent<RectTransform>();
 
             _navaidDatabase = _injector.navaidDatabase;
             _adiru = _injector.adiru;
@@ -50,17 +53,16 @@ namespace VAU.V320NeoNext.Runtime.Systems.LegacyInstrument.EFIS.ND.Script {
         private void Update() {
             if (!UpdateIntervalUtil.CanUpdate(ref _lastUpdate, UPDATE_INTERVAL)) return;
 
-            var entityTransform = _adiru.irs.position;
-            var mapRotation = Quaternion.Euler(0, 0, _adiru.irs.heading);
-            var inverseRotation = Quaternion.Inverse(mapRotation);
+            var aircraftPosition = _adiru.irs.position;
+            var heading = _adiru.irs.heading;
+
+            var mapRotation = Quaternion.Euler(0, 0, heading);
             transform.localRotation = mapRotation;
+            
+            var uiOffset = -aircraftPosition * scale;
+            transform.localPosition = mapRotation * uiOffset;
 
-            var rotation =
-                Quaternion.AngleAxis(
-                    Vector3.SignedAngle(Vector3.forward, Vector3.ProjectOnPlane(entityTransform, Vector3.up),
-                        Vector3.up) + magneticDeclination, Vector3.forward);
-            transform.localPosition = rotation * (-entityTransform * scale);
-
+            var inverseRotation = Quaternion.Inverse(mapRotation);
             UpdateMarkerRotations(_markers, inverseRotation);
         }
 

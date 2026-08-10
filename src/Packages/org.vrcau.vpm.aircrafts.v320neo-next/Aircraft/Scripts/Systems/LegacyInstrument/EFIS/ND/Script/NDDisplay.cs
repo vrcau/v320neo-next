@@ -34,6 +34,8 @@ namespace VAU.V320NeoNext.Runtime.Systems.LegacyInstrument.EFIS.ND.Script {
         private ADIRU _adiru;
         private SystemEventBus _eventBus;
 
+        public Transform receiverTransform;
+
         public NDMode NDMode {
             get => _ndMode;
             set {
@@ -56,6 +58,8 @@ namespace VAU.V320NeoNext.Runtime.Systems.LegacyInstrument.EFIS.ND.Script {
             _eventBus = _injector.systemEventBus;
 
             _eventBus.RegisterSaccEvent(this);
+
+            if (!receiverTransform) receiverTransform = transform;
 
             NDModeChanged();
             _mapDisplays = GetComponentsInChildren<MapDisplay>(true);
@@ -184,14 +188,14 @@ namespace VAU.V320NeoNext.Runtime.Systems.LegacyInstrument.EFIS.ND.Script {
                 if (_vor1.Index >= 0) {
                     VOR1Name.text = _vor1.Identity;
                     VOR1Dist.text = _vor1.HasDME
-                        ? (Vector3.Distance(transform.position, GetNavaidPosition(_vor1)) / 1852.0f).ToString("f2")
+                        ? (Vector3.Distance(receiverTransform.position, GetNavaidPosition(_vor1)) / 1852.0f).ToString("f2")
                         : "--.-";
                 }
 
                 if (_vor2.Index >= 0) {
                     VOR2Name.text = _vor2.Identity;
                     VOR2Dist.text = _vor2.HasDME
-                        ? (Vector3.Distance(transform.position, GetNavaidPosition(_vor2)) / 1852.0f).ToString("f2")
+                        ? (Vector3.Distance(receiverTransform.position, GetNavaidPosition(_vor2)) / 1852.0f).ToString("f2")
                         : "--.-";
                 }
             }
