@@ -16,7 +16,7 @@ namespace VAU.V320NeoNext.Runtime.Systems.LegacyInstrument.EFIS.ND.Script {
         private float _lastUpdate;
 
         [Tooltip("unit: nm")]
-        public int defaultRange = 40;
+        public int defaultRange = 20;
 
         public EFISVisibilityType defaultVisibilityType = EFISVisibilityType.NONE;
 
@@ -51,16 +51,15 @@ namespace VAU.V320NeoNext.Runtime.Systems.LegacyInstrument.EFIS.ND.Script {
             if (!UpdateIntervalUtil.CanUpdate(ref _lastUpdate, UPDATE_INTERVAL)) return;
 
             var entityTransform = _adiru.irs.position;
+            var mapRotation = Quaternion.Euler(0, 0, _adiru.irs.heading);
+            var inverseRotation = Quaternion.Inverse(mapRotation);
+            transform.localRotation = mapRotation;
+
             var rotation =
                 Quaternion.AngleAxis(
                     Vector3.SignedAngle(Vector3.forward, Vector3.ProjectOnPlane(entityTransform, Vector3.up),
                         Vector3.up) + magneticDeclination, Vector3.forward);
-            transform.localRotation = rotation;
-
-            var inverseRotation = Quaternion.Inverse(rotation);
-
-            var position = -entityTransform * scale;
-            transform.localPosition = rotation * (Vector3.right * position.x + Vector3.up * position.y);
+            transform.localPosition = rotation * (-entityTransform * scale);
 
             UpdateMarkerRotations(_markers, inverseRotation);
         }
