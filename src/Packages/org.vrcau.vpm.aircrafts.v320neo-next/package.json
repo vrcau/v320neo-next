@@ -12,6 +12,8 @@
   ],
   "license": "MIT",
   "vpmDependencies": {
+    "jp.virtualaviation.urc-redux": "^0.1.1",
+    "jp.virtualaviation.urc-redux-sf": "^0.1.1"
   },
   "author": {
     "name": "VRChat Aerospace University",
