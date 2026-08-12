@@ -5415,7 +5415,7 @@ MonoBehaviour:
   m_FallbackScreenDPI: 96
   m_DefaultSpriteDPI: 96
   m_DynamicPixelsPerUnit: 1
-  m_PresetInfoIsWorld: 1
+  m_PresetInfoIsWorld: 0
 --- !u!222 &9152668935542095864
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -6726,12 +6726,12 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 770704927154073681}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 2550070534856135868}
+  m_Father: {fileID: 1012262601000222114}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &8039740003811797684
 MonoBehaviour:
@@ -6756,7 +6756,7 @@ MonoBehaviour:
   _udonSharpBackingUdonBehaviour: {fileID: 1764296377747481294}
   SAVControl: {fileID: 7941525626698614549}
   SoundControl: {fileID: 1273408180332607746}
-  Dial_Funcon: {fileID: 4568115909696560272}
+  Dial_Funcon: {fileID: 9167781398953451252}
   Dial_Funcon_Array: []
   CanopyAnimator: {fileID: 1561089686252911106}
   CanopyOpenTime: 0
@@ -16882,6 +16882,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 6848073290671622943}
+  - {fileID: 7134764186927296548}
   - {fileID: 76105789588599360}
   - {fileID: 5741708677639719251}
   - {fileID: 1290473869558084659}
@@ -51770,7 +51771,7 @@ GameObject:
   - component: {fileID: 4684476512045022397}
   - component: {fileID: 3447324697678596455}
   m_Layer: 18
-  m_Name: Indicator_CabineDoor
+  m_Name: Indicator_Trim
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -52276,7 +52277,7 @@ MonoBehaviour:
   - {fileID: 8397340840038700154}
   - {fileID: 1420792167383067488}
   - {fileID: 1968102284611630082}
-  - {fileID: 1420792167383067488}
+  - {fileID: 7141318309438013151}
   LStickDisplayHighlighter: {fileID: 326556999360826579}
   RStickDisplayHighlighter: {fileID: 7290105692274090006}
   DialSensitivity: 0.7
@@ -61494,8 +61495,8 @@ MonoBehaviour:
   desktopDown: 281
   desktopStep: 0.02
   desktopEnableAuto: 288
-  Dial_Funcon: {fileID: 9167781398953451252}
-  DebugOut: {fileID: 0}
+  Dial_Funcon: {fileID: 4568115909696560272}
+  DebugOut: {fileID: 9092772698572328483}
   entityControl: {fileID: 3979190132806479119}
   SAVControl: {fileID: 7941525626698614549}
 --- !u!114 &7826605931651636844
@@ -108081,7 +108082,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &1405189985665686332
 Transform:
   m_ObjectHideFlags: 0
@@ -110128,7 +110129,6 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 7134764186927296548}
   - {fileID: 4175417557482383279}
   - {fileID: 366552418699271536}
   - {fileID: 1003653556006966396}
@@ -127497,7 +127497,7 @@ GameObject:
   - component: {fileID: 2743147127000141199}
   - component: {fileID: 8767644495972362860}
   m_Layer: 18
-  m_Name: Indicator_Trim
+  m_Name: Indicator_CabinDoor
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
