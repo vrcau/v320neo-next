@@ -100183,7 +100183,7 @@ MonoBehaviour:
   _udonSharpBackingUdonBehaviour: {fileID: 5265966397504714266}
   targetGameObject: {fileID: 0}
   enableInVR: 1
-  enableInDesktop: 1
+  enableInDesktop: 0
 --- !u!114 &5265966397504714266
 MonoBehaviour:
   m_ObjectHideFlags: 0
