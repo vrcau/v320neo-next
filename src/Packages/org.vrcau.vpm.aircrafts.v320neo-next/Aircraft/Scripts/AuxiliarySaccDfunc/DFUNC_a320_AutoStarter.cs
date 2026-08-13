@@ -22,7 +22,6 @@ namespace VAU.V320NeoNext.Runtime.AuxiliarySaccDfunc {
         public const byte STATE_ON = 255;
 
         public KeyCode startKey = KeyCode.LeftShift;
-        public KeyCode stopKey = KeyCode.RightControl;
         public GameObject Dial_Funcon;
         public bool desktopOnly;
 
@@ -57,12 +56,10 @@ namespace VAU.V320NeoNext.Runtime.AuxiliarySaccDfunc {
             if (isPilot) {
                 if (Input.GetKeyDown(startKey)) {
                     if (!start) {
-                        SetStart(true);
                         holdThrottle = true;
                     }
-                }
-                else if (Input.GetKeyDown(stopKey)) {
-                    SetStart(false);
+
+                    SetStart(!start);
                 }
 
                 if (holdThrottle && Input.GetKeyUp(startKey)) {
