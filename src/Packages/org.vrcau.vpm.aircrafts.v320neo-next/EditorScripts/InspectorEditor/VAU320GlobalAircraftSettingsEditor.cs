@@ -16,11 +16,25 @@ namespace VAU.V320NeoNext.Editor.InspectorEditor
 
             base.OnInspectorGUI();
 
-            if (GUILayout.Button("Setup"))
+            if (GUILayout.Button("Auto Setup Fields and Layers"))
             {
                 settings.Setup();
                 SetupLayer();
             }
+        }
+
+        [MenuItem("SaccFlight/VAU320/Auto Setup VAU320 Settings Fields and Layers")]
+        private static void SetupFieldsAndLayers()
+        {
+            var settings = FindObjectOfType<VAU320GlobalAircraftSettings>();
+            if (!settings)
+            {
+                Debug.LogError("VAU320GlobalAircraftSettings not found in the scene.");
+                return;
+            }
+
+            settings.Setup();
+            SetupLayer();
         }
 
         // https://github.com/esnya/EsnyaSFAddons/blob/d2984ab062190521d701c9b4651c84abc6e424b9/Packages/com.nekometer.esnya.esnya-sf-addons/Editor/ESFAMenu.cs
