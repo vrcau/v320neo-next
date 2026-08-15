@@ -40499,6 +40499,9 @@ MonoBehaviour:
   globalAircraftSettings: {fileID: 0}
   dependenciesInjector: {fileID: 2161749549400937695}
   udonRadioCommunicationTransceiver: {fileID: 3524264692805584608}
+  vor1Selector: {fileID: 2670819258927409631}
+  vor2Selector: {fileID: 5280045854631791212}
+  ilsSelector: {fileID: 7012039478967793121}
 --- !u!114 &2161749549400937695
 MonoBehaviour:
   m_ObjectHideFlags: 0

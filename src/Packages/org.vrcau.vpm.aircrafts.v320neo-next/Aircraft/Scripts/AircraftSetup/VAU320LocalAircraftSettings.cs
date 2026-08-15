@@ -12,8 +12,7 @@ namespace VAU.V320NeoNext.Runtime.AircraftSetup
     {
         #region Override Settings Fields
 
-        [Header("Override Global Settings")] 
-        public NavaidDatabase navaidDatabaseOverride;
+        [Header("Override Global Settings")] public NavaidDatabase navaidDatabaseOverride;
         public VoiceBroadcastByChannel voiceProtocolForVhfOverride;
 
         [Header(
@@ -27,7 +26,12 @@ namespace VAU.V320NeoNext.Runtime.AircraftSetup
 
         [Header("For Aircraft Developer Only")]
         public DependenciesInjector dependenciesInjector;
+
         public Transceiver udonRadioCommunicationTransceiver;
+
+        public NavSelector vor1Selector;
+        public NavSelector vor2Selector;
+        public NavSelector ilsSelector;
 
         #endregion
 
@@ -36,6 +40,9 @@ namespace VAU.V320NeoNext.Runtime.AircraftSetup
         private bool _isRuntimeInit;
         [PublicAPI] public NavaidDatabase RuntimeNavaidDatabase { get; private set; }
         [PublicAPI] public VoiceBroadcastByChannel RuntimeVoiceProtocolForVhf { get; private set; }
+        [PublicAPI] public int Vor1DefaultNavaidIndex { get; private set; }
+        [PublicAPI] public int Vor2DefaultNavaidIndex { get; private set; }
+        [PublicAPI] public int IlsDefaultNavaidIndex { get; private set; }
 
         #endregion
 
@@ -67,8 +74,16 @@ namespace VAU.V320NeoNext.Runtime.AircraftSetup
             RuntimeVoiceProtocolForVhf =
                 voiceProtocolForVhfOverride ? voiceProtocolForVhfOverride : globalAircraftSettings.voiceProtocolForVhf;
 
+            Vor1DefaultNavaidIndex = globalAircraftSettings.vor1DefaultNavaidIndex;
+            Vor2DefaultNavaidIndex = globalAircraftSettings.vor2DefaultNavaidIndex;
+            IlsDefaultNavaidIndex = globalAircraftSettings.ilsDefaultNavaidIndex;
+
             dependenciesInjector.navaidDatabase = RuntimeNavaidDatabase;
             udonRadioCommunicationTransceiver.channelManager = RuntimeVoiceProtocolForVhf;
+
+            vor1Selector.defaultIndex = Vor1DefaultNavaidIndex;
+            vor2Selector.defaultIndex = Vor2DefaultNavaidIndex;
+            ilsSelector.defaultIndex = IlsDefaultNavaidIndex;
 
             _isRuntimeInit = true;
         }
