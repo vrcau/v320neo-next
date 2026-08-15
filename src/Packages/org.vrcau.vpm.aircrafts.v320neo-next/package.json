@@ -13,7 +13,8 @@
   "license": "MIT",
   "vpmDependencies": {
     "jp.virtualaviation.urc-redux": "^0.1.1",
-    "jp.virtualaviation.urc-redux-sf": "^0.1.1"
+    "jp.virtualaviation.urc-redux-sf": "^0.1.1",
+    "org.vrcau.vpm.aircrafts.v320neo-next.assets": "^0.1.0"
   },
   "author": {
     "name": "VRChat Aerospace University",
