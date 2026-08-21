@@ -8,7 +8,7 @@ namespace VAU.V320NeoNext.Runtime.FlightMenu.MenuData.Item
     public abstract class FlightMenuItemBase : UdonSharpBehaviour
     {
         public string title;
-        public Texture icon;
+        public Sprite icon;
         public bool isActivated;
 
         public virtual FlightMenuTriggerResult Trigger()
