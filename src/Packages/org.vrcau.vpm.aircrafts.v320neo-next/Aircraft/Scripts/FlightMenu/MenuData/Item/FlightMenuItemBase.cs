@@ -27,6 +27,7 @@ namespace VAU.V320NeoNext.Runtime.FlightMenu.MenuData.Item
     {
         Noop = 0,
         OpenNewMenu = 1,
-        OpenPopupMenu = 2
+        OpenPopupMenu = 2,
+        InternalBackMenu = 3
     }
 }

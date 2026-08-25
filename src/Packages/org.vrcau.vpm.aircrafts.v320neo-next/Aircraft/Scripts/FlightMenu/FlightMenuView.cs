@@ -1,17 +1,21 @@
+using System;
 using TMPro;
 using UdonSharp;
 using UnityEngine;
 using UnityEngine.UI;
 using VAU.V320NeoNext.Runtime.FlightMenu.MenuData;
+using VAU.V320NeoNext.Runtime.FlightMenu.MenuData.Item;
 
 namespace VAU.V320NeoNext.Runtime.FlightMenu
 {
     [UdonBehaviourSyncMode(BehaviourSyncMode.None)]
     public sealed class FlightMenuView : UdonSharpBehaviour
     {
-        public FlightMenuGroup menuGroup;
+        public FlightMenuGroup rootMenuGroup;
 
-        [Header("Core")] public FlightMenuController menuController;
+        [Header("Core")] 
+        public FlightMenuController menuController;
+        public FlightMenuBackItem backButtonItem;
 
         [Header("Child Root")] 
         public Transform backgroundRoot;
@@ -24,27 +28,78 @@ namespace VAU.V320NeoNext.Runtime.FlightMenu
         public GameObject hoverClipTemplate;
         public GameObject activatedClipTemplate;
         public GameObject titleTemplate;
-
-        [Header("Debug Only")] 
-        public int itemNumber = 8;
         public float marginAngle = 2f;
 
+        private int _itemNumber = 8;
+
+        [Header("Debug Only")] 
+        public FlightMenuGroup[] menuGroupHistory = new FlightMenuGroup[0];
+        public FlightMenuGroup menuGroupActivated;
+
         private GameObject[] _itemGenerated = new GameObject[0];
+        private FlightMenuItemBase[] _flightMenuActivated = new FlightMenuItemBase[0];
 
         private void Start()
         {
-            itemNumber = menuGroup.menuItems.Length;
-            GenerateMenuView(itemNumber);
-            menuController.RequestMenuUpdate(itemNumber);
+            ClearHistory();
+            NavigateToMenu(rootMenuGroup);
         }
 
-        public void GenerateMenuView(int menuLength)
+        private void NavigateToMenu(FlightMenuGroup newMenuGroup)
+        {
+            var newMenuGroupItems = newMenuGroup.menuItems;
+            if (menuGroupActivated)
+            {
+                PushHistory(menuGroupActivated);
+                _flightMenuActivated = new FlightMenuItemBase[newMenuGroupItems.Length + 1];
+                _flightMenuActivated[0] = backButtonItem;
+                newMenuGroupItems.CopyTo(_flightMenuActivated, 1);
+            }
+            else
+            {
+                _flightMenuActivated = new FlightMenuItemBase[newMenuGroupItems.Length];
+                newMenuGroupItems.CopyTo(_flightMenuActivated, 0);
+            }
+
+            menuGroupActivated = newMenuGroup;
+            _itemNumber = _flightMenuActivated.Length;
+            GenerateMenuView();
+            menuController.RequestMenuUpdate(_itemNumber);
+        }
+
+        private void GoBack()
+        {
+            if (menuGroupHistory.Length == 0) return;
+            var menuToGoBack = PopHistory();
+            var menuToGoBackItems = menuToGoBack.menuItems;
+
+            if (menuGroupHistory.Length != 0)
+            {
+                _flightMenuActivated = new FlightMenuItemBase[menuToGoBackItems.Length + 1];
+                _flightMenuActivated[0] = backButtonItem;
+
+                menuToGoBackItems.CopyTo(_flightMenuActivated, 1);
+            }
+            else
+            {
+                _flightMenuActivated = new FlightMenuItemBase[menuToGoBackItems.Length];
+                menuToGoBackItems.CopyTo(_flightMenuActivated, 0);
+            }
+
+            menuGroupActivated = menuToGoBack;
+            _itemNumber = _flightMenuActivated.Length;
+            GenerateMenuView();
+            menuController.RequestMenuUpdate(_itemNumber);
+        }
+
+        private void GenerateMenuView()
         {
             foreach (var itemToDestroy in _itemGenerated)
             {
                 Destroy(itemToDestroy);
             }
 
+            var menuLength = _flightMenuActivated.Length;
             _itemGenerated = new GameObject[menuLength * 4];
 
             var anglePerItem = 360f / menuLength;
@@ -53,48 +108,45 @@ namespace VAU.V320NeoNext.Runtime.FlightMenu
 
             for (var index = 0; index < menuLength; index++)
             {
-                var item = Instantiate(backgroundClipTemplate, backgroundRoot);
-                item.transform.localPosition = Vector3.zero;
-                item.transform.localEulerAngles = new Vector3(0, 0, initialItemAngle - anglePerItem * index);
-                item.gameObject.name = $"BackgroundClip_{index}";
-                item.GetComponentInChildren<Image>().fillAmount = fillAmount;
+                var targetLocalEulerAngle = new Vector3(0, 0, initialItemAngle - anglePerItem * index);
 
-                _itemGenerated[index] = item;
-            }
+                // Background clip
+                var backgroundItem = Instantiate(backgroundClipTemplate, backgroundRoot);
+                backgroundItem.transform.localPosition = Vector3.zero;
+                backgroundItem.transform.localEulerAngles = targetLocalEulerAngle;
+                backgroundItem.gameObject.name = $"BackgroundClip_{index}";
+                backgroundItem.GetComponentInChildren<Image>().fillAmount = fillAmount;
 
-            for (var index = 0; index < menuLength; index++)
-            {
-                var item = Instantiate(hoverClipTemplate, hoverRoot);
-                item.transform.localPosition = Vector3.zero;
-                item.transform.localEulerAngles = new Vector3(0, 0, initialItemAngle - anglePerItem * index);
-                item.gameObject.name = $"HoverClip_{index}";
-                item.GetComponentInChildren<Image>().fillAmount = fillAmount;
+                _itemGenerated[index] = backgroundItem;
 
-                _itemGenerated[menuLength + index] = item;
-            }
+                // Hover clip
+                var clipItem = Instantiate(hoverClipTemplate, hoverRoot);
+                clipItem.transform.localPosition = Vector3.zero;
+                clipItem.transform.localEulerAngles = targetLocalEulerAngle;
+                clipItem.gameObject.name = $"HoverClip_{index}";
+                clipItem.GetComponentInChildren<Image>().fillAmount = fillAmount;
 
-            for (var index = 0; index < menuLength; index++)
-            {
-                var item = Instantiate(activatedClipTemplate, activatedRoot);
-                item.transform.localPosition = Vector3.zero;
-                item.transform.localEulerAngles = new Vector3(0, 0, initialItemAngle - anglePerItem * index);
-                item.gameObject.name = $"ActivatedClip_{index}";
-                item.GetComponentInChildren<Image>().fillAmount = fillAmount;
-                item.SetActive(false);
+                _itemGenerated[menuLength + index] = clipItem;
 
-                _itemGenerated[menuLength * 2 + index] = item;
-            }
+                // activated clip
+                var activatedItem = Instantiate(activatedClipTemplate, activatedRoot);
+                activatedItem.transform.localPosition = Vector3.zero;
+                activatedItem.transform.localEulerAngles = targetLocalEulerAngle;
+                activatedItem.gameObject.name = $"ActivatedClip_{index}";
+                activatedItem.GetComponentInChildren<Image>().fillAmount = fillAmount;
+                activatedItem.SetActive(false);
 
-            for (var index = 0; index < menuLength; index++)
-            {
-                var item = Instantiate(titleTemplate, titleRoot);
-                item.transform.localPosition = Vector3.zero;
-                item.transform.localEulerAngles = new Vector3(0, 0, anglePerItem * index);
-                item.gameObject.name = $"TitleTemplate_{index}";
+                _itemGenerated[menuLength * 2 + index] = activatedItem;
 
-                var menuItem = menuGroup.menuItems[index];
+                // title and icon
+                var titleItem = Instantiate(titleTemplate, titleRoot);
+                titleItem.transform.localPosition = Vector3.zero;
+                titleItem.transform.localEulerAngles = new Vector3(0, 0, anglePerItem * -index);
+                titleItem.gameObject.name = $"TitleTemplate_{index}";
 
-                var imageComponent = item.GetComponentInChildren<Image>();
+                var menuItem = _flightMenuActivated[index];
+
+                var imageComponent = titleItem.GetComponentInChildren<Image>();
                 if (menuItem.icon)
                 {
                     imageComponent.sprite = menuItem.icon;
@@ -105,49 +157,112 @@ namespace VAU.V320NeoNext.Runtime.FlightMenu
                     imageComponent.gameObject.SetActive(false);
                 }
 
-                item.GetComponentInChildren<TextMeshProUGUI>().text = menuItem.title;
-                item.GetComponentInChildren<FlightMenuItemTitleRotationTarget>()
-                    .transform.localRotation = Quaternion.Inverse(item.transform.localRotation);
+                titleItem.GetComponentInChildren<TextMeshProUGUI>().text = menuItem.title;
+                titleItem.GetComponentInChildren<FlightMenuItemTitleRotationTarget>()
+                    .transform.localRotation = Quaternion.Inverse(titleItem.transform.localRotation);
 
-                _itemGenerated[menuLength * 3 + index] = item;
+                _itemGenerated[menuLength * 3 + index] = titleItem;
             }
         }
 
         public void _OnItemHover(int itemIndex)
         {
-            if (itemIndex < 0 || itemIndex > itemNumber)
+            if (itemIndex < 0 || itemIndex > _itemNumber)
             {
                 Debug.LogWarning(
-                    "_OnItemHover: itemIndex is out of range, input: " + itemIndex + ", max: " + itemNumber);
+                    "_OnItemHover: itemIndex is out of range, input: " + itemIndex + ", max: " + _itemNumber);
                 return;
             }
 
-            _itemGenerated[itemNumber + itemIndex].SetActive(true);
+            _itemGenerated[_itemNumber + itemIndex].SetActive(true);
         }
 
         public void _OnItemHoverLost(int itemIndex)
         {
-            if (itemIndex < 0 || itemIndex > itemNumber)
+            if (itemIndex < 0 || itemIndex > _itemNumber)
             {
                 Debug.LogWarning(
-                    "_OnItemHoverLost: itemIndex is out of range, input: " + itemIndex + ", max: " + itemNumber);
+                    "_OnItemHoverLost: itemIndex is out of range, input: " + itemIndex + ", max: " + _itemNumber);
                 return;
             }
 
-            _itemGenerated[itemNumber + itemIndex].SetActive(false);
+            _itemGenerated[_itemNumber + itemIndex].SetActive(false);
         }
 
         public void _OnItemTrigger(int itemIndex)
         {
-            if (itemIndex < 0 || itemIndex > itemNumber)
+            if (itemIndex < 0 || itemIndex > _itemNumber)
             {
                 Debug.LogWarning(
-                    "_OnItemTrigger: itemIndex is out of range, input: " + itemIndex + ", max: " + itemNumber);
+                    "_OnItemTrigger: itemIndex is out of range, input: " + itemIndex + ", max: " + _itemNumber);
                 return;
             }
 
-            var item = _itemGenerated[itemNumber  * 2 + itemIndex];
+            var menuItem = _flightMenuActivated[itemIndex];
+            var triggerResult = menuItem.Trigger();
+
+            switch (triggerResult)
+            {
+                case FlightMenuTriggerResult.Noop:
+                    // Do nothing, all logic should handle by menu item itself
+                    break;
+                case FlightMenuTriggerResult.OpenNewMenu:
+                    var newMenuGroup = menuItem.GetNewMenu();
+                    if (!newMenuGroup)
+                    {
+                        Debug.LogWarning(
+                            "_OnItemTrigger: triggerResult is OpenNewMenu, but GetNewMenu() returns null, itemIndex: " +
+                            itemIndex);
+                        return;
+                    }
+
+                    NavigateToMenu(newMenuGroup);
+                    break;
+                case FlightMenuTriggerResult.InternalBackMenu:
+                    GoBack();
+                    break;
+                case FlightMenuTriggerResult.OpenPopupMenu:
+                    // TODO: Handle Popup Menu
+                    break;
+                default:
+                    Debug.LogWarning(
+                        "_OnItemTrigger: triggerResult is unknown, input: " + triggerResult + ", itemIndex: " +
+                        itemIndex);
+                    break;
+            }
+        }
+
+        private void SetItemActivatedIndicator(int index, bool activated)
+        {
+            var item = _itemGenerated[_itemNumber  * 2 + index];
             item.SetActive(!item.activeSelf);
         }
+
+        #region Menu Group History
+
+        private void PushHistory(FlightMenuGroup newMenuGroup)
+        {
+            var newHistoryArray = new FlightMenuGroup[menuGroupHistory.Length + 1];
+            menuGroupHistory.CopyTo(newHistoryArray, 0);
+            newHistoryArray[menuGroupHistory.Length] = newMenuGroup;
+            menuGroupHistory = newHistoryArray;
+        }
+
+        private FlightMenuGroup PopHistory()
+        {
+            var lastMenuGroup = menuGroupHistory[menuGroupHistory.Length - 1];
+            var newHistoryArray = new FlightMenuGroup[menuGroupHistory.Length - 1];
+            Array.Copy(menuGroupHistory, newHistoryArray, menuGroupHistory.Length - 1);
+            menuGroupHistory = newHistoryArray;
+
+            return lastMenuGroup;
+        }
+
+        private void ClearHistory()
+        {
+            menuGroupHistory = new FlightMenuGroup[0];
+        }
+
+        #endregion
     }
 }

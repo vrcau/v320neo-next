@@ -8,7 +8,7 @@ namespace VAU.V320NeoNext.Runtime.FlightMenu.MenuData.Item
     {
         public override FlightMenuTriggerResult Trigger()
         {
-            Debug.Log("Flight Menu Button Trigger!");
+            // TODO: Handle Button Click
             return FlightMenuTriggerResult.Noop;
         }
     }
