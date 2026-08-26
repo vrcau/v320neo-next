@@ -30,6 +30,12 @@ namespace VAU.V320NeoNext.Runtime.FlightMenu
         public Transform activatedRoot;
         public Transform titleRoot;
 
+        [Header("UI")] 
+        public GameObject menuGroupTitleBox;
+        public TextMeshProUGUI menuGroupTitleText;
+        public TextMeshProUGUI menuGroupDescriptionText;
+        public TextMeshProUGUI closePopupMenuTipText;
+
         [Header("Item Image Template")] 
         public GameObject backgroundClipTemplate;
         public GameObject hoverClipTemplate;
@@ -73,6 +79,8 @@ namespace VAU.V320NeoNext.Runtime.FlightMenu
                 newMenuGroupItems.CopyTo(_flightMenuActivated, 0);
             }
 
+            UpdateMenuGroupTitleBox(newMenuGroup);
+
             menuGroupActivated = newMenuGroup;
             _itemNumber = _flightMenuActivated.Length;
             GenerateMenuView();
@@ -98,10 +106,31 @@ namespace VAU.V320NeoNext.Runtime.FlightMenu
                 menuToGoBackItems.CopyTo(_flightMenuActivated, 0);
             }
 
+            UpdateMenuGroupTitleBox(menuToGoBack);
+
             menuGroupActivated = menuToGoBack;
             _itemNumber = _flightMenuActivated.Length;
             GenerateMenuView();
             menuController.RequestMenuUpdate(_itemNumber);
+        }
+
+        private void UpdateMenuGroupTitleBox(FlightMenuGroup newMenuGroup)
+        {
+            var menuGroupTitleExist = !string.IsNullOrWhiteSpace(newMenuGroup.groupName);
+            var menuGroupDescriptionExist = !string.IsNullOrWhiteSpace(newMenuGroup.description);
+            if (!menuGroupTitleExist && !menuGroupDescriptionExist && !isPopupMenu)
+            {
+                menuGroupTitleBox.SetActive(false);
+            }
+            else
+            {
+                menuGroupTitleBox.SetActive(true);
+                menuGroupTitleText.text = newMenuGroup.groupName;
+                menuGroupTitleText.gameObject.SetActive(menuGroupTitleExist);
+                menuGroupDescriptionText.text = newMenuGroup.description;
+                menuGroupDescriptionText.gameObject.SetActive(menuGroupDescriptionExist);
+                closePopupMenuTipText.gameObject.SetActive(isPopupMenu);
+            }
         }
 
         private void GenerateMenuView()
