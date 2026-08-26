@@ -4,6 +4,7 @@
     {
         public override FlightMenuTriggerResult Trigger()
         {
+            base.Trigger();
             return FlightMenuTriggerResult.InternalBackMenu;
         }
     }

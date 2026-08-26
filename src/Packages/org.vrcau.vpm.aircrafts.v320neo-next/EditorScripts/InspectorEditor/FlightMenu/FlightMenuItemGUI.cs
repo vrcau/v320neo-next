@@ -16,6 +16,10 @@ namespace VAU.V320NeoNext.Editor.InspectorEditor.FlightMenu
         private readonly SerializedProperty _iconProperty;
         private readonly SerializedProperty _isActivatedProperty;
 
+        // Event Properties
+        private readonly SerializedProperty _eventTargetProperty;
+        private readonly SerializedProperty _triggerEventNameProperty;
+
         // Sub/PopMenu Properties
         private readonly SerializedProperty _isPopupMenuProperty;
         private readonly SerializedProperty _subMenuProperty;
@@ -31,6 +35,9 @@ namespace VAU.V320NeoNext.Editor.InspectorEditor.FlightMenu
             _titleProperty = _itemSerializedObject.FindProperty(nameof(FlightMenuItemBase.title));
             _iconProperty = _itemSerializedObject.FindProperty(nameof(FlightMenuItemBase.icon));
             _isActivatedProperty = _itemSerializedObject.FindProperty(nameof(FlightMenuItemBase.isActivated));
+
+            _eventTargetProperty = _itemSerializedObject.FindProperty(nameof(FlightMenuItemBase.eventTarget));
+            _triggerEventNameProperty = _itemSerializedObject.FindProperty(nameof(FlightMenuItemBase.triggerEventName));
 
             _isPopupMenuProperty = _itemSerializedObject.FindProperty(nameof(FlightMenuSubMenuItem.isPopupMenu));
             _subMenuProperty = _itemSerializedObject.FindProperty(nameof(FlightMenuSubMenuItem.subMenu));
@@ -69,6 +76,12 @@ namespace VAU.V320NeoNext.Editor.InspectorEditor.FlightMenu
             GUILayout.EndVertical();
 
             GUILayout.EndHorizontal();
+
+            EditorGUILayout.PropertyField(_eventTargetProperty);
+            if (_itemBase.eventTarget)
+            {
+                EditorGUILayout.PropertyField(_triggerEventNameProperty);
+            }
 
             if (EditorGUI.EndChangeCheck())
             {

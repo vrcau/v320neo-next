@@ -11,6 +11,7 @@ namespace VAU.V320NeoNext.Runtime.FlightMenu.MenuData.Item
 
         public override FlightMenuTriggerResult Trigger()
         {
+            base.Trigger();
             return isPopupMenu ? FlightMenuTriggerResult.OpenPopupMenu : FlightMenuTriggerResult.OpenNewMenu;
         }
 
