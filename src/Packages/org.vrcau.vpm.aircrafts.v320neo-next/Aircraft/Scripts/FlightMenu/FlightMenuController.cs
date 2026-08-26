@@ -28,6 +28,7 @@ namespace VAU.V320NeoNext.Runtime.FlightMenu
 
         [Header("UI (Internal)")]
         public float menuRadius = 60f;
+        public float outerMenuRadius = 220f;
 
         public float hoverThreshold = 550f;
         public float activeThreshold = 1900f;
@@ -116,6 +117,11 @@ namespace VAU.V320NeoNext.Runtime.FlightMenu
             {
                 _sqrMagnitudeInLastFrame = cursorSqrMagnitude;
                 _lastHoverItemIndex = -1;
+
+                if (IsTriggerPressed())
+                {
+                    viewCore._OnTriggerOnBlank();
+                }
                 return;
             }
 
@@ -130,7 +136,7 @@ namespace VAU.V320NeoNext.Runtime.FlightMenu
                 viewCore._OnItemHover(itemIndex);
                 _lastHoverItemIndex = itemIndex;
 
-                if (Input.GetMouseButtonDown(0))
+                if (IsTriggerPressed())
                 {
                     // "release thumbstick to trigger" are handle in above
                     viewCore._OnItemTrigger(itemIndex);
@@ -142,6 +148,18 @@ namespace VAU.V320NeoNext.Runtime.FlightMenu
             }
 
             _sqrMagnitudeInLastFrame = cursorSqrMagnitude;
+        }
+
+        public Vector3 GetPopupMenuPosition(int itemIndex)
+        {
+            var step = 360f / itemNumber;
+            var itemAngle = -(step * itemIndex);
+            return Quaternion.Euler(0, 0, itemAngle) * Vector3.up * (menuRadius + (outerMenuRadius - menuRadius) * 0.5f);
+        }
+
+        private bool IsTriggerPressed()
+        {
+            return Input.GetMouseButtonDown(0);
         }
     }
 }

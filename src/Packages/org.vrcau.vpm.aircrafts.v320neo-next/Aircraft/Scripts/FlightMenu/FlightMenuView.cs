@@ -17,6 +17,13 @@ namespace VAU.V320NeoNext.Runtime.FlightMenu
         public FlightMenuController menuController;
         public FlightMenuBackItem backButtonItem;
 
+        [Header("Popup Menu Extension")] 
+        public bool isPopupMenu;
+
+        public FlightMenuView mainMenuView;
+        public GameObject popupMenuRoot;
+        public FlightMenuView popupMenuView;
+
         [Header("Child Root")] 
         public Transform backgroundRoot;
         public Transform hoverRoot;
@@ -41,12 +48,17 @@ namespace VAU.V320NeoNext.Runtime.FlightMenu
 
         private void Start()
         {
-            ClearHistory();
-            NavigateToMenu(rootMenuGroup);
+            if (!isPopupMenu) NavigateToMenu(rootMenuGroup);
         }
 
-        private void NavigateToMenu(FlightMenuGroup newMenuGroup)
+        private void NavigateToMenu(FlightMenuGroup newMenuGroup, bool clearHistory = false)
         {
+            if (clearHistory)
+            {
+                menuGroupActivated = null;
+                ClearHistory();
+            }
+
             var newMenuGroupItems = newMenuGroup.menuItems;
             if (menuGroupActivated)
             {
@@ -189,6 +201,14 @@ namespace VAU.V320NeoNext.Runtime.FlightMenu
             _itemGenerated[_itemNumber + itemIndex].SetActive(false);
         }
 
+        public void _OnTriggerOnBlank()
+        {
+            if (isPopupMenu)
+            {
+                ReturnToMainMenu();
+            }
+        }
+
         public void _OnItemTrigger(int itemIndex)
         {
             if (itemIndex < 0 || itemIndex > _itemNumber)
@@ -222,7 +242,15 @@ namespace VAU.V320NeoNext.Runtime.FlightMenu
                     GoBack();
                     break;
                 case FlightMenuTriggerResult.OpenPopupMenu:
-                    // TODO: Handle Popup Menu
+                    if (isPopupMenu)
+                    {
+                        Debug.LogWarning(
+                            "_OnItemTrigger: triggerResult is OpenPopupMenu, but this menu is already a popup menu, itemIndex: " + 
+                            itemIndex);
+                        break;
+                    }
+
+                    OpenPopupMenu(menuItem.GetNewMenu(), itemIndex);
                     break;
                 default:
                     Debug.LogWarning(
@@ -237,6 +265,40 @@ namespace VAU.V320NeoNext.Runtime.FlightMenu
             var item = _itemGenerated[_itemNumber  * 2 + index];
             item.SetActive(!item.activeSelf);
         }
+
+        #region Popup Menu Handling
+
+        private void OpenPopupMenu(FlightMenuGroup newMenuGroup, int itemIndex)
+        {
+            if (!popupMenuView || !popupMenuRoot || !mainMenuView)
+            {
+                Debug.LogWarning(
+                    "OpenPopupMenu: popupMenuView/popupMenuRoot/mainMenuView is null, cannot open popup menu");
+                return;
+            }
+
+            popupMenuView.NavigateToMenu(newMenuGroup, true);
+            popupMenuRoot.SetActive(true);
+            popupMenuRoot.GetComponent<RectTransform>().anchoredPosition = menuController.GetPopupMenuPosition(itemIndex);
+            mainMenuView.menuController.enabled = false;
+        }
+
+        // For popup menu to bring main menu back and hide itself
+        private void ReturnToMainMenu()
+        {
+            if (!popupMenuView || !popupMenuRoot || !mainMenuView)
+            {
+                Debug.LogWarning(
+                    "ReturnToMainMenu: popupMenuView/popupMenuRoot/mainMenuView is null, cannot return to main menu");
+                return;
+            }
+
+            popupMenuView.NavigateToMenu(popupMenuView.rootMenuGroup, true);
+            popupMenuRoot.SetActive(false);
+            mainMenuView.menuController.enabled = true;
+        }
+
+        #endregion
 
         #region Menu Group History
 

@@ -222,6 +222,10 @@ MonoBehaviour:
   rootMenuGroup: {fileID: 0}
   menuController: {fileID: 8802991183155974477}
   backButtonItem: {fileID: 4882034393650237295}
+  isPopupMenu: 0
+  mainMenuView: {fileID: 0}
+  popupMenuRoot: {fileID: 0}
+  popupMenuView: {fileID: 0}
   backgroundRoot: {fileID: 1500660517243756558}
   hoverRoot: {fileID: 5648928053051726677}
   activatedRoot: {fileID: 9216341000183984591}
@@ -404,6 +408,7 @@ MonoBehaviour:
   toggleForceVrKey: 307
   forceInVr: 0
   menuRadius: 60
+  outerMenuRadius: 220
   hoverThreshold: 550
   activeThreshold: 1900
   cursorTransform: {fileID: 7841633146911986780}

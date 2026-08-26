@@ -13,12 +13,21 @@ namespace VAU.V320NeoNext.Editor.InspectorEditor.FlightMenu
         private readonly FlightMenuGroup _flightMenuGroup;
         private readonly SerializedObject _serializedObject;
 
+        private readonly SerializedProperty _menuItemsProperty;
+        private readonly SerializedProperty _menuGroupNameProperty;
+        private readonly SerializedProperty _menuGroupDescriptionProperty;
+
         private readonly Dictionary<FlightMenuItemBase, FlightMenuItemGUI> _itemGuis = new();
 
         public FlightMenuPreviewGUI(FlightMenuGroup flightMenuGroup)
         {
             _flightMenuGroup = flightMenuGroup;
             _serializedObject = new SerializedObject(flightMenuGroup);
+
+            _menuItemsProperty = _serializedObject
+                .FindProperty(nameof(FlightMenuGroup.menuItems));
+            _menuGroupNameProperty = _serializedObject.FindProperty(nameof(FlightMenuGroup.groupName));
+            _menuGroupDescriptionProperty = _serializedObject.FindProperty(nameof(FlightMenuGroup.description));
         }
 
         public void OnGui()
@@ -30,6 +39,14 @@ namespace VAU.V320NeoNext.Editor.InspectorEditor.FlightMenu
             }
 
             GUILayout.BeginVertical(EditorStyles.helpBox);
+
+            EditorGUI.BeginChangeCheck();
+            EditorGUILayout.PropertyField(_menuGroupNameProperty);
+            EditorGUILayout.PropertyField(_menuGroupDescriptionProperty);
+            if (EditorGUI.EndChangeCheck())
+            {
+                _serializedObject.ApplyModifiedProperties();
+            }
 
             for (var index = 0; index < _flightMenuGroup.menuItems.Length; index++)
             {
@@ -44,9 +61,7 @@ namespace VAU.V320NeoNext.Editor.InspectorEditor.FlightMenu
 
                     EditorGUI.BeginChangeCheck();
 
-                    var objectProperty = _serializedObject
-                        .FindProperty(nameof(FlightMenuGroup.menuItems))
-                        .GetArrayElementAtIndex(index);
+                    var objectProperty = _menuItemsProperty.GetArrayElementAtIndex(index);
                     EditorGUILayout.PropertyField(objectProperty);
 
                     GUILayout.EndVertical();
