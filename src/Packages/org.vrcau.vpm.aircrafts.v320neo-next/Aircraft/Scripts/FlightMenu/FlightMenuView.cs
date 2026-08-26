@@ -48,6 +48,7 @@ namespace VAU.V320NeoNext.Runtime.FlightMenu
         [Header("Debug Only")] 
         public FlightMenuGroup[] menuGroupHistory = new FlightMenuGroup[0];
         public FlightMenuGroup menuGroupActivated;
+        public bool menuActivated;
 
         private GameObject[] _itemGenerated = new GameObject[0];
         private FlightMenuItemBase[] _flightMenuActivated = new FlightMenuItemBase[0];
@@ -57,8 +58,19 @@ namespace VAU.V320NeoNext.Runtime.FlightMenu
             if (!isPopupMenu) NavigateToMenu(rootMenuGroup);
         }
 
+        private void Update()
+        {
+            if (!menuActivated) return;
+
+            for (var index = 0; index < _flightMenuActivated.Length; index++)
+            {
+                SetItemActivatedIndicator(index, _flightMenuActivated[index].isActivated);
+            }
+        }
+
         private void NavigateToMenu(FlightMenuGroup newMenuGroup, bool clearHistory = false)
         {
+            menuActivated = false;
             if (clearHistory)
             {
                 menuGroupActivated = null;
@@ -85,11 +97,15 @@ namespace VAU.V320NeoNext.Runtime.FlightMenu
             _itemNumber = _flightMenuActivated.Length;
             GenerateMenuView();
             menuController.RequestMenuUpdate(_itemNumber);
+
+            menuActivated = true;
         }
 
         private void GoBack()
         {
             if (menuGroupHistory.Length == 0) return;
+            menuActivated = false;
+
             var menuToGoBack = PopHistory();
             var menuToGoBackItems = menuToGoBack.menuItems;
 
@@ -112,6 +128,8 @@ namespace VAU.V320NeoNext.Runtime.FlightMenu
             _itemNumber = _flightMenuActivated.Length;
             GenerateMenuView();
             menuController.RequestMenuUpdate(_itemNumber);
+
+            menuActivated = true;
         }
 
         private void UpdateMenuGroupTitleBox(FlightMenuGroup newMenuGroup)
@@ -292,7 +310,7 @@ namespace VAU.V320NeoNext.Runtime.FlightMenu
         private void SetItemActivatedIndicator(int index, bool activated)
         {
             var item = _itemGenerated[_itemNumber  * 2 + index];
-            item.SetActive(!item.activeSelf);
+            item.SetActive(activated);
         }
 
         #region Popup Menu Handling
