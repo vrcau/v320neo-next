@@ -15,10 +15,12 @@ namespace VAU.V320NeoNext.Editor.InspectorEditor.FlightMenu
         private readonly SerializedProperty _titleProperty;
         private readonly SerializedProperty _iconProperty;
         private readonly SerializedProperty _isActivatedProperty;
+        private readonly SerializedProperty _updateIsActivatedFromEventTargetProperty;
 
         // Event Properties
         private readonly SerializedProperty _eventTargetProperty;
         private readonly SerializedProperty _triggerEventNameProperty;
+        private readonly SerializedProperty _isActivatedVariableNameProperty;
 
         // Sub/PopMenu Properties
         private readonly SerializedProperty _isPopupMenuProperty;
@@ -35,9 +37,13 @@ namespace VAU.V320NeoNext.Editor.InspectorEditor.FlightMenu
             _titleProperty = _itemSerializedObject.FindProperty(nameof(FlightMenuItemBase.title));
             _iconProperty = _itemSerializedObject.FindProperty(nameof(FlightMenuItemBase.icon));
             _isActivatedProperty = _itemSerializedObject.FindProperty(nameof(FlightMenuItemBase.isActivated));
+            _updateIsActivatedFromEventTargetProperty = _itemSerializedObject
+                .FindProperty(nameof(FlightMenuItemBase.updateIsActivatedFromEventTarget));
 
             _eventTargetProperty = _itemSerializedObject.FindProperty(nameof(FlightMenuItemBase.eventTarget));
             _triggerEventNameProperty = _itemSerializedObject.FindProperty(nameof(FlightMenuItemBase.triggerEventName));
+            _isActivatedVariableNameProperty = _itemSerializedObject
+                .FindProperty(nameof(FlightMenuItemBase.isActivatedVariableName));
 
             _isPopupMenuProperty = _itemSerializedObject.FindProperty(nameof(FlightMenuSubMenuItem.isPopupMenu));
             _subMenuProperty = _itemSerializedObject.FindProperty(nameof(FlightMenuSubMenuItem.subMenu));
@@ -66,7 +72,17 @@ namespace VAU.V320NeoNext.Editor.InspectorEditor.FlightMenu
 
             GUILayout.BeginVertical();
             EditorGUILayout.PropertyField(_titleProperty, new GUIContent());
-            EditorGUILayout.PropertyField(_isActivatedProperty);
+
+            if (!_itemBase.eventTarget || !_itemBase.updateIsActivatedFromEventTarget)
+            {
+                EditorGUILayout.PropertyField(_isActivatedProperty);
+            }
+            else
+            {
+                EditorGUILayout.HelpBox(
+                    "IsActivated state are update from event target, see below", 
+                    MessageType.Info);
+            }
 
             if (_itemBase is FlightMenuSubMenuItem)
             {
@@ -81,6 +97,12 @@ namespace VAU.V320NeoNext.Editor.InspectorEditor.FlightMenu
             if (_itemBase.eventTarget)
             {
                 EditorGUILayout.PropertyField(_triggerEventNameProperty);
+                EditorGUILayout.PropertyField(_updateIsActivatedFromEventTargetProperty);
+                EditorGUILayout.PropertyField(_isActivatedVariableNameProperty);
+            }
+            else
+            {
+                _updateIsActivatedFromEventTargetProperty.boolValue = false;
             }
 
             if (EditorGUI.EndChangeCheck())

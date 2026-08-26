@@ -1,4 +1,5 @@
 using System;
+using JetBrains.Annotations;
 using SaccFlightAndVehicles;
 using UdonSharp;
 using UnityEngine;
@@ -8,10 +9,10 @@ using VRC.SDKBase;
 
 //note:this code is original from https://github.com/esnya/EsnyaSFAddons
 //to satisfy vau320's demand, add eletrical start
-namespace VAU.V320NeoNext.Runtime.AuxiliarySaccDfunc {
+namespace VAU.V320NeoNext.Runtime.Systems.AutoStarter {
     [UdonBehaviourSyncMode(BehaviourSyncMode.Manual)]
     [DefaultExecutionOrder(1000)] // After SaccAirVehicle
-    public class DFUNC_a320_AutoStarter : UdonSharpBehaviour {
+    public class A320AutoStarter : UdonSharpBehaviour {
         public const byte STATE_OFF = 0;
         public const byte STATE_ElETRICAL_START = 1;
         public const byte STATE_ElETRICAL_STOP = 2;
@@ -21,8 +22,9 @@ namespace VAU.V320NeoNext.Runtime.AuxiliarySaccDfunc {
         public const byte STATE_ENGINE_STOP = 6;
         public const byte STATE_ON = 255;
 
+        [PublicAPI] public bool isIndicatorActivated;
+
         public KeyCode startKey = KeyCode.LeftShift;
-        public GameObject Dial_Funcon;
         public bool desktopOnly;
 
         [Header("Engine")]
@@ -35,7 +37,7 @@ namespace VAU.V320NeoNext.Runtime.AuxiliarySaccDfunc {
         private SFEXT_a320_AdvancedEngine[] engines;
 
         private bool holdThrottle;
-        private bool initialized, selected, isPilot, isPassenger, isOwner, prevTrigger;
+        private bool initialized, isPilot, isPassenger, isOwner;
 
         private byte prevState;
 
@@ -46,7 +48,6 @@ namespace VAU.V320NeoNext.Runtime.AuxiliarySaccDfunc {
         [NonSerialized] [UdonSynced] public byte state;
 
         private float stateChangedTime;
-        private string triggerAxis;
 
         private void Update() {
             if (!initialized) return;
@@ -66,18 +67,14 @@ namespace VAU.V320NeoNext.Runtime.AuxiliarySaccDfunc {
                     holdThrottle = false;
                     airVehicle.ThrottleInput = 0.375f;
                 }
-
-                var trigger = selected && Input.GetAxisRaw(triggerAxis) > 0.75f;
-                if (!prevTrigger && trigger) SetStart(!start);
-                prevTrigger = trigger;
             }
 
             if (isOwner) {
-                if (Dial_Funcon && Dial_Funcon.activeSelf != start) Dial_Funcon.SetActive(start);
+                isIndicatorActivated = start;
             }
             else if (isPassenger) {
                 var remoteStart = state != STATE_OFF;
-                if (Dial_Funcon && Dial_Funcon.activeSelf != remoteStart) Dial_Funcon.SetActive(remoteStart);
+                isIndicatorActivated = remoteStart;
             }
 
             var stateChanged = state != prevState;
@@ -203,25 +200,9 @@ namespace VAU.V320NeoNext.Runtime.AuxiliarySaccDfunc {
             start = false;
             state = STATE_OFF;
 
-            if (Dial_Funcon) Dial_Funcon.SetActive(false);
+            isIndicatorActivated = false;
             gameObject.SetActive(false);
             initialized = true;
-        }
-
-        public void DFUNC_LeftDial() {
-            triggerAxis = "Oculus_CrossPlatform_PrimaryIndexTrigger";
-        }
-
-        public void DFUNC_RightDial() {
-            triggerAxis = "Oculus_CrossPlatform_SecondaryIndexTrigger";
-        }
-
-        public void DFUNC_Selected() {
-            selected = true;
-        }
-
-        public void DFUNC_Deselected() {
-            selected = false;
         }
 
         public void SFEXT_O_PilotEnter() {
@@ -229,8 +210,6 @@ namespace VAU.V320NeoNext.Runtime.AuxiliarySaccDfunc {
 
             isPilot = true;
             isOwner = true;
-            selected = false;
-            prevTrigger = true;
             gameObject.SetActive(true);
         }
 
@@ -269,6 +248,12 @@ namespace VAU.V320NeoNext.Runtime.AuxiliarySaccDfunc {
 
         public override void PostLateUpdate() {
             if (isOwner && holdThrottle) airVehicle.ThrottleInput = 0;
+        }
+
+        [PublicAPI]
+        public void _ToggleStart()
+        {
+            SetStart(!start);
         }
 
         private void SetStart(bool value) {

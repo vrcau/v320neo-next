@@ -64,7 +64,17 @@ namespace VAU.V320NeoNext.Runtime.FlightMenu
 
             for (var index = 0; index < _flightMenuActivated.Length; index++)
             {
-                SetItemActivatedIndicator(index, _flightMenuActivated[index].isActivated);
+                var menuItem = _flightMenuActivated[index];
+                if (menuItem.updateIsActivatedFromEventTarget)
+                {
+                    SetItemActivatedIndicator(
+                        index, 
+                        (bool)menuItem.eventTarget.GetProgramVariable(menuItem.isActivatedVariableName));
+                }
+                else
+                {
+                    SetItemActivatedIndicator(index, menuItem.isActivated);
+                }
             }
         }
 

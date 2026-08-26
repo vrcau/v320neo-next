@@ -10,9 +10,11 @@ namespace VAU.V320NeoNext.Runtime.FlightMenu.MenuData.Item
         public string title;
         public Sprite icon;
         public bool isActivated;
+        public bool updateIsActivatedFromEventTarget;
 
         public UdonSharpBehaviour eventTarget;
         public string triggerEventName;
+        public string isActivatedVariableName;
 
         public virtual FlightMenuTriggerResult Trigger()
         {
