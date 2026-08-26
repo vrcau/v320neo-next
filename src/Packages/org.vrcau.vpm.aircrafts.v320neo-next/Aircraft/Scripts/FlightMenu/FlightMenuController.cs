@@ -104,8 +104,19 @@ namespace VAU.V320NeoNext.Runtime.FlightMenu
             }
 
             // Origin position are always (0, 0), so just pass position as vector to origin
+
+            // Limit max cursor range
+            if (cursorPosition.magnitude > menuRadius)
+            {
+                cursorPosition = cursorPosition.normalized * menuRadius; 
+                cursorTransform.localPosition = new Vector3(
+                    cursorPosition.x,
+                    cursorPosition.y,
+                    cursorTransform.localPosition.z);
+            }
+
             var cursorSqrMagnitude = cursorPosition.sqrMagnitude;
-            
+
             // Handle "release thumbstick to trigger" in VR mode
             if (userInVr &&
                 cursorSqrMagnitude < activeThreshold && _sqrMagnitudeInLastFrame > activeThreshold)
