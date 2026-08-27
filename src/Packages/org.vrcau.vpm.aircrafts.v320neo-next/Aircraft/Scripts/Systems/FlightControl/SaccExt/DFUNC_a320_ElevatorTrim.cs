@@ -1,9 +1,8 @@
 using SaccFlightAndVehicles;
-using TMPro;
 using UdonSharp;
 using UnityEngine;
+using VAU.V320NeoNext.Runtime.FlightMenu.MenuData.Item;
 using VAU.V320NeoNext.Runtime.Systems.LegacyFlightDataProvider;
-using VRC.SDKBase;
 
 //note:this code is original from https://github.com/esnya/EsnyaSFAddons
 //to satisfy vau320's demand, add autotrim
@@ -256,8 +255,8 @@ namespace VAU.V320NeoNext.Runtime.Systems.FlightControl.SaccExt
             SetDirty();
             if (vehicleAnimator) vehicleAnimator.SetFloat(animatorParameterName, Remap01(trim, -1, 1));
             //SAVControl.SetProgramVariable("VelLiftStart", trim * trimStrength + trimBias);
-            DebugOut.text = $"TRIM[PdUp/Dn]\nAUTO SW [{desktopEnableAuto}]\n" + (trim).ToString("f2") +
-                            (autoTrimActive ? "\nAuto" : "\n");
+
+            trimDisplayString = $"{(trim > 0 ? "UP" : "DOWN")} {Mathf.Abs(trim):f2}";
         }
 
         private void FixedUpdate()
@@ -352,7 +351,6 @@ namespace VAU.V320NeoNext.Runtime.Systems.FlightControl.SaccExt
         public float desktopStep = 0.02f;
 
         public KeyCode desktopEnableAuto = KeyCode.F7;
-        public TextMeshProUGUI DebugOut;
 
         public SaccEntity entityControl;
         public SaccAirVehicle SAVControl;
@@ -361,6 +359,9 @@ namespace VAU.V320NeoNext.Runtime.Systems.FlightControl.SaccExt
         private Animator vehicleAnimator;
         private bool hasPilot, isPilot, isOwner, isDirty;
         private float rotMultiMaxSpeed;
+
+        // User for flight menu update
+        public string trimDisplayString;
 
         public void SFEXT_L_EntityStart()
         {

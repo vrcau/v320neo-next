@@ -15,12 +15,17 @@ namespace VAU.V320NeoNext.Editor.InspectorEditor.FlightMenu
         private readonly SerializedProperty _titleProperty;
         private readonly SerializedProperty _iconProperty;
         private readonly SerializedProperty _isActivatedProperty;
-        private readonly SerializedProperty _updateIsActivatedFromEventTargetProperty;
 
         // Event Properties
         private readonly SerializedProperty _eventTargetProperty;
         private readonly SerializedProperty _triggerEventNameProperty;
+
+        private readonly SerializedProperty _updateIsActivatedFromEventTargetProperty;
         private readonly SerializedProperty _isActivatedVariableNameProperty;
+
+        private readonly SerializedProperty _titleVariableNameProperty;
+        private readonly SerializedProperty _titleTemplateProperty;
+        private readonly SerializedProperty _updateTitleFromEventTargetProperty;
 
         // Sub/PopMenu Properties
         private readonly SerializedProperty _isPopupMenuProperty;
@@ -44,6 +49,12 @@ namespace VAU.V320NeoNext.Editor.InspectorEditor.FlightMenu
             _triggerEventNameProperty = _itemSerializedObject.FindProperty(nameof(FlightMenuItemBase.triggerEventName));
             _isActivatedVariableNameProperty = _itemSerializedObject
                 .FindProperty(nameof(FlightMenuItemBase.isActivatedVariableName));
+
+            _titleVariableNameProperty = _itemSerializedObject
+                .FindProperty(nameof(FlightMenuItemBase.titleVariableName));
+            _titleTemplateProperty = _itemSerializedObject.FindProperty(nameof(FlightMenuItemBase.titleTemplate));
+            _updateTitleFromEventTargetProperty = _itemSerializedObject
+                .FindProperty(nameof(FlightMenuItemBase.updateTitleFromEventTarget));
 
             _isPopupMenuProperty = _itemSerializedObject.FindProperty(nameof(FlightMenuSubMenuItem.isPopupMenu));
             _subMenuProperty = _itemSerializedObject.FindProperty(nameof(FlightMenuSubMenuItem.subMenu));
@@ -71,7 +82,16 @@ namespace VAU.V320NeoNext.Editor.InspectorEditor.FlightMenu
                     _iconProperty.objectReferenceValue, typeof(Sprite), false);
 
             GUILayout.BeginVertical();
-            EditorGUILayout.PropertyField(_titleProperty, new GUIContent());
+            if (!_itemBase.eventTarget || !_itemBase.updateTitleFromEventTarget)
+            {
+                _titleProperty.stringValue = EditorGUILayout.TextArea(_titleProperty.stringValue);
+            }
+            else
+            {
+                EditorGUILayout.HelpBox(
+                    "Title are update from event target, see below",
+                    MessageType.Info);
+            }
 
             if (!_itemBase.eventTarget || !_itemBase.updateIsActivatedFromEventTarget)
             {
@@ -98,11 +118,24 @@ namespace VAU.V320NeoNext.Editor.InspectorEditor.FlightMenu
             {
                 EditorGUILayout.PropertyField(_triggerEventNameProperty);
                 EditorGUILayout.PropertyField(_updateIsActivatedFromEventTargetProperty);
-                EditorGUILayout.PropertyField(_isActivatedVariableNameProperty);
+                if (_itemBase.updateIsActivatedFromEventTarget)
+                {
+                    EditorGUILayout.PropertyField(_isActivatedVariableNameProperty);
+                }
+
+                EditorGUILayout.PropertyField(_updateTitleFromEventTargetProperty);
+                if (_itemBase.updateTitleFromEventTarget)
+                {
+                    EditorGUILayout.PropertyField(_titleVariableNameProperty);
+                    EditorGUILayout.LabelField("Title Template (use {0} for the variable value)");
+                    _titleTemplateProperty.stringValue = EditorGUILayout.TextArea(_titleTemplateProperty.stringValue);
+                }
             }
             else
             {
                 _updateIsActivatedFromEventTargetProperty.boolValue = false;
+                _updateTitleFromEventTargetProperty.boolValue = false;
+                _itemSerializedObject.ApplyModifiedProperties();
             }
 
             if (EditorGUI.EndChangeCheck())

@@ -10,5 +10,7 @@ namespace VAU.V320NeoNext.Runtime.FlightMenu.MenuData
         public string groupName;
         public string description;
         public FlightMenuItemBase[] menuItems = Array.Empty<FlightMenuItemBase>();
+
+        public bool keepUpdateGroupTitle;
     }
 }

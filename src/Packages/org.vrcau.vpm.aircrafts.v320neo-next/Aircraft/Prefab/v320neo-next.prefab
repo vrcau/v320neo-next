@@ -5382,10 +5382,15 @@ MonoBehaviour:
   title: Trim
   icon: {fileID: 0}
   isActivated: 0
-  updateIsActivatedFromEventTarget: 0
-  eventTarget: {fileID: 0}
+  eventTarget: {fileID: 9015973210307997977}
   triggerEventName: 
+  updateIsActivatedFromEventTarget: 0
   isActivatedVariableName: 
+  updateTitleFromEventTarget: 1
+  titleVariableName: trimDisplayString
+  titleTemplate: 'Trim
+
+    <size=18>{0}</size>'
   subMenu: {fileID: 448378609298140858}
   isPopupMenu: 0
 --- !u!114 &4189817311678185062
@@ -5503,10 +5508,13 @@ MonoBehaviour:
   title: Landing Light
   icon: {fileID: 0}
   isActivated: 0
-  updateIsActivatedFromEventTarget: 1
   eventTarget: {fileID: 1968102284611630082}
   triggerEventName: ToggleLandingLight
+  updateIsActivatedFromEventTarget: 1
   isActivatedVariableName: isLandingLightOn
+  updateTitleFromEventTarget: 0
+  titleVariableName: 
+  titleTemplate: '{0}'
 --- !u!114 &6499357969154122717
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -12215,10 +12223,13 @@ MonoBehaviour:
   title: Auto Start
   icon: {fileID: 0}
   isActivated: 0
-  updateIsActivatedFromEventTarget: 1
   eventTarget: {fileID: 1948125224356613658}
   triggerEventName: _ToggleStart
+  updateIsActivatedFromEventTarget: 1
   isActivatedVariableName: isIndicatorActivated
+  updateTitleFromEventTarget: 0
+  titleVariableName: 
+  titleTemplate: '{0}'
 --- !u!114 &5466091040490517151
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -17548,10 +17559,15 @@ MonoBehaviour:
   title: Manual Trim
   icon: {fileID: 0}
   isActivated: 0
-  updateIsActivatedFromEventTarget: 0
-  eventTarget: {fileID: 0}
+  eventTarget: {fileID: 9015973210307997977}
   triggerEventName: 
+  updateIsActivatedFromEventTarget: 0
   isActivatedVariableName: 
+  updateTitleFromEventTarget: 1
+  titleVariableName: trimDisplayString
+  titleTemplate: 'Manual Trim
+
+    <size=18>{0}</size>'
   subMenu: {fileID: 637735668683441367}
   isPopupMenu: 1
 --- !u!114 &3321333259774598084
@@ -17604,6 +17620,7 @@ MonoBehaviour:
   menuItems:
   - {fileID: 990840795871917966}
   - {fileID: 2965894802410161439}
+  keepUpdateGroupTitle: 0
 --- !u!114 &3099975622282980856
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -18238,10 +18255,13 @@ MonoBehaviour:
   title: Auto Start
   icon: {fileID: 0}
   isActivated: 0
-  updateIsActivatedFromEventTarget: 1
   eventTarget: {fileID: 1948125224356613658}
   triggerEventName: _ToggleStart
+  updateIsActivatedFromEventTarget: 1
   isActivatedVariableName: isIndicatorActivated
+  updateTitleFromEventTarget: 0
+  titleVariableName: 
+  titleTemplate: '{0}'
 --- !u!114 &6631464794007821743
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -19027,6 +19047,7 @@ MonoBehaviour:
   menuItems:
   - {fileID: 5979732846689173064}
   - {fileID: 6178544007668483150}
+  keepUpdateGroupTitle: 0
 --- !u!114 &1711101510160767944
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -42060,10 +42081,13 @@ MonoBehaviour:
   title: Pitch Down
   icon: {fileID: 21300000, guid: c2f1b86d814a65445a5c3818c2659488, type: 3}
   isActivated: 0
-  updateIsActivatedFromEventTarget: 0
   eventTarget: {fileID: 9015973210307997977}
   triggerEventName: _TrimDown
+  updateIsActivatedFromEventTarget: 0
   isActivatedVariableName: 
+  updateTitleFromEventTarget: 0
+  titleVariableName: 
+  titleTemplate: '{0}'
 --- !u!114 &4738552219953132375
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -48114,6 +48138,7 @@ MonoBehaviour:
   groupName: 
   description: 
   menuItems: []
+  keepUpdateGroupTitle: 0
 --- !u!114 &3234000133237317188
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -50267,10 +50292,15 @@ MonoBehaviour:
   title: Auto Trim
   icon: {fileID: 0}
   isActivated: 0
-  updateIsActivatedFromEventTarget: 1
   eventTarget: {fileID: 9015973210307997977}
   triggerEventName: _ToggleAutoTrim
+  updateIsActivatedFromEventTarget: 1
   isActivatedVariableName: autoTrimActive
+  updateTitleFromEventTarget: 1
+  titleVariableName: trimDisplayString
+  titleTemplate: 'Auto Trim
+
+    <size=18>{0}</size>'
 --- !u!114 &5455235003936860123
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -50625,10 +50655,13 @@ MonoBehaviour:
   title: Pitch Up
   icon: {fileID: 21300000, guid: 36de982de0167c84f98baac98cd23015, type: 3}
   isActivated: 0
-  updateIsActivatedFromEventTarget: 0
   eventTarget: {fileID: 9015973210307997977}
   triggerEventName: _TrimUp
+  updateIsActivatedFromEventTarget: 0
   isActivatedVariableName: 
+  updateTitleFromEventTarget: 0
+  titleVariableName: 
+  titleTemplate: '{0}'
 --- !u!114 &6279771272121451767
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -52366,10 +52399,13 @@ MonoBehaviour:
   title: Cabin Door
   icon: {fileID: 0}
   isActivated: 0
-  updateIsActivatedFromEventTarget: 1
   eventTarget: {fileID: 8039740003811797684}
   triggerEventName: ToggleCanopy
+  updateIsActivatedFromEventTarget: 1
   isActivatedVariableName: CanopyOpen
+  updateTitleFromEventTarget: 0
+  titleVariableName: 
+  titleTemplate: '{0}'
 --- !u!114 &6125395535242598775
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -62706,9 +62742,9 @@ MonoBehaviour:
   desktopDown: 281
   desktopStep: 0.02
   desktopEnableAuto: 288
-  DebugOut: {fileID: 9092772698572328483}
   entityControl: {fileID: 3979190132806479119}
   SAVControl: {fileID: 7941525626698614549}
+  trimDisplayString: 
 --- !u!114 &7826605931651636844
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -96117,6 +96153,7 @@ MonoBehaviour:
   - {fileID: 2541860666975086132}
   - {fileID: 1622329498239000327}
   - {fileID: 6386272777233935976}
+  keepUpdateGroupTitle: 0
 --- !u!114 &2357616360992344826
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -110496,6 +110533,7 @@ MonoBehaviour:
   description: 
   menuItems:
   - {fileID: 4834679312910378316}
+  keepUpdateGroupTitle: 0
 --- !u!114 &6306338435651400623
 MonoBehaviour:
   m_ObjectHideFlags: 0

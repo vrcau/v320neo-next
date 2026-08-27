@@ -16,6 +16,7 @@ namespace VAU.V320NeoNext.Editor.InspectorEditor.FlightMenu
         private readonly SerializedProperty _menuItemsProperty;
         private readonly SerializedProperty _menuGroupNameProperty;
         private readonly SerializedProperty _menuGroupDescriptionProperty;
+        private readonly SerializedProperty _keepUpdateTitleProperty;
 
         private readonly Dictionary<FlightMenuItemBase, FlightMenuItemGUI> _itemGuis = new();
 
@@ -28,6 +29,7 @@ namespace VAU.V320NeoNext.Editor.InspectorEditor.FlightMenu
                 .FindProperty(nameof(FlightMenuGroup.menuItems));
             _menuGroupNameProperty = _serializedObject.FindProperty(nameof(FlightMenuGroup.groupName));
             _menuGroupDescriptionProperty = _serializedObject.FindProperty(nameof(FlightMenuGroup.description));
+            _keepUpdateTitleProperty = _serializedObject.FindProperty(nameof(FlightMenuGroup.keepUpdateGroupTitle));
         }
 
         public void OnGui()
@@ -43,6 +45,7 @@ namespace VAU.V320NeoNext.Editor.InspectorEditor.FlightMenu
             EditorGUI.BeginChangeCheck();
             EditorGUILayout.PropertyField(_menuGroupNameProperty);
             EditorGUILayout.PropertyField(_menuGroupDescriptionProperty);
+            EditorGUILayout.PropertyField(_keepUpdateTitleProperty);
             if (EditorGUI.EndChangeCheck())
             {
                 _serializedObject.ApplyModifiedProperties();

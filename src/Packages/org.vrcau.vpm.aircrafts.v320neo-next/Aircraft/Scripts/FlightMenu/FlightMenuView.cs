@@ -51,6 +51,7 @@ namespace VAU.V320NeoNext.Runtime.FlightMenu
         public bool menuActivated;
 
         private GameObject[] _itemGenerated = new GameObject[0];
+        private TextMeshProUGUI[] _itemTitleGenerated = new TextMeshProUGUI[0];
         private FlightMenuItemBase[] _flightMenuActivated = new FlightMenuItemBase[0];
 
         private void Start()
@@ -75,6 +76,19 @@ namespace VAU.V320NeoNext.Runtime.FlightMenu
                 {
                     SetItemActivatedIndicator(index, menuItem.isActivated);
                 }
+
+                if (menuItem.updateTitleFromEventTarget)
+                {
+                    _itemTitleGenerated[index].text = 
+                        string.Format(
+                            menuItem.titleTemplate, 
+                            menuItem.eventTarget.GetProgramVariable(menuItem.titleVariableName));
+                }
+            }
+
+            if (menuGroupActivated.keepUpdateGroupTitle)
+            {
+                UpdateMenuGroupTitleBox(menuGroupActivated);
             }
         }
 
@@ -170,6 +184,7 @@ namespace VAU.V320NeoNext.Runtime.FlightMenu
 
             var menuLength = _flightMenuActivated.Length;
             _itemGenerated = new GameObject[menuLength * 4];
+            _itemTitleGenerated = new TextMeshProUGUI[menuLength];
 
             var anglePerItem = 360f / menuLength;
             var initialItemAngle = anglePerItem / 2f;
@@ -226,7 +241,10 @@ namespace VAU.V320NeoNext.Runtime.FlightMenu
                     imageComponent.gameObject.SetActive(false);
                 }
 
-                titleItem.GetComponentInChildren<TextMeshProUGUI>().text = menuItem.title;
+                var titleText = titleItem.GetComponentInChildren<TextMeshProUGUI>();
+                titleText.text = menuItem.title;
+                _itemTitleGenerated[index] = titleText;
+
                 titleItem.GetComponentInChildren<FlightMenuItemTitleRotationTarget>()
                     .transform.localRotation = Quaternion.Inverse(titleItem.transform.localRotation);
 
