@@ -68,7 +68,7 @@ namespace VAU.V320NeoNext.Editor.InspectorEditor.FlightMenu
             _iconProperty.objectReferenceValue =
                 EditorGUI.ObjectField(
                     EditorGUILayout.GetControlRect(GUILayout.Width(64), GUILayout.Height(64)),
-                    _iconProperty.objectReferenceValue, typeof(Texture), false);
+                    _iconProperty.objectReferenceValue, typeof(Sprite), false);
 
             GUILayout.BeginVertical();
             EditorGUILayout.PropertyField(_titleProperty, new GUIContent());
