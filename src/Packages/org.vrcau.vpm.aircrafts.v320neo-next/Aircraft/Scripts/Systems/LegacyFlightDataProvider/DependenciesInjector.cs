@@ -8,7 +8,7 @@ using VAU.V320NeoNext.Runtime.Systems.Engine.SaccExt;
 using VAU.V320NeoNext.Runtime.Systems.FlightControl.SaccExt;
 using VAU.V320NeoNext.Runtime.Systems.Gpws;
 using VAU.V320NeoNext.Runtime.Systems.LandingGear.SaccExt;
-using VAU.V320NeoNext.Runtime.Systems.LandingLight.SaccExt;
+using VAU.V320NeoNext.Runtime.Systems.LandingLight;
 using VAU.V320NeoNext.Runtime.Systems.LegacFmgc;
 using VAU.V320NeoNext.Runtime.Systems.LegacyAutoBrake;
 using VAU.V320NeoNext.Runtime.Systems.LegacyFlightDataProvider.LegacyADRIRU;
@@ -42,7 +42,7 @@ namespace VAU.V320NeoNext.Runtime.Systems.LegacyFlightDataProvider {
         public DFUNC_a320_Brake brake;
         public AutoBrake autoBrake;
 
-        public DFUNC_a320_LandingLight landingLight;
+        public A320LandingLightToggle landingLight;
         public DFUNC_Canopy canopy;
         public DFUNC_a320_AutoThrust autoThrust;
         public DFUNC_AltHold altHold;
@@ -97,7 +97,7 @@ namespace VAU.V320NeoNext.Runtime.Systems.LegacyFlightDataProvider {
             flaps = GetComponentInChildren<DFUNC_a320_FlapController>(true);
 
             brake = GetComponentInChildren<DFUNC_a320_Brake>(true);
-            landingLight = GetComponentInChildren<DFUNC_a320_LandingLight>(true);
+            landingLight = GetComponentInChildren<A320LandingLightToggle>(true);
             canopy = GetComponentInChildren<DFUNC_Canopy>(true);
             autoThrust = GetComponentInChildren<DFUNC_a320_AutoThrust>(true);
             altHold = GetComponentInChildren<DFUNC_AltHold>(true);
