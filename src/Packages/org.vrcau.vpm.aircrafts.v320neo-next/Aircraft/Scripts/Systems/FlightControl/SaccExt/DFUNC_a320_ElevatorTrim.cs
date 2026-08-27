@@ -24,7 +24,7 @@ namespace VAU.V320NeoNext.Runtime.Systems.FlightControl.SaccExt
         //[Range(0, 50)] public float trimBias = 8;
         private float prevTrim;
 
-        public float initialTrim = -0.1f;
+        public float initialTrim = 0.3f;
         [UdonSynced] public float trim; //当前配平位置，-1~1
         public float critiaclAOA = 20f; //临界攻角，sav.pitchaoa低于该数值时，触发afloorProtect;
 
@@ -49,20 +49,13 @@ namespace VAU.V320NeoNext.Runtime.Systems.FlightControl.SaccExt
         public float ki2 = 0.4f;
         public float kd2 = 0.0003f;
 
-
         [Header("animation")] public string animatorParameterName = "elevtrim";
-
-        [Header("Haptics")] public Vector3 vrInputAxis = Vector3.forward;
-        [Range(0, 1)] public float hapticDuration = 0.2f;
-        [Range(0, 1)] public float hapticAmplitude = 0.5f;
-        [Range(0, 1)] public float hapticFrequency = 0.1f;
-
-        [Header("Debug")] public Transform debugControllerTransform;
 
         [Tooltip("0-直接法则 1-飞行模式 2-地面模式 3-拉平模式")]
         public int trimMode = 1; //0-直接法则 1-飞行模式 2-地面模式 3-拉平模式
 
-        public bool TrimActive; //当侧杆(SFEXT_O_JoystickGrabbed/SFEXT_O_JoystickDropped)以及AP(JoystickOverride)无输入时，配平才激活
+        public bool
+            autoTrimActive; //当侧杆(SFEXT_O_JoystickGrabbed/SFEXT_O_JoystickDropped)以及AP(JoystickOverride)无输入时，配平才激活
 
         public bool TrimActiveLastFrame = false;
         public bool afloorProtect = false;
@@ -72,9 +65,7 @@ namespace VAU.V320NeoNext.Runtime.Systems.FlightControl.SaccExt
 
         private void ResetStatus()
         {
-            //自动配平默认开启
             trimMode = 0;
-            Dial_Funcon.SetActive(TrimActive);
             prevTrim = trim = initialTrim;
             if (vehicleAnimator) vehicleAnimator.SetFloat(animatorParameterName, .5f);
             //SAVControl.SetProgramVariable("VelLiftStart", trimStrength* trim + trimBias);
@@ -95,7 +86,7 @@ namespace VAU.V320NeoNext.Runtime.Systems.FlightControl.SaccExt
             var pitchInputs = SAVControl.RotationInputs.x;
 
             //飞行模式
-            if (TrimActive &&
+            if (autoTrimActive &&
                 !SAVControl.Taxiing &&
                 radioAltimeter.radioAltitude >= 50)
             {
@@ -148,7 +139,7 @@ namespace VAU.V320NeoNext.Runtime.Systems.FlightControl.SaccExt
             }
 
             //地面模式
-            else if (TrimActive && SAVControl.Taxiing)
+            else if (autoTrimActive && SAVControl.Taxiing)
             {
                 if (trimMode != 2)
                 {
@@ -162,7 +153,7 @@ namespace VAU.V320NeoNext.Runtime.Systems.FlightControl.SaccExt
             }
 
             //拉平模式
-            else if (TrimActive &&
+            else if (autoTrimActive &&
                      radioAltimeter.radioAltitude < 50 &&
                      !SAVControl.Taxiing &&
                      BasicFlightData.verticalSpeed < -0.6 &&
@@ -186,15 +177,6 @@ namespace VAU.V320NeoNext.Runtime.Systems.FlightControl.SaccExt
                 */
                 TrimError = TrimErrorIntergrate = TrimErrorDerivative = 0f;
                 trim = Mathf.MoveTowards(trim, targetTrim, DeltaTime * 0.025f);
-            }
-
-            //手动配平
-            else if (!TrimActive)
-            {
-                var input = GetSliderInput();
-                trim = Mathf.Clamp(trim + input, -1, 1);
-                if (!Mathf.Approximately(input, 0) &&
-                    Time.frameCount % Mathf.FloorToInt(hapticDuration / Time.fixedDeltaTime) == 0) PlayHapticEvent();
             }
         }
 
@@ -274,7 +256,8 @@ namespace VAU.V320NeoNext.Runtime.Systems.FlightControl.SaccExt
             SetDirty();
             if (vehicleAnimator) vehicleAnimator.SetFloat(animatorParameterName, Remap01(trim, -1, 1));
             //SAVControl.SetProgramVariable("VelLiftStart", trim * trimStrength + trimBias);
-            DebugOut.text = $"TRIM[PdUp/Dn]\nAUTO SW [{desktopEnableAuto}]\n" + (trim).ToString("f2") + (TrimActive ? "\nAuto" : "\n");
+            DebugOut.text = $"TRIM[PdUp/Dn]\nAUTO SW [{desktopEnableAuto}]\n" + (trim).ToString("f2") +
+                            (autoTrimActive ? "\nAuto" : "\n");
         }
 
         private void FixedUpdate()
@@ -303,7 +286,7 @@ namespace VAU.V320NeoNext.Runtime.Systems.FlightControl.SaccExt
             aoALiftPitch = Mathf.Clamp(aoALiftPitch, aoALiftPitchMin, 1);
             aoALiftPitch = Mathf.Clamp(aoALiftPitch, SAVControl.HighPitchAoaMinLift, 1);
 
-            var pitchForce = (vehicleTransform.up * trim +
+            var pitchForce = (vehicleTransform.up * -trim +
                               vehicleTransform.up *
                               (downspeed * SAVControl.VelStraightenStrPitch * aoALiftPitch * rotlift)) *
                              (SAVControl.Atmosphere * SAVControl.VehicleRigidbody.mass);
@@ -330,38 +313,28 @@ namespace VAU.V320NeoNext.Runtime.Systems.FlightControl.SaccExt
             //SAVControl.SetProgramVariable("JoystickOverride", FBWRotationInputs);
         }
 
-        public void TrimUp()
+        public void _TrimUp()
         {
             trim += desktopStep;
         }
 
-        public void TrimDown()
+        public void _TrimDown()
         {
             trim -= desktopStep;
         }
 
-        private void PlayHapticEvent()
+        public void _ToggleAutoTrim()
         {
-            var hand = trackingTarget == VRCPlayerApi.TrackingDataType.LeftHand
-                ? VRC_Pickup.PickupHand.Left
-                : VRC_Pickup.PickupHand.Right;
-            Networking.LocalPlayer.PlayHapticEventInHand(hand, hapticDuration, hapticAmplitude, hapticFrequency);
-        }
-
-        private void ToggleAutoTrim()
-        {
-            if (!TrimActive)
+            if (!autoTrimActive)
             {
-                TrimActive = true;
+                autoTrimActive = true;
                 Debug.Log("[FBW]AUTO TRIM");
             }
             else
             {
-                TrimActive = false;
+                autoTrimActive = false;
                 Debug.Log("[FBW]MAN TRIM");
             }
-
-            Dial_Funcon.SetActive(TrimActive);
 
             TrimError = 0;
             TrimErrorIntergrate = 0;
@@ -374,55 +347,20 @@ namespace VAU.V320NeoNext.Runtime.Systems.FlightControl.SaccExt
 
         #region DFUNC
 
-        public float controllerSensitivity = 0.5f;
         public KeyCode desktopUp = KeyCode.PageUp, desktopDown = KeyCode.PageDown;
 
         public float desktopStep = 0.02f;
 
         public KeyCode desktopEnableAuto = KeyCode.F7;
-        public GameObject Dial_Funcon;
         public TextMeshProUGUI DebugOut;
-        private string triggerAxis;
-        private VRCPlayerApi.TrackingDataType trackingTarget;
 
         public SaccEntity entityControl;
         public SaccAirVehicle SAVControl;
         private Transform controlsRoot;
         private Rigidbody vehicleRigidbody;
         private Animator vehicleAnimator;
-        private bool hasPilot, isPilot, isOwner, isSelected, isDirty, triggered, prevTriggered;
-        private bool InVR;
-        private bool triggerLastFrame;
-        private Vector3 prevTrackingPosition;
-        private float sliderInput;
+        private bool hasPilot, isPilot, isOwner, isDirty;
         private float rotMultiMaxSpeed;
-        private float triggerTapTime = 1;
-
-        public void DFUNC_LeftDial()
-        {
-            triggerAxis = "Oculus_CrossPlatform_PrimaryIndexTrigger";
-            trackingTarget = VRCPlayerApi.TrackingDataType.LeftHand;
-        }
-
-        public void DFUNC_RightDial()
-        {
-            triggerAxis = "Oculus_CrossPlatform_SecondaryIndexTrigger";
-            trackingTarget = VRCPlayerApi.TrackingDataType.RightHand;
-        }
-
-        public void DFUNC_Selected()
-        {
-            gameObject.SetActive(true);
-            isSelected = true;
-            prevTriggered = false;
-        }
-
-        public void DFUNC_Deselected()
-        {
-            gameObject.SetActive(trimMode > 0);
-            isSelected = false;
-            triggerTapTime = 1;
-        }
 
         public void SFEXT_L_EntityStart()
         {
@@ -437,15 +375,11 @@ namespace VAU.V320NeoNext.Runtime.Systems.FlightControl.SaccExt
         {
             isPilot = true;
             isOwner = true;
-            isSelected = false;
-            prevTriggered = false;
         }
 
         public void SFEXT_O_PilotExit()
         {
             isPilot = false;
-            triggerTapTime = 1;
-            isSelected = false;
         }
 
         public void SFEXT_O_TakeOwnership()
@@ -479,17 +413,6 @@ namespace VAU.V320NeoNext.Runtime.Systems.FlightControl.SaccExt
             ResetStatus();
         }
 
-
-        private void OnEnable()
-        {
-            triggerLastFrame = true;
-        }
-
-        private void OnDisable()
-        {
-            isSelected = false;
-        }
-
         private void Update()
         {
             isDirty = false;
@@ -500,63 +423,17 @@ namespace VAU.V320NeoNext.Runtime.Systems.FlightControl.SaccExt
 
         public override void PostLateUpdate()
         {
-            if (isPilot)
-            {
-                prevTriggered = triggered;
-                triggered = (isSelected && Input.GetAxis(triggerAxis) > 0.75f) || debugControllerTransform;
-                triggerTapTime += Time.deltaTime;
+            if (!isPilot) return;
 
-                if (triggered)
-                {
-                    var trackingPosition =
-                        controlsRoot.InverseTransformPoint(Networking.LocalPlayer.GetTrackingData(trackingTarget)
-                            .position);
-                    if (debugControllerTransform)
-                        trackingPosition = controlsRoot.InverseTransformPoint(debugControllerTransform.position);
+            if (Input.GetKeyDown(desktopUp)) _TrimUp();
+            if (Input.GetKeyDown(desktopDown)) _TrimDown();
 
-                    if (prevTriggered)
-                    {
-                        sliderInput =
-                            Mathf.Clamp(
-                                Vector3.Dot(trackingPosition - prevTrackingPosition, vrInputAxis) *
-                                controllerSensitivity, -1, 1);
-                    }
-                    else //enable and disable
-                    {
-                        if (triggerTapTime > .4f) //no double tap
-                        {
-                            triggerTapTime = 0;
-                        }
-                        else //double tap detected, switch trim
-                        {
-                            ToggleAutoTrim();
-                            triggerTapTime = 1;
-                        }
-                    }
-
-                    prevTrackingPosition = trackingPosition;
-                }
-                else
-                {
-                    sliderInput = 0;
-                }
-
-                if (Input.GetKeyDown(desktopUp)) sliderInput = desktopStep;
-                if (Input.GetKeyDown(desktopDown)) sliderInput = -desktopStep;
-
-                if (Input.GetKeyDown(desktopEnableAuto)) ToggleAutoTrim();
-            }
+            if (Input.GetKeyDown(desktopEnableAuto)) _ToggleAutoTrim();
         }
 
         private void SetDirty()
         {
             isDirty = true;
-        }
-
-        private float GetSliderInput()
-        {
-            //使用了sav的标记方法，UP=-1 DOWN=1
-            return -sliderInput;
         }
 
         #endregion
