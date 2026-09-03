@@ -18,9 +18,12 @@ namespace VAU.V320NeoNext.Runtime.FlightMenu
 
         public KeyCode desktopModeHoldToMoveMenuCursorKey = KeyCode.Tab;
 
-        [Header("VR Mode Thumbstick Axis")]
+        [Header("VR Mode Axis and Button")]
         public string thumbstickHorizontalAxis = "Oculus_CrossPlatform_PrimaryThumbstickHorizontal";
         public string thumbstickVerticalAxis = "Oculus_CrossPlatform_PrimaryThumbstickVertical";
+        public string thumbstickButtonName = "Oculus_CrossPlatform_PrimaryThumbstick";
+        public string triggerAxis = "Oculus_CrossPlatform_PrimaryIndexTrigger";
+        public float triggerAxisThreshold = 0.8f;
 
         [Header("Debug Only")]
         public KeyCode toggleForceVrKey = KeyCode.RightAlt;
@@ -129,7 +132,7 @@ namespace VAU.V320NeoNext.Runtime.FlightMenu
                 _sqrMagnitudeInLastFrame = cursorSqrMagnitude;
                 _lastHoverItemIndex = -1;
 
-                if (IsTriggerPressed())
+                if (IsTriggerPressed() || Input.GetButtonDown(thumbstickButtonName))
                 {
                     viewCore._OnTriggerOnBlank();
                 }
@@ -170,7 +173,7 @@ namespace VAU.V320NeoNext.Runtime.FlightMenu
 
         private bool IsTriggerPressed()
         {
-            return Input.GetMouseButtonDown(0);
+            return Input.GetMouseButtonDown(0) || Input.GetAxisRaw(triggerAxis) > triggerAxisThreshold;
         }
     }
 }
