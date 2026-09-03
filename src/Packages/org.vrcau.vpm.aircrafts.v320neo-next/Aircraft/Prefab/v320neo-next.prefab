@@ -17565,7 +17565,6 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 76105789588599360}
-  - {fileID: 5741708677639719251}
   m_Father: {fileID: 8113123468145042700}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1053943389686912086
@@ -54637,13 +54636,14 @@ MonoBehaviour:
   - {fileID: 9015973210307997977}
   - {fileID: 8397340840038700154}
   - {fileID: 1948125224356613658}
+  - {fileID: 7021629069946968379}
   Dial_Functions_L:
   - {fileID: 1420792167383067488}
   - {fileID: 1420792167383067488}
   - {fileID: 1420792167383067488}
   - {fileID: 1420792167383067488}
   - {fileID: 9030965893291498146}
-  - {fileID: 7021629069946968379}
+  - {fileID: 1420792167383067488}
   - {fileID: 1420792167383067488}
   - {fileID: 1420792167383067488}
   Dial_Functions_R:
@@ -63207,7 +63207,7 @@ GameObject:
   - component: {fileID: 7021629069946968379}
   - component: {fileID: 6919250510744052780}
   m_Layer: 0
-  m_Name: DFUNC_AltHold
+  m_Name: AltHoldController
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -63221,12 +63221,12 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5860543857410183069}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 1012262601000222114}
+  m_Father: {fileID: 6582084721374510317}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &7021629069946968379
 MonoBehaviour:
@@ -86353,6 +86353,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 7786450989913678931}
+  - {fileID: 5741708677639719251}
   m_Father: {fileID: 1756185802540127018}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &6515830380262536111
