@@ -10,6 +10,11 @@ namespace VAU.V320NeoNext.Runtime.FlightMenu.MenuData.Item
         public string title;
         public Sprite icon;
         public bool isActivated;
+        public bool isDisabled;
+
+        public bool requestClosePopupWhenTrigger;
+
+        public bool isHide;
 
         public UdonSharpBehaviour eventTarget;
         public string triggerEventName;
@@ -19,13 +24,22 @@ namespace VAU.V320NeoNext.Runtime.FlightMenu.MenuData.Item
 
         public bool updateTitleFromEventTarget;
         public string titleVariableName;
-        public string titleTemplate = "{0}"; 
+        public string titleTemplate = "{0}";
+
+        public bool updateIsEnabledFromEventTarget;
+        public string isDisabledVariableName;
+        public bool invertIsDisabledVariable;
 
         public virtual FlightMenuTriggerResult Trigger()
         {
             if (eventTarget && !string.IsNullOrWhiteSpace(triggerEventName))
             {
                 eventTarget.SendCustomEvent(triggerEventName);
+            }
+
+            if (requestClosePopupWhenTrigger)
+            {
+                return FlightMenuTriggerResult.RequestClosePopup;
             }
 
             return FlightMenuTriggerResult.Noop;
@@ -43,6 +57,7 @@ namespace VAU.V320NeoNext.Runtime.FlightMenu.MenuData.Item
         Noop = 0,
         OpenNewMenu = 1,
         OpenPopupMenu = 2,
-        InternalBackMenu = 3
+        InternalBackMenu = 3,
+        RequestClosePopup = 4
     }
 }

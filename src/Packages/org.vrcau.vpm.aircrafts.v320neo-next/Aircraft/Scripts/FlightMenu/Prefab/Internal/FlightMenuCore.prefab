@@ -136,6 +136,19 @@ MonoBehaviour:
   title: Back
   icon: {fileID: 21300000, guid: d635016ca8d37324eaf5d65e2c500fc6, type: 3}
   isActivated: 0
+  isDisabled: 0
+  requestClosePopupWhenTrigger: 0
+  isHide: 0
+  eventTarget: {fileID: 0}
+  triggerEventName: 
+  updateIsActivatedFromEventTarget: 0
+  isActivatedVariableName: 
+  updateTitleFromEventTarget: 0
+  titleVariableName: 
+  titleTemplate: '{0}'
+  updateIsEnabledFromEventTarget: 0
+  isDisabledVariableName: 
+  invertIsDisabledVariable: 0
 --- !u!114 &349963216509650734
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -234,6 +247,8 @@ MonoBehaviour:
   menuGroupTitleText: {fileID: 456057390524029915}
   menuGroupDescriptionText: {fileID: 8126371807701748635}
   closePopupMenuTipText: {fileID: 496185365107760798}
+  normalItemTitleColor: {r: 1, g: 1, b: 1, a: 1}
+  disabledItemTitleColor: {r: 1, g: 1, b: 1, a: 0.2}
   backgroundClipTemplate: {fileID: 2895981371690107605, guid: c91ade258a4034a4dace8124825f28dc, type: 3}
   hoverClipTemplate: {fileID: 760276980043048469, guid: a187d0555247be84b8b7700761163370, type: 3}
   activatedClipTemplate: {fileID: 4003128317223206755, guid: be2b4188134064e4e88e62fde98020a2, type: 3}
@@ -241,6 +256,7 @@ MonoBehaviour:
   marginAngle: 2
   menuGroupHistory: []
   menuGroupActivated: {fileID: 0}
+  menuActivated: 0
 --- !u!114 &6571243296002751339
 MonoBehaviour:
   m_ObjectHideFlags: 0

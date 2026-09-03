@@ -36,6 +36,9 @@ namespace VAU.V320NeoNext.Runtime.FlightMenu
         public TextMeshProUGUI menuGroupDescriptionText;
         public TextMeshProUGUI closePopupMenuTipText;
 
+        public Color normalItemTitleColor = Color.white;
+        public Color disabledItemTitleColor = new Color(1, 1, 1, 0.2f);
+
         [Header("Item Image Template")] 
         public GameObject backgroundClipTemplate;
         public GameObject hoverClipTemplate;
@@ -77,13 +80,17 @@ namespace VAU.V320NeoNext.Runtime.FlightMenu
                     SetItemActivatedIndicator(index, menuItem.isActivated);
                 }
 
+                var titleText = _itemTitleGenerated[index];
                 if (menuItem.updateTitleFromEventTarget)
                 {
-                    _itemTitleGenerated[index].text = 
+                    titleText.text = 
                         string.Format(
                             menuItem.titleTemplate, 
                             menuItem.eventTarget.GetProgramVariable(menuItem.titleVariableName));
                 }
+
+                var itemIsEnabled = IsMenuItemEnabled(menuItem);
+                titleText.color = itemIsEnabled ? normalItemTitleColor : disabledItemTitleColor;
             }
 
             if (menuGroupActivated.keepUpdateGroupTitle)
@@ -101,8 +108,8 @@ namespace VAU.V320NeoNext.Runtime.FlightMenu
                 ClearHistory();
             }
 
-            var newMenuGroupItems = newMenuGroup.menuItems;
-            if (menuGroupActivated)
+            var newMenuGroupItems = FilterHiddenMenuItems(newMenuGroup.menuItems);
+            if (menuGroupActivated && menuGroupActivated != newMenuGroup)
             {
                 PushHistory(menuGroupActivated);
                 _flightMenuActivated = new FlightMenuItemBase[newMenuGroupItems.Length + 1];
@@ -123,6 +130,25 @@ namespace VAU.V320NeoNext.Runtime.FlightMenu
             menuController.RequestMenuUpdate(_itemNumber);
 
             menuActivated = true;
+        }
+
+        private FlightMenuItemBase[] FilterHiddenMenuItems(FlightMenuItemBase[] itemSource)
+        {
+            var filteredItems = new FlightMenuItemBase[itemSource.Length];
+            var filteredItemIndex = 0;
+            for (int index = 0; index < itemSource.Length; index++)
+            {
+                if (itemSource[index].isHide) continue;
+                filteredItems[filteredItemIndex] = itemSource[index];
+                filteredItemIndex++;
+            }
+
+            var newFilteredItems = new FlightMenuItemBase[filteredItemIndex];
+            for (int index = 0; index < filteredItemIndex; index++)
+            {
+                newFilteredItems[index] = filteredItems[index];
+            }
+            return newFilteredItems;
         }
 
         private void GoBack()
@@ -243,6 +269,10 @@ namespace VAU.V320NeoNext.Runtime.FlightMenu
 
                 var titleText = titleItem.GetComponentInChildren<TextMeshProUGUI>();
                 titleText.text = menuItem.title;
+                var itemIsEnabled = menuItem.updateIsEnabledFromEventTarget ?
+                    (bool)menuItem.eventTarget.GetProgramVariable(menuItem.isDisabledVariableName) :
+                    menuItem.isDisabled;
+                titleText.color = itemIsEnabled ? normalItemTitleColor : disabledItemTitleColor;
                 _itemTitleGenerated[index] = titleText;
 
                 titleItem.GetComponentInChildren<FlightMenuItemTitleRotationTarget>()
@@ -294,6 +324,10 @@ namespace VAU.V320NeoNext.Runtime.FlightMenu
             }
 
             var menuItem = _flightMenuActivated[itemIndex];
+            var itemIsEnabled = IsMenuItemEnabled(menuItem);
+
+            if (!itemIsEnabled) return;
+
             var triggerResult = menuItem.Trigger();
 
             switch (triggerResult)
@@ -326,6 +360,9 @@ namespace VAU.V320NeoNext.Runtime.FlightMenu
                     }
 
                     OpenPopupMenu(menuItem.GetNewMenu(), itemIndex);
+                    break;
+                case FlightMenuTriggerResult.RequestClosePopup:
+                    ReturnToMainMenu();
                     break;
                 default:
                     Debug.LogWarning(
@@ -401,5 +438,14 @@ namespace VAU.V320NeoNext.Runtime.FlightMenu
         }
 
         #endregion
+
+        private bool IsMenuItemEnabled(FlightMenuItemBase menuItem)
+        {
+            var itemIsDisabled = menuItem.updateIsEnabledFromEventTarget ?
+                (bool)menuItem.eventTarget.GetProgramVariable(menuItem.isDisabledVariableName) :
+                menuItem.isDisabled;
+
+            return menuItem.invertIsDisabledVariable ? itemIsDisabled : !itemIsDisabled;
+        }
     }
 }
