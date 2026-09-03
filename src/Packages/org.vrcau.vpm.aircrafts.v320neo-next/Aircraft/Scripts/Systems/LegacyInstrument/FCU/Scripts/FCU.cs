@@ -31,7 +31,7 @@ namespace VAU.V320NeoNext.Runtime.Systems.LegacyInstrument.FCU.Scripts {
             cockpitAnimator.SetBool(AP1_HASH, _altHoldDFunc.AltHold);
             cockpitAnimator.SetBool(ATHR_HASH, _cruiseDFunc.Cruise || _cruiseDFunc.isAutoThrustArm);
 
-            TargetSpeed = Convert.ToInt32(_cruiseDFunc.SetSpeed * 1.9438445f);
+            TargetSpeed = Convert.ToInt32(_cruiseDFunc.SetSpeed);
         }
 
         private void UpdateFCUMode() {
