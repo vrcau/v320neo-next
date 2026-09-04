@@ -111626,7 +111626,7 @@ MonoBehaviour:
   requestClosePopupWhenTrigger: 0
   isHide: 0
   eventTarget: {fileID: 1120376107507212076}
-  triggerEventName: 
+  triggerEventName: KeyboardInput
   updateIsActivatedFromEventTarget: 1
   isActivatedVariableName: Cruise
   updateTitleFromEventTarget: 0
