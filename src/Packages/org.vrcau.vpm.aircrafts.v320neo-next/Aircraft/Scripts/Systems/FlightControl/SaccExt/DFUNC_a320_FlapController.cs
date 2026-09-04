@@ -2,7 +2,6 @@
 using UdonSharp;
 using UnityEngine;
 using VAU.V320NeoNext.Runtime.Systems.LegacyFlightDataProvider.LegacyADRIRU;
-using VRC.SDKBase;
 
 namespace VAU.V320NeoNext.Runtime.Systems.FlightControl.SaccExt {
     [UdonBehaviourSyncMode(BehaviourSyncMode.Manual)]
@@ -60,10 +59,10 @@ namespace VAU.V320NeoNext.Runtime.Systems.FlightControl.SaccExt {
         public ADIRU adiru;
 
         [Header("Inputs")]
-        public float controllerSensitivity = 10f;
-        public Vector3 vrInputAxis = Vector3.forward;
         public KeyCode desktopKey = KeyCode.F;
-        public bool seamless = true;
+
+        public KeyCode desktopFlapUpKey = KeyCode.Alpha1;
+        public KeyCode desktopFlapDownKey = KeyCode.Alpha2;
 
         [Header("Animator")]
         public string boolParameterName = "flaps";
@@ -80,11 +79,6 @@ namespace VAU.V320NeoNext.Runtime.Systems.FlightControl.SaccExt {
         public float overspeedDamageMultiplier = 10.0f;
         public float brokenDragMultiplier = 2.9f;
         public float brokenLiftMultiplier = 0.3f;
-
-        [Header("Haptics")]
-        [Range(0, 1)] public float hapticDuration = 0.1f;
-        [Range(0, 1)] public float hapticAmplitude = 0.5f;
-        [Range(0, 1)] public float hapticFrequency = 0.1f;
 
         /*[System.NonSerialized]*/ [UdonSynced(UdonSyncMode.None)] public int leverIndex;
         /*[HideInInspector]*/
@@ -113,29 +107,17 @@ namespace VAU.V320NeoNext.Runtime.Systems.FlightControl.SaccExt {
             }
             get => _wingBroken;
         }
-        private string triggerAxis;
-        private VRCPlayerApi.TrackingDataType trackingTarget;
-        private bool hasPilot, isPilot, isOwner, selected;
+
+        private bool hasPilot, isPilot, isOwner;
         private SaccAirVehicle airVehicle;
-        private Transform controlsRoot;
+
         private float[] audioVolumes, audioPitches;
-        public void DFUNC_LeftDial() {
-            triggerAxis = "Oculus_CrossPlatform_PrimaryIndexTrigger";
-            trackingTarget = VRCPlayerApi.TrackingDataType.LeftHand;
-        }
-        public void DFUNC_RightDial() {
-            triggerAxis = "Oculus_CrossPlatform_SecondaryIndexTrigger";
-            trackingTarget = VRCPlayerApi.TrackingDataType.RightHand;
-        }
 
         public void SFEXT_L_EntityStart() {
             var entity = GetComponentInParent<SaccEntity>();
             airVehicle = (SaccAirVehicle)entity.GetExtention(GetUdonTypeName<SaccAirVehicle>());
 
             vehicleAnimator = airVehicle.VehicleAnimator;
-
-            controlsRoot = airVehicle.ControlsRoot;
-            if (!controlsRoot) controlsRoot = entity.transform;
 
             maxFlapAngle = flapDetents[flapDetents.Length - 1];
             maxSlatAngle = slatDetents[slatDetents.Length - 1];
@@ -156,7 +138,6 @@ namespace VAU.V320NeoNext.Runtime.Systems.FlightControl.SaccExt {
         public void SFEXT_O_PilotEnter() {
             isPilot = true;
             isOwner = true;
-            selected = false;
         }
         public void SFEXT_O_PilotExit() => isPilot = false;
 
@@ -170,9 +151,6 @@ namespace VAU.V320NeoNext.Runtime.Systems.FlightControl.SaccExt {
         public void SFEXT_G_PilotExit() => hasPilot = false;
         public void SFEXT_G_Explode() => ResetStatus();
         public void SFEXT_G_RespawnButton() => ResetStatus();
-
-        public void DFUNC_Selected() => selected = true;
-        public void DFUNC_Deselected() => selected = false;
 
         private void Update() {
             var deltaTime = Time.deltaTime;
@@ -226,42 +204,29 @@ namespace VAU.V320NeoNext.Runtime.Systems.FlightControl.SaccExt {
             gameObject.SetActive(false);
         }
 
-        private bool prevTrigger;
-        private Vector3 trackingOrigin;
-        private float targetDetentOrigin;
         private void HandleInput() {
-            if (selected) {
-                var trigger = Input.GetAxis(triggerAxis) > 0.7f;
-                var triggerChanged = prevTrigger != trigger;
-                prevTrigger = trigger;
-
-                if (trigger) {
-                    var trackingPosition = controlsRoot.InverseTransformPoint(Networking.LocalPlayer.GetTrackingData(trackingTarget).position);
-                    if (triggerChanged) {
-                        trackingOrigin = trackingPosition;
-                        targetDetentOrigin = leverIndex;
-                    }
-                    else {
-                        leverIndex = (int)Mathf.Clamp(targetDetentOrigin - Vector3.Dot(trackingPosition - trackingOrigin, vrInputAxis) * (flapLeverDetent-1) * controllerSensitivity, 0, (flapLeverDetent-1));
-                        if (isPilot && targetDetentOrigin != leverIndex) {
-                            OnLeverChanged();
-                            PlayHapticEvent(); 
-                            
-                        }
-                    }
-                }
-
-                if (triggerChanged && !trigger && !seamless) {
-                    OnLeverChanged();
-                }
-            }
-
             if (Input.GetKeyDown(desktopKey)) {
                 leverIndex = (leverIndex + 1) % flapLeverDetent;
                 OnLeverChanged();
             }
+
+            if (Input.GetKeyDown(desktopFlapUpKey))
+            {
+                RequestFlapsUp();
+            }
+
+            if (Input.GetKeyDown(desktopFlapDownKey))
+            {
+                RequestFlapsDown();
+            }
         }
         
+        public void SetLeverIndex(int index)
+        {
+            leverIndex = index;
+            SetMovementTarget();
+        }
+
         public void RequestFlapsUp()
         {
             if (isOwner)
@@ -370,11 +335,6 @@ namespace VAU.V320NeoNext.Runtime.Systems.FlightControl.SaccExt {
 
             appliedExtraDrag = extraDrag;
             appliedExtraLift = extraLift;
-        }
-
-        private void PlayHapticEvent() {
-            var hand = trackingTarget == VRCPlayerApi.TrackingDataType.LeftHand ? VRC_Pickup.PickupHand.Left : VRC_Pickup.PickupHand.Right;
-            Networking.LocalPlayer.PlayHapticEventInHand(hand, hapticDuration, hapticAmplitude, hapticFrequency);
         }
     }
 }
