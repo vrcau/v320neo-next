@@ -1,4 +1,5 @@
 ﻿using System;
+using JetBrains.Annotations;
 using SaccFlightAndVehicles;
 using UdonSharp;
 using UnityEngine;
@@ -33,11 +34,6 @@ namespace VAU.V320NeoNext.Runtime.Systems.LandingGear.SaccExt {
 
         public bool NoPilotAlwaysParkBrake = true;
 
-        [Tooltip("停留刹车指示")]
-        public GameObject Dial_Funcon;
-
-
-        
         private float AirbrakeLerper;
         private int BRAKE_STRING = Animator.StringToHash("brake");
         [NonSerialized] [UdonSynced] public float BrakeInput;
@@ -92,7 +88,7 @@ namespace VAU.V320NeoNext.Runtime.Systems.LandingGear.SaccExt {
                                 }
                                 else //double tap detected, switch break
                                 {
-                                    ToggleParkBrake();
+                                    _ToggleParkBrake();
                                     triggerTapTime = 1;
                                 }
                             }
@@ -108,7 +104,7 @@ namespace VAU.V320NeoNext.Runtime.Systems.LandingGear.SaccExt {
                     if (Input.GetKey(KeyboardControl)) KeyboardBrakeInput = 1; //获取键盘输入
                     if (Input.GetKey(ParkBreakControl)) {
                         if (!prevKeyPress) {
-                            ToggleParkBrake();
+                            _ToggleParkBrake();
                             prevKeyPress = true;
                         }
                     } //生成parkbreak开关或brakeinput
@@ -180,9 +176,6 @@ namespace VAU.V320NeoNext.Runtime.Systems.LandingGear.SaccExt {
             }
         }
 
-        public override void OnDeserialization() {
-            Dial_Funcon.SetActive(ParkBreakSet);
-        }
         public void DFUNC_LeftDial() {
             UseLeftTrigger = true;
         }
@@ -203,7 +196,6 @@ namespace VAU.V320NeoNext.Runtime.Systems.LandingGear.SaccExt {
                 gameObject.SetActive(false);
             else
                 gameObject.SetActive(true);
-            Dial_Funcon.SetActive(ParkBreakSet);
         }
 
         public void DFUNC_Selected() {
@@ -220,7 +212,6 @@ namespace VAU.V320NeoNext.Runtime.Systems.LandingGear.SaccExt {
         public void SFEXT_O_PilotEnter() {
             prevTriggered = false;
             prevKeyPress = false;
-            Dial_Funcon.SetActive(ParkBreakSet);
             RequestSerialization();
         }
 
@@ -228,7 +219,6 @@ namespace VAU.V320NeoNext.Runtime.Systems.LandingGear.SaccExt {
             BrakeInput = 0;
             Selected = false;
             if (NoPilotAlwaysParkBrake) ParkBreakSet = true;
-            Dial_Funcon.SetActive(ParkBreakSet);
             RequestSerialization();
         }
 
@@ -273,10 +263,11 @@ namespace VAU.V320NeoNext.Runtime.Systems.LandingGear.SaccExt {
         public void SFEXT_G_TouchDown() {
         }
 
-        private void ToggleParkBrake() {
+        [PublicAPI]
+        public void _ToggleParkBrake() {
+            if (!IsOwner) return;
             ParkBreakSet = !ParkBreakSet;
-            Dial_Funcon.SetActive(ParkBreakSet);
-            if (IsOwner) RequestSerialization();
+            RequestSerialization();
         }
     }
 }

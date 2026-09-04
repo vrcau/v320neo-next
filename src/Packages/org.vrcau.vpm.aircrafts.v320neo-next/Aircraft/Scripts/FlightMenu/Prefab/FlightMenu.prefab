@@ -691,6 +691,10 @@ PrefabInstance:
       propertyPath: _syncMethod
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 496185365107760798, guid: 53edcaa3c075b5d4795348add51c65f0, type: 3}
+      propertyPath: m_text
+      value: Press thumbstick or LMB to close popup.
+      objectReference: {fileID: 0}
     - target: {fileID: 2962425573362100216, guid: 53edcaa3c075b5d4795348add51c65f0, type: 3}
       propertyPath: m_Name
       value: PopupFlightMenuContainer
