@@ -34,7 +34,6 @@ namespace VAU.V320NeoNext.Runtime.Systems.AutoThrust.SaccExt {
 
         private float CruiseTemp;
         private float SpeedZeroPoint;
-        [NonSerialized] public float SetSpeedInMeter = 100f;
         [NonSerialized] public int SetSpeed = 194;
 
         [NonSerialized] public bool Cruise;
@@ -53,6 +52,7 @@ namespace VAU.V320NeoNext.Runtime.Systems.AutoThrust.SaccExt {
             _injector = DependenciesInjector.GetInstance(this);
             _aircraftSystemData = _injector.equipmentData;
             _saccAirVehicle = _injector.saccAirVehicle;
+            _SetSpeedInKt(200);
         }
 
         private void Start() {
@@ -156,7 +156,7 @@ namespace VAU.V320NeoNext.Runtime.Systems.AutoThrust.SaccExt {
             }
 
             if (func_active) {
-                var error = SetSpeedInMeter - _saccAirVehicle.AirSpeed;
+                var error = SetSpeed * KtToMeter - _saccAirVehicle.AirSpeed;
 
                 CruiseDerivative = (error - CruiseDerivativeLastFrame) / DeltaTime;
                 
@@ -228,7 +228,6 @@ namespace VAU.V320NeoNext.Runtime.Systems.AutoThrust.SaccExt {
         public void _SetSpeedInKt(int speed)
         {
             SetSpeed = Mathf.Clamp(speed, MinSpeedInKt, MaxSpeedInKt);
-            SetSpeedInMeter = speed * KtToMeter;
         }
 
         public void SFEXT_O_LoseOwnership() {
