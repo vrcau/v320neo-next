@@ -21,6 +21,7 @@ namespace VAU.V320NeoNext.Runtime.FlightMenu.MenuData.Item
 
         public bool updateIsActivatedFromEventTarget;
         public string isActivatedVariableName;
+        public bool invertIsActivatedVariable;
 
         public bool updateTitleFromEventTarget;
         public string titleVariableName;

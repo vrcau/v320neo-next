@@ -5308,6 +5308,7 @@ MonoBehaviour:
   triggerEventName: 
   updateIsActivatedFromEventTarget: 1
   isActivatedVariableName: Cruise
+  invertIsActivatedVariable: 0
   updateTitleFromEventTarget: 1
   titleVariableName: SetSpeed
   titleTemplate: 'A/THR
@@ -5406,6 +5407,7 @@ MonoBehaviour:
   triggerEventName: 
   updateIsActivatedFromEventTarget: 0
   isActivatedVariableName: 
+  invertIsActivatedVariable: 0
   updateTitleFromEventTarget: 1
   titleVariableName: trimDisplayString
   titleTemplate: 'Trim
@@ -5538,6 +5540,7 @@ MonoBehaviour:
   triggerEventName: ToggleLandingLight
   updateIsActivatedFromEventTarget: 1
   isActivatedVariableName: isLandingLightOn
+  invertIsActivatedVariable: 0
   updateTitleFromEventTarget: 0
   titleVariableName: 
   titleTemplate: '{0}'
@@ -6178,6 +6181,7 @@ MonoBehaviour:
   triggerEventName: 
   updateIsActivatedFromEventTarget: 0
   isActivatedVariableName: 
+  invertIsActivatedVariable: 0
   updateTitleFromEventTarget: 1
   titleVariableName: flapStatusText
   titleTemplate: 'Flaps
@@ -6376,6 +6380,7 @@ MonoBehaviour:
   triggerEventName: _ResetDraft
   updateIsActivatedFromEventTarget: 0
   isActivatedVariableName: 
+  invertIsActivatedVariable: 0
   updateTitleFromEventTarget: 1
   titleVariableName: activeFrequencyText
   titleTemplate: 'ACTIVE
@@ -6571,6 +6576,7 @@ MonoBehaviour:
   triggerEventName: 
   updateIsActivatedFromEventTarget: 0
   isActivatedVariableName: 
+  invertIsActivatedVariable: 0
   updateTitleFromEventTarget: 0
   titleVariableName: 
   titleTemplate: '{0}'
@@ -7282,6 +7288,7 @@ MonoBehaviour:
   triggerEventName: ToggleRx
   updateIsActivatedFromEventTarget: 1
   isActivatedVariableName: rxPower
+  invertIsActivatedVariable: 0
   updateTitleFromEventTarget: 0
   titleVariableName: 
   titleTemplate: '{0}'
@@ -12533,6 +12540,7 @@ MonoBehaviour:
   triggerEventName: _ToggleStart
   updateIsActivatedFromEventTarget: 1
   isActivatedVariableName: isIndicatorActivated
+  invertIsActivatedVariable: 0
   updateTitleFromEventTarget: 0
   titleVariableName: 
   titleTemplate: '{0}'
@@ -18103,6 +18111,7 @@ MonoBehaviour:
   triggerEventName: _ToggleStart
   updateIsActivatedFromEventTarget: 1
   isActivatedVariableName: isIndicatorActivated
+  invertIsActivatedVariable: 0
   updateTitleFromEventTarget: 0
   titleVariableName: 
   titleTemplate: '{0}'
@@ -18748,6 +18757,7 @@ MonoBehaviour:
   triggerEventName: 
   updateIsActivatedFromEventTarget: 0
   isActivatedVariableName: 
+  invertIsActivatedVariable: 0
   updateTitleFromEventTarget: 0
   titleVariableName: 
   titleTemplate: '{0}'
@@ -19240,6 +19250,7 @@ MonoBehaviour:
   triggerEventName: SetFlap3
   updateIsActivatedFromEventTarget: 0
   isActivatedVariableName: 
+  invertIsActivatedVariable: 0
   updateTitleFromEventTarget: 0
   titleVariableName: 
   titleTemplate: '{0}'
@@ -19847,6 +19858,7 @@ MonoBehaviour:
   triggerEventName: 
   updateIsActivatedFromEventTarget: 1
   isActivatedVariableName: isVhfRxActivated
+  invertIsActivatedVariable: 0
   updateTitleFromEventTarget: 1
   titleVariableName: vhfStatusOverviewText
   titleTemplate: 'VHF
@@ -20213,6 +20225,7 @@ MonoBehaviour:
   triggerEventName: ToggleTx
   updateIsActivatedFromEventTarget: 1
   isActivatedVariableName: txPower
+  invertIsActivatedVariable: 0
   updateTitleFromEventTarget: 0
   titleVariableName: 
   titleTemplate: '{0}'
@@ -41257,6 +41270,7 @@ MonoBehaviour:
   triggerEventName: SetFlap1
   updateIsActivatedFromEventTarget: 0
   isActivatedVariableName: 
+  invertIsActivatedVariable: 0
   updateTitleFromEventTarget: 0
   titleVariableName: 
   titleTemplate: '{0}'
@@ -41593,6 +41607,7 @@ MonoBehaviour:
   triggerEventName: 
   updateIsActivatedFromEventTarget: 0
   isActivatedVariableName: 
+  invertIsActivatedVariable: 0
   updateTitleFromEventTarget: 0
   titleVariableName: 
   titleTemplate: '{0}'
@@ -41805,6 +41820,7 @@ MonoBehaviour:
   triggerEventName: 
   updateIsActivatedFromEventTarget: 0
   isActivatedVariableName: 
+  invertIsActivatedVariable: 0
   updateTitleFromEventTarget: 0
   titleVariableName: 
   titleTemplate: '{0}'
@@ -42422,6 +42438,7 @@ MonoBehaviour:
   triggerEventName: _TrimDown
   updateIsActivatedFromEventTarget: 0
   isActivatedVariableName: 
+  invertIsActivatedVariable: 0
   updateTitleFromEventTarget: 0
   titleVariableName: 
   titleTemplate: '{0}'
@@ -42516,6 +42533,7 @@ MonoBehaviour:
   triggerEventName: 
   updateIsActivatedFromEventTarget: 0
   isActivatedVariableName: 
+  invertIsActivatedVariable: 0
   updateTitleFromEventTarget: 0
   titleVariableName: 
   titleTemplate: '{0}'
@@ -48232,6 +48250,7 @@ MonoBehaviour:
   triggerEventName: 
   updateIsActivatedFromEventTarget: 0
   isActivatedVariableName: 
+  invertIsActivatedVariable: 0
   updateTitleFromEventTarget: 0
   titleVariableName: 
   titleTemplate: '{0}'
@@ -48560,6 +48579,7 @@ MonoBehaviour:
   triggerEventName: _DecreaseSetSpeedBy1Kt
   updateIsActivatedFromEventTarget: 0
   isActivatedVariableName: 
+  invertIsActivatedVariable: 0
   updateTitleFromEventTarget: 0
   titleVariableName: 
   titleTemplate: '{0}'
@@ -49963,6 +49983,7 @@ MonoBehaviour:
   triggerEventName: SetFlap2
   updateIsActivatedFromEventTarget: 0
   isActivatedVariableName: 
+  invertIsActivatedVariable: 0
   updateTitleFromEventTarget: 0
   titleVariableName: 
   titleTemplate: '{0}'
@@ -50175,6 +50196,7 @@ MonoBehaviour:
   triggerEventName: SetFlapFull
   updateIsActivatedFromEventTarget: 0
   isActivatedVariableName: 
+  invertIsActivatedVariable: 0
   updateTitleFromEventTarget: 0
   titleVariableName: 
   titleTemplate: '{0}'
@@ -50912,6 +50934,7 @@ MonoBehaviour:
   triggerEventName: _ToggleAutoTrim
   updateIsActivatedFromEventTarget: 1
   isActivatedVariableName: autoTrimActive
+  invertIsActivatedVariable: 0
   updateTitleFromEventTarget: 1
   titleVariableName: trimDisplayString
   titleTemplate: 'Auto Trim
@@ -51313,6 +51336,7 @@ MonoBehaviour:
   triggerEventName: _TrimUp
   updateIsActivatedFromEventTarget: 0
   isActivatedVariableName: 
+  invertIsActivatedVariable: 0
   updateTitleFromEventTarget: 0
   titleVariableName: 
   titleTemplate: '{0}'
@@ -51710,6 +51734,7 @@ MonoBehaviour:
   triggerEventName: 
   updateIsActivatedFromEventTarget: 0
   isActivatedVariableName: 
+  invertIsActivatedVariable: 0
   updateTitleFromEventTarget: 1
   titleVariableName: flapStatusText
   titleTemplate: 'Flaps
@@ -52475,6 +52500,7 @@ MonoBehaviour:
   triggerEventName: 
   updateIsActivatedFromEventTarget: 0
   isActivatedVariableName: 
+  invertIsActivatedVariable: 0
   updateTitleFromEventTarget: 0
   titleVariableName: 
   titleTemplate: '{0}'
@@ -53219,6 +53245,7 @@ MonoBehaviour:
   triggerEventName: ToggleCanopy
   updateIsActivatedFromEventTarget: 1
   isActivatedVariableName: CanopyOpen
+  invertIsActivatedVariable: 0
   updateTitleFromEventTarget: 0
   titleVariableName: 
   titleTemplate: '{0}'
@@ -53807,6 +53834,7 @@ MonoBehaviour:
   triggerEventName: SetFlapUp
   updateIsActivatedFromEventTarget: 0
   isActivatedVariableName: 
+  invertIsActivatedVariable: 0
   updateTitleFromEventTarget: 0
   titleVariableName: 
   titleTemplate: '{0}'
@@ -54071,6 +54099,7 @@ MonoBehaviour:
   triggerEventName: 
   updateIsActivatedFromEventTarget: 1
   isActivatedVariableName: isVhfRxActivated
+  invertIsActivatedVariable: 0
   updateTitleFromEventTarget: 1
   titleVariableName: vhfStatusOverviewText
   titleTemplate: 'VHF
@@ -54381,6 +54410,7 @@ MonoBehaviour:
   triggerEventName: _IncreaseSetSpeedBy10Kt
   updateIsActivatedFromEventTarget: 0
   isActivatedVariableName: 
+  invertIsActivatedVariable: 0
   updateTitleFromEventTarget: 0
   titleVariableName: 
   titleTemplate: '{0}'
@@ -54475,6 +54505,7 @@ MonoBehaviour:
   triggerEventName: ToggleLandingLight
   updateIsActivatedFromEventTarget: 1
   isActivatedVariableName: isLandingLightOn
+  invertIsActivatedVariable: 0
   updateTitleFromEventTarget: 0
   titleVariableName: 
   titleTemplate: '{0}'
@@ -60212,6 +60243,7 @@ MonoBehaviour:
   triggerEventName: 
   updateIsActivatedFromEventTarget: 0
   isActivatedVariableName: 
+  invertIsActivatedVariable: 0
   updateTitleFromEventTarget: 0
   titleVariableName: 
   titleTemplate: '{0}'
@@ -61137,6 +61169,7 @@ MonoBehaviour:
   triggerEventName: 
   updateIsActivatedFromEventTarget: 0
   isActivatedVariableName: 
+  invertIsActivatedVariable: 0
   updateTitleFromEventTarget: 0
   titleVariableName: 
   titleTemplate: '{0}'
@@ -61345,6 +61378,7 @@ MonoBehaviour:
   triggerEventName: 
   updateIsActivatedFromEventTarget: 0
   isActivatedVariableName: 
+  invertIsActivatedVariable: 0
   updateTitleFromEventTarget: 0
   titleVariableName: 
   titleTemplate: '{0}'
@@ -61900,6 +61934,7 @@ MonoBehaviour:
   triggerEventName: _ToggleParkBrake
   updateIsActivatedFromEventTarget: 1
   isActivatedVariableName: ParkBreakSet
+  invertIsActivatedVariable: 0
   updateTitleFromEventTarget: 0
   titleVariableName: 
   titleTemplate: '{0}'
@@ -75030,6 +75065,7 @@ MonoBehaviour:
   triggerEventName: ToggleTx
   updateIsActivatedFromEventTarget: 1
   isActivatedVariableName: txPower
+  invertIsActivatedVariable: 0
   updateTitleFromEventTarget: 0
   titleVariableName: 
   titleTemplate: '{0}'
@@ -85287,6 +85323,7 @@ MonoBehaviour:
   triggerEventName: 
   updateIsActivatedFromEventTarget: 0
   isActivatedVariableName: 
+  invertIsActivatedVariable: 0
   updateTitleFromEventTarget: 0
   titleVariableName: 
   titleTemplate: '{0}'
@@ -85381,6 +85418,7 @@ MonoBehaviour:
   triggerEventName: _IncreaseSetSpeedBy1Kt
   updateIsActivatedFromEventTarget: 0
   isActivatedVariableName: 
+  invertIsActivatedVariable: 0
   updateTitleFromEventTarget: 0
   titleVariableName: 
   titleTemplate: '{0}'
@@ -85475,6 +85513,7 @@ MonoBehaviour:
   triggerEventName: 
   updateIsActivatedFromEventTarget: 0
   isActivatedVariableName: 
+  invertIsActivatedVariable: 0
   updateTitleFromEventTarget: 0
   titleVariableName: 
   titleTemplate: '{0}'
@@ -90959,6 +90998,7 @@ MonoBehaviour:
   triggerEventName: ToggleCanopy
   updateIsActivatedFromEventTarget: 1
   isActivatedVariableName: CanopyOpen
+  invertIsActivatedVariable: 0
   updateTitleFromEventTarget: 0
   titleVariableName: 
   titleTemplate: '{0}'
@@ -96735,6 +96775,7 @@ MonoBehaviour:
   triggerEventName: ToggleGear
   updateIsActivatedFromEventTarget: 1
   isActivatedVariableName: GearUp
+  invertIsActivatedVariable: 1
   updateTitleFromEventTarget: 0
   titleVariableName: 
   titleTemplate: '{0}'
@@ -102299,6 +102340,7 @@ MonoBehaviour:
   triggerEventName: 
   updateIsActivatedFromEventTarget: 0
   isActivatedVariableName: 
+  invertIsActivatedVariable: 0
   updateTitleFromEventTarget: 0
   titleVariableName: 
   titleTemplate: '{0}'
@@ -102429,6 +102471,7 @@ MonoBehaviour:
   triggerEventName: 
   updateIsActivatedFromEventTarget: 1
   isActivatedVariableName: Cruise
+  invertIsActivatedVariable: 0
   updateTitleFromEventTarget: 1
   titleVariableName: SetSpeed
   titleTemplate: 'A/THR
@@ -103249,6 +103292,7 @@ MonoBehaviour:
   triggerEventName: 
   updateIsActivatedFromEventTarget: 0
   isActivatedVariableName: 
+  invertIsActivatedVariable: 0
   updateTitleFromEventTarget: 0
   titleVariableName: 
   titleTemplate: '{0}'
@@ -104190,6 +104234,7 @@ MonoBehaviour:
   triggerEventName: 
   updateIsActivatedFromEventTarget: 0
   isActivatedVariableName: 
+  invertIsActivatedVariable: 0
   updateTitleFromEventTarget: 1
   titleVariableName: SetSpeed
   titleTemplate: '<size=18>Speed Target</size>
@@ -109933,6 +109978,7 @@ MonoBehaviour:
   triggerEventName: 
   updateIsActivatedFromEventTarget: 0
   isActivatedVariableName: 
+  invertIsActivatedVariable: 0
   updateTitleFromEventTarget: 0
   titleVariableName: 
   titleTemplate: '{0}'
@@ -110029,6 +110075,7 @@ MonoBehaviour:
   triggerEventName: _DecreaseSetSpeedBy10Kt
   updateIsActivatedFromEventTarget: 0
   isActivatedVariableName: 
+  invertIsActivatedVariable: 0
   updateTitleFromEventTarget: 0
   titleVariableName: 
   titleTemplate: '{0}'
@@ -110792,6 +110839,7 @@ MonoBehaviour:
   triggerEventName: _ToggleParkBrake
   updateIsActivatedFromEventTarget: 1
   isActivatedVariableName: ParkBreakSet
+  invertIsActivatedVariable: 0
   updateTitleFromEventTarget: 0
   titleVariableName: 
   titleTemplate: '{0}'
@@ -110886,6 +110934,7 @@ MonoBehaviour:
   triggerEventName: 
   updateIsActivatedFromEventTarget: 0
   isActivatedVariableName: 
+  invertIsActivatedVariable: 0
   updateTitleFromEventTarget: 1
   titleVariableName: trimDisplayString
   titleTemplate: 'Trim
@@ -111108,6 +111157,7 @@ MonoBehaviour:
   triggerEventName: ToggleGear
   updateIsActivatedFromEventTarget: 1
   isActivatedVariableName: GearUp
+  invertIsActivatedVariable: 1
   updateTitleFromEventTarget: 0
   titleVariableName: 
   titleTemplate: '{0}'
@@ -111725,6 +111775,7 @@ MonoBehaviour:
   triggerEventName: KeyboardInput
   updateIsActivatedFromEventTarget: 1
   isActivatedVariableName: Cruise
+  invertIsActivatedVariable: 0
   updateTitleFromEventTarget: 0
   titleVariableName: 
   titleTemplate: '{0}'
@@ -118135,6 +118186,7 @@ MonoBehaviour:
   triggerEventName: 
   updateIsActivatedFromEventTarget: 0
   isActivatedVariableName: 
+  invertIsActivatedVariable: 0
   updateTitleFromEventTarget: 0
   titleVariableName: 
   titleTemplate: '{0}'
@@ -118925,6 +118977,7 @@ MonoBehaviour:
   triggerEventName: 
   updateIsActivatedFromEventTarget: 0
   isActivatedVariableName: 
+  invertIsActivatedVariable: 0
   updateTitleFromEventTarget: 0
   titleVariableName: 
   titleTemplate: '{0}'
@@ -119370,6 +119423,7 @@ MonoBehaviour:
   triggerEventName: 
   updateIsActivatedFromEventTarget: 0
   isActivatedVariableName: 
+  invertIsActivatedVariable: 0
   updateTitleFromEventTarget: 0
   titleVariableName: 
   titleTemplate: '{0}'

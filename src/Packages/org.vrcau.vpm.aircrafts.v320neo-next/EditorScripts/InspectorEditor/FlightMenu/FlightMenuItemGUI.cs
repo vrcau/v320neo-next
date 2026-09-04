@@ -29,6 +29,7 @@ namespace VAU.V320NeoNext.Editor.InspectorEditor.FlightMenu
 
         private readonly SerializedProperty _updateIsActivatedFromEventTargetProperty;
         private readonly SerializedProperty _isActivatedVariableNameProperty;
+        private readonly SerializedProperty _invertIsActivatedVariableProperty;
 
         private readonly SerializedProperty _titleVariableNameProperty;
         private readonly SerializedProperty _titleTemplateProperty;
@@ -66,6 +67,8 @@ namespace VAU.V320NeoNext.Editor.InspectorEditor.FlightMenu
             _triggerEventNameProperty = _itemSerializedObject.FindProperty(nameof(FlightMenuItemBase.triggerEventName));
             _isActivatedVariableNameProperty = _itemSerializedObject
                 .FindProperty(nameof(FlightMenuItemBase.isActivatedVariableName));
+            _invertIsActivatedVariableProperty = _itemSerializedObject
+                .FindProperty(nameof(FlightMenuItemBase.invertIsActivatedVariable));
 
             _titleVariableNameProperty = _itemSerializedObject
                 .FindProperty(nameof(FlightMenuItemBase.titleVariableName));
@@ -162,6 +165,7 @@ namespace VAU.V320NeoNext.Editor.InspectorEditor.FlightMenu
                 if (_itemBase.updateIsActivatedFromEventTarget)
                 {
                     EditorGUILayout.PropertyField(_isActivatedVariableNameProperty);
+                    EditorGUILayout.PropertyField(_invertIsActivatedVariableProperty);
                 }
 
                 EditorGUILayout.PropertyField(_updateTitleFromEventTargetProperty);
