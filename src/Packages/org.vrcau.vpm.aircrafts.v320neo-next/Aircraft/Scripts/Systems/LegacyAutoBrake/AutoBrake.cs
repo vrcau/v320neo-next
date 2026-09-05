@@ -1,4 +1,5 @@
-﻿using JetBrains.Annotations;
+﻿using System;
+using JetBrains.Annotations;
 using SaccFlightAndVehicles;
 using UdonSharp;
 using UnityEngine;
@@ -6,9 +7,11 @@ using VAU.V320NeoNext.Runtime.Systems.LandingGear.SaccExt;
 using VAU.V320NeoNext.Runtime.Systems.LegacyFlightDataProvider;
 using VAU.V320NeoNext.Runtime.Systems.LegacyFlightDataProvider.LegacyADRIRU;
 
-namespace VAU.V320NeoNext.Runtime.Systems.LegacyAutoBrake {
+namespace VAU.V320NeoNext.Runtime.Systems.LegacyAutoBrake
+{
     [UdonBehaviourSyncMode(BehaviourSyncMode.Manual)]
-    public class AutoBrake : UdonSharpBehaviour {
+    public class AutoBrake : UdonSharpBehaviour
+    {
         public Animator indicatorAnimator;
 
         private DependenciesInjector _dependenciesInjector;
@@ -20,7 +23,7 @@ namespace VAU.V320NeoNext.Runtime.Systems.LegacyAutoBrake {
 
         private Vector3 _lastVelocity;
 
-    #region PID
+        #region PID
 
         private float _previousError;
         private float _integral;
@@ -29,13 +32,15 @@ namespace VAU.V320NeoNext.Runtime.Systems.LegacyAutoBrake {
         public float Ki = 0.01f;
         public float Kd = 0.01f;
 
-    #endregion
+        #endregion
 
         private bool _isLastFrameAircraftTouchdown;
 
-        public bool isAutoBrakeActive {
+        public bool isAutoBrakeActive
+        {
             get => _isAutoBrakeActive;
-            private set {
+            private set
+            {
                 if (_isAutoBrakeActive == value) return;
 
                 Reset();
@@ -48,16 +53,18 @@ namespace VAU.V320NeoNext.Runtime.Systems.LegacyAutoBrake {
         [UdonSynced] [SerializeField] [HideInInspector]
         private bool _isAutoBrakeActive;
 
-    #region Animation
+        #region Animation
 
         private readonly int AUTO_BRK_MODE = Animator.StringToHash("AutoBrkMode");
         private readonly int DECELERATION_HASH = Animator.StringToHash("Deceleration");
 
-    #endregion
+        #endregion
 
-        public AutoBrakeMode currentAutoBrakeMode {
+        public AutoBrakeMode currentAutoBrakeMode
+        {
             get => _currentAutoBrakeMode;
-            private set {
+            private set
+            {
                 if (_currentAutoBrakeMode == value) return;
 
                 _currentAutoBrakeMode = value;
@@ -65,13 +72,16 @@ namespace VAU.V320NeoNext.Runtime.Systems.LegacyAutoBrake {
             }
         }
 
+        [NonSerialized] public bool isReachDecelerationRateTarget;
+
         [UdonSynced] [SerializeField] [HideInInspector]
         private AutoBrakeMode _currentAutoBrakeMode = AutoBrakeMode.None;
 
         private const float _lowBrakeDecelerationRate = -1.7f; // -1.7m/s²
         private const float _medBrakeDecelerationRate = -3f; // -3m/s²
 
-        private void Start() {
+        private void Start()
+        {
             _dependenciesInjector = DependenciesInjector.GetInstance(this);
             _saccAirVehicle = _dependenciesInjector.saccAirVehicle;
             _aircraftSystemData = _dependenciesInjector.equipmentData;
@@ -80,16 +90,26 @@ namespace VAU.V320NeoNext.Runtime.Systems.LegacyAutoBrake {
             _dependenciesInjector.systemEventBus.RegisterSaccEvent(this);
         }
 
-        public void SFEXT_O_RespawnButton() {
+        public void SFEXT_O_RespawnButton()
+        {
             isAutoBrakeActive = false;
             currentAutoBrakeMode = AutoBrakeMode.None;
         }
 
-    #region Touch Switch Event
+        #region Touch Switch Event
 
         [PublicAPI]
-        public void SelectAutoBrakeLow() {
-            if (currentAutoBrakeMode != AutoBrakeMode.Low) {
+        public void SelectAutoBrakeOff()
+        {
+            isAutoBrakeActive = false;
+            currentAutoBrakeMode = AutoBrakeMode.None;
+        }
+
+        [PublicAPI]
+        public void SelectAutoBrakeLow()
+        {
+            if (currentAutoBrakeMode != AutoBrakeMode.Low)
+            {
                 currentAutoBrakeMode = AutoBrakeMode.Low;
                 return;
             }
@@ -98,8 +118,10 @@ namespace VAU.V320NeoNext.Runtime.Systems.LegacyAutoBrake {
         }
 
         [PublicAPI]
-        public void SelectAutoBrakeMed() {
-            if (currentAutoBrakeMode != AutoBrakeMode.Med) {
+        public void SelectAutoBrakeMed()
+        {
+            if (currentAutoBrakeMode != AutoBrakeMode.Med)
+            {
                 currentAutoBrakeMode = AutoBrakeMode.Med;
                 return;
             }
@@ -108,13 +130,16 @@ namespace VAU.V320NeoNext.Runtime.Systems.LegacyAutoBrake {
         }
 
         [PublicAPI]
-        public void SelectedAutoBrakeMax() {
-            if (!_aircraftSystemData.isAircraftGrounded) {
+        public void SelectedAutoBrakeMax()
+        {
+            if (!_aircraftSystemData.isAircraftGrounded)
+            {
                 currentAutoBrakeMode = AutoBrakeMode.None;
                 return;
             }
 
-            if (currentAutoBrakeMode != AutoBrakeMode.Max) {
+            if (currentAutoBrakeMode != AutoBrakeMode.Max)
+            {
                 currentAutoBrakeMode = AutoBrakeMode.Max;
                 return;
             }
@@ -122,18 +147,21 @@ namespace VAU.V320NeoNext.Runtime.Systems.LegacyAutoBrake {
             currentAutoBrakeMode = AutoBrakeMode.None;
         }
 
-    #endregion
+        #endregion
 
-    #region Update
+        #region Update
 
-        private void LateUpdate() {
+        private void LateUpdate()
+        {
             var decelerationRate = GetDecelerationRate();
 
-            if (currentAutoBrakeMode == AutoBrakeMode.Max && !_aircraftSystemData.isAircraftGrounded) {
+            if (currentAutoBrakeMode == AutoBrakeMode.Max && !_aircraftSystemData.isAircraftGrounded)
+            {
                 currentAutoBrakeMode = AutoBrakeMode.None;
             }
 
-            if (_aircraftSystemData.isOwner) {
+            if (_aircraftSystemData.isOwner)
+            {
                 UpdateAutoBrakeActive();
                 UpdateAutoBrake(decelerationRate);
             }
@@ -144,13 +172,17 @@ namespace VAU.V320NeoNext.Runtime.Systems.LegacyAutoBrake {
         }
 
 
-        private void UpdateAutoBrake(float decelerationRate) {
-            if (isAutoBrakeActive) {
+        private void UpdateAutoBrake(float decelerationRate)
+        {
+            if (isAutoBrakeActive)
+            {
                 float brakeInput;
-                if (currentAutoBrakeMode == AutoBrakeMode.Max) {
+                if (currentAutoBrakeMode == AutoBrakeMode.Max)
+                {
                     brakeInput = 1f;
                 }
-                else {
+                else
+                {
                     var targetDecelerationRate = GetTargetDecelerationRate();
 
                     var error = decelerationRate - targetDecelerationRate;
@@ -165,31 +197,37 @@ namespace VAU.V320NeoNext.Runtime.Systems.LegacyAutoBrake {
 
                 brake.autoBrakeInput = Mathf.Clamp(brakeInput, 0f, 1f);
             }
-            else {
+            else
+            {
                 brake.autoBrakeInput = 0;
             }
         }
 
-        private void UpdateAutoBrakeActive() {
-            if (isAutoBrakeActive && brake.isManuelBrakeInUse) {
+        private void UpdateAutoBrakeActive()
+        {
+            if (isAutoBrakeActive && brake.isManuelBrakeInUse)
+            {
                 isAutoBrakeActive = false;
                 currentAutoBrakeMode = AutoBrakeMode.None;
                 return;
             }
 
-            if (currentAutoBrakeMode == AutoBrakeMode.None) {
+            if (currentAutoBrakeMode == AutoBrakeMode.None)
+            {
                 isAutoBrakeActive = false;
                 return;
             }
 
-            if (!_aircraftSystemData.isAircraftGrounded) {
+            if (!_aircraftSystemData.isAircraftGrounded)
+            {
                 isAutoBrakeActive = false;
                 return;
             }
 
             if (isAutoBrakeActive) return;
 
-            switch (currentAutoBrakeMode) {
+            switch (currentAutoBrakeMode)
+            {
                 case AutoBrakeMode.Low:
                     if (!_isLastFrameAircraftTouchdown)
                         isAutoBrakeActive = true;
@@ -207,9 +245,11 @@ namespace VAU.V320NeoNext.Runtime.Systems.LegacyAutoBrake {
             }
         }
 
-        private void UpdateIndicator(float decelerationRate) {
+        private void UpdateIndicator(float decelerationRate)
+        {
             float animationValue;
-            switch (currentAutoBrakeMode) {
+            switch (currentAutoBrakeMode)
+            {
                 case AutoBrakeMode.Low:
                     animationValue = 0f;
                     break;
@@ -227,19 +267,21 @@ namespace VAU.V320NeoNext.Runtime.Systems.LegacyAutoBrake {
 
             indicatorAnimator.SetFloat(AUTO_BRK_MODE, animationValue / 3f);
 
-            if (!isAutoBrakeActive) {
+            if (!isAutoBrakeActive)
+            {
                 indicatorAnimator.SetBool(DECELERATION_HASH, false);
                 return;
             }
 
-            var isReachDecelerationRateTarget = IsReachDecelerationRateTarget(decelerationRate);
+            isReachDecelerationRateTarget = IsReachDecelerationRateTarget(decelerationRate);
 
             indicatorAnimator.SetBool(DECELERATION_HASH, isReachDecelerationRateTarget);
         }
 
-    #endregion
+        #endregion
 
-        private float GetDecelerationRate() {
+        private float GetDecelerationRate()
+        {
             var velocity = _saccAirVehicle.CurrentVel;
 
             var acceleration = (velocity - _lastVelocity) / Time.fixedDeltaTime;
@@ -250,8 +292,10 @@ namespace VAU.V320NeoNext.Runtime.Systems.LegacyAutoBrake {
             return temp.z;
         }
 
-        private float GetTargetDecelerationRate() {
-            switch (currentAutoBrakeMode) {
+        private float GetTargetDecelerationRate()
+        {
+            switch (currentAutoBrakeMode)
+            {
                 case AutoBrakeMode.Low:
                     return _lowBrakeDecelerationRate;
                 case AutoBrakeMode.Med:
@@ -263,20 +307,23 @@ namespace VAU.V320NeoNext.Runtime.Systems.LegacyAutoBrake {
             }
         }
 
-        private bool IsReachDecelerationRateTarget(float decelerationRate) {
+        private bool IsReachDecelerationRateTarget(float decelerationRate)
+        {
             if (currentAutoBrakeMode == AutoBrakeMode.Max) return true;
 
             var targetDecelerationRate = GetTargetDecelerationRate() * 0.8f;
             return decelerationRate < targetDecelerationRate;
         }
 
-        public void Reset() {
+        public void Reset()
+        {
             _previousError = 0f;
             _integral = 0f;
         }
     }
 
-    public enum AutoBrakeMode {
+    public enum AutoBrakeMode
+    {
         Low,
         Med,
         Max,
