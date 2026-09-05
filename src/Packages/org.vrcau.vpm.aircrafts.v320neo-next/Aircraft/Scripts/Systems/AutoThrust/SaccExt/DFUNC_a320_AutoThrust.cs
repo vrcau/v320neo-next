@@ -98,6 +98,8 @@ namespace VAU.V320NeoNext.Runtime.Systems.AutoThrust.SaccExt {
 
         public void SFEXT_G_TouchDown() => SetCruiseOff();
 
+        private float _keyboardSpeedDelta;
+
         private void LateUpdate() {
             if (!_aircraftSystemData)
                 return; // Temp workaround
@@ -150,9 +152,20 @@ namespace VAU.V320NeoNext.Runtime.Systems.AutoThrust.SaccExt {
 
             if (isDecreaseKeyPressed || isIncreaseKeyPressed)
             {
-                float equals = Input.GetKey(increaseSpeedKey) ? DeltaTime * 10 : 0;
-                float minus = Input.GetKey(decreaseSpeedKey) ? DeltaTime * 10 : 0;
-                _SetSpeedInKt(SetSpeed + Mathf.RoundToInt(equals - minus));
+                float equals = isIncreaseKeyPressed ? DeltaTime * 10 : 0;
+                float minus = isDecreaseKeyPressed ? DeltaTime * 10 : 0;
+                _keyboardSpeedDelta += equals - minus;
+
+                var deltaRoundToInt = Mathf.RoundToInt(_keyboardSpeedDelta);
+                if (deltaRoundToInt != 0)
+                {
+                    _SetSpeedInKt(SetSpeed + deltaRoundToInt);
+                    _keyboardSpeedDelta -= deltaRoundToInt;
+                }
+            }
+            else
+            {
+                _keyboardSpeedDelta = 0;
             }
 
             if (func_active) {
