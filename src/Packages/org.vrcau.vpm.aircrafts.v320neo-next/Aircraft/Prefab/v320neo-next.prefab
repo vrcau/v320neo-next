@@ -6433,7 +6433,7 @@ MonoBehaviour:
   titleVariableName: flapStatusText
   titleTemplate: 'Flaps
 
-    {0}'
+    <size=18>{0}</size>'
   updateIsEnabledFromEventTarget: 0
   isDisabledVariableName: 
   invertIsDisabledVariable: 0
@@ -19865,7 +19865,7 @@ MonoBehaviour:
   invertIsActivatedVariable: 0
   updateTitleFromEventTarget: 1
   titleVariableName: autoBrakeStatusText
-  titleTemplate: 'AUTO BRAKE
+  titleTemplate: 'Auto Brake
 
     <size=18>{0}</size>'
   updateIsEnabledFromEventTarget: 0
@@ -20446,7 +20446,7 @@ MonoBehaviour:
   titleVariableName: vhfStatusOverviewText
   titleTemplate: 'VHF
 
-    {0}'
+    <size=18>{0}</size>'
   updateIsEnabledFromEventTarget: 0
   isDisabledVariableName: 
   invertIsDisabledVariable: 0
@@ -52225,7 +52225,7 @@ MonoBehaviour:
   titleVariableName: flapStatusText
   titleTemplate: 'Flaps
 
-    {0}'
+    <size=18>{0}</size>'
   updateIsEnabledFromEventTarget: 0
   isDisabledVariableName: 
   invertIsDisabledVariable: 0
@@ -54592,7 +54592,7 @@ MonoBehaviour:
   titleVariableName: vhfStatusOverviewText
   titleTemplate: 'VHF
 
-    {0}'
+    <size=18>{0}</size>'
   updateIsEnabledFromEventTarget: 0
   isDisabledVariableName: 
   invertIsDisabledVariable: 0
@@ -62673,7 +62673,7 @@ MonoBehaviour:
   invertIsActivatedVariable: 0
   updateTitleFromEventTarget: 1
   titleVariableName: autoBrakeStatusText
-  titleTemplate: 'AUTO BRAKE
+  titleTemplate: 'Auto Brake
 
     <size=18>{0}</size>'
   updateIsEnabledFromEventTarget: 0
