@@ -2,7 +2,6 @@ using System;
 using JetBrains.Annotations;
 using UdonSharp;
 using UnityEngine;
-using VAU.V320NeoNext.Runtime.Systems.LegacyFlightDataProvider.LegacyADRIRU;
 
 namespace VAU.V320NeoNext.Runtime.Systems.FlightControl.SaccExt
 {
@@ -10,7 +9,9 @@ namespace VAU.V320NeoNext.Runtime.Systems.FlightControl.SaccExt
     public class FlapFlightMenuController : UdonSharpBehaviour
     {
         public DFUNC_a320_FlapController flapController;
-        public ADR adr;
+
+        // Slider menu item
+        [NonSerialized] [PublicAPI] public int flapLeverIndex;
 
         [NonSerialized] public string currentFlapPositionText;
         [NonSerialized] public string targetFlapPositionText;
@@ -18,6 +19,8 @@ namespace VAU.V320NeoNext.Runtime.Systems.FlightControl.SaccExt
 
         private void LateUpdate()
         {
+            flapLeverIndex = flapController.leverIndex;
+            
             var detentIndex = flapController.detentIndex;
             var isMoving = detentIndex < 0;
             var targetDetentIndex = flapController.targetDetentIndex;
@@ -80,23 +83,9 @@ namespace VAU.V320NeoNext.Runtime.Systems.FlightControl.SaccExt
         }
 
         [PublicAPI]
-        public void SetFlapUp() => SetFlap(0);
-
-        [PublicAPI]
-        public void SetFlap1() => SetFlap(1);
-
-        [PublicAPI]
-        public void SetFlap2() => SetFlap(2);
-
-        [PublicAPI]
-        public void SetFlap3() => SetFlap(3);
-
-        [PublicAPI]
-        public void SetFlapFull() => SetFlap(4);
-
-        private void SetFlap(int index)
+        public void ApplyFlapLeverIndex()
         {
-            flapController.SetLeverIndex(index);
+            flapController.SetLeverIndex(flapLeverIndex);
         }
     }
 }

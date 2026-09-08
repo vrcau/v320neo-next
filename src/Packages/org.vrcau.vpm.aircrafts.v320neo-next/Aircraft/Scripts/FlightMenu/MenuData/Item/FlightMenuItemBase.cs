@@ -59,6 +59,7 @@ namespace VAU.V320NeoNext.Runtime.FlightMenu.MenuData.Item
         OpenNewMenu = 1,
         OpenPopupMenu = 2,
         InternalBackMenu = 3,
-        RequestClosePopup = 4
+        RequestClosePopup = 4,
+        OpenSliderMenu = 5
     }
 }

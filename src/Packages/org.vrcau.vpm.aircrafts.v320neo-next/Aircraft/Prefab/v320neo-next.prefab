@@ -6375,8 +6375,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8786129465150958789}
-  - component: {fileID: 6238328396969455100}
-  - component: {fileID: 8118450224465007075}
+  - component: {fileID: 6412782057710105716}
+  - component: {fileID: 2256349626128336150}
   m_Layer: 0
   m_Name: Flaps
   m_TagString: Untagged
@@ -6399,7 +6399,7 @@ Transform:
   m_Children: []
   m_Father: {fileID: 6035096835631693203}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &6238328396969455100
+--- !u!114 &6412782057710105716
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -6408,7 +6408,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 543026734378229977}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d2c1c2c9cfc04197b9fc2ecb2cee3be3, type: 3}
+  m_Script: {fileID: 11500000, guid: 2e70c59fe42ed054da1ae173f07a7ff5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   serializationData:
@@ -6419,7 +6419,7 @@ MonoBehaviour:
     PrefabModificationsReferencedUnityObjects: []
     PrefabModifications: []
     SerializationNodes: []
-  _udonSharpBackingUdonBehaviour: {fileID: 8118450224465007075}
+  _udonSharpBackingUdonBehaviour: {fileID: 2256349626128336150}
   title: Flaps
   icon: {fileID: 0}
   isActivated: 0
@@ -6439,9 +6439,14 @@ MonoBehaviour:
   updateIsEnabledFromEventTarget: 0
   isDisabledVariableName: 
   invertIsDisabledVariable: 0
-  subMenu: {fileID: 2569473039943845509}
-  isPopupMenu: 1
---- !u!114 &8118450224465007075
+  sliderLength: 5
+  sliderIndexVariableName: flapLeverIndex
+  onSliderIndexChangedEventName: ApplyFlapLeverIndex
+  sliderDescription: 
+  updateSliderDescriptionFromEventTarget: 1
+  sliderDescriptionTemplate: '{0}'
+  sliderDescriptionVariableName: flapStatusText
+--- !u!114 &2256349626128336150
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -6461,7 +6466,7 @@ MonoBehaviour:
   AllowCollisionOwnershipTransfer: 0
   Reliable: 0
   _syncMethod: 2
-  programSource: {fileID: 11400000, guid: 5f3a84a557b24fd4da8675e7b2bc476f, type: 2}
+  programSource: {fileID: 11400000, guid: 74ade0e5741eae94caa9de6781b1ac99, type: 2}
   serializedPublicVariablesBytesString: Ai8AAAAAATIAAABWAFIAQwAuAFUAZABvAG4ALgBDAG8AbQBtAG8AbgAuAFUAZABvAG4AVgBhAHIAaQBhAGIAbABlAFQAYQBiAGwAZQAsACAAVgBSAEMALgBVAGQAbwBuAC4AQwBvAG0AbQBvAG4AAAAAAAYBAAAAAAAAACcBBAAAAHQAeQBwAGUAAWgAAABTAHkAcwB0AGUAbQAuAEMAbwBsAGwAZQBjAHQAaQBvAG4AcwAuAEcAZQBuAGUAcgBpAGMALgBMAGkAcwB0AGAAMQBbAFsAVgBSAEMALgBVAGQAbwBuAC4AQwBvAG0AbQBvAG4ALgBJAG4AdABlAHIAZgBhAGMAZQBzAC4ASQBVAGQAbwBuAFYAYQByAGkAYQBiAGwAZQAsACAAVgBSAEMALgBVAGQAbwBuAC4AQwBvAG0AbQBvAG4AXQBdACwAIABtAHMAYwBvAHIAbABpAGIAAQEJAAAAVgBhAHIAaQBhAGIAbABlAHMALwEAAAABaAAAAFMAeQBzAHQAZQBtAC4AQwBvAGwAbABlAGMAdABpAG8AbgBzAC4ARwBlAG4AZQByAGkAYwAuAEwAaQBzAHQAYAAxAFsAWwBWAFIAQwAuAFUAZABvAG4ALgBDAG8AbQBtAG8AbgAuAEkAbgB0AGUAcgBmAGEAYwBlAHMALgBJAFUAZABvAG4AVgBhAHIAaQBhAGIAbABlACwAIABWAFIAQwAuAFUAZABvAG4ALgBDAG8AbQBtAG8AbgBdAF0ALAAgAG0AcwBjAG8AcgBsAGkAYgABAAAABgEAAAAAAAAAAi8CAAAAAUkAAABWAFIAQwAuAFUAZABvAG4ALgBDAG8AbQBtAG8AbgAuAFUAZABvAG4AVgBhAHIAaQBhAGIAbABlAGAAMQBbAFsAUwB5AHMAdABlAG0ALgBJAG4AdAAzADIALAAgAG0AcwBjAG8AcgBsAGkAYgBdAF0ALAAgAFYAUgBDAC4AVQBkAG8AbgAuAEMAbwBtAG0AbwBuAAIAAAAGAgAAAAAAAAAnAQQAAAB0AHkAcABlAAEXAAAAUwB5AHMAdABlAG0ALgBTAHQAcgBpAG4AZwAsACAAbQBzAGMAbwByAGwAaQBiACcBCgAAAFMAeQBtAGIAbwBsAE4AYQBtAGUAAR8AAABfAF8AXwBVAGQAbwBuAFMAaABhAHIAcABCAGUAaABhAHYAaQBvAHUAcgBWAGUAcgBzAGkAbwBuAF8AXwBfACcBBAAAAHQAeQBwAGUAARYAAABTAHkAcwB0AGUAbQAuAEkAbgB0ADMAMgAsACAAbQBzAGMAbwByAGwAaQBiABcBBQAAAFYAYQBsAHUAZQACAAAABwUHBQcF
   publicVariablesUnityEngineObjects: []
   publicVariablesSerializationDataFormat: 0
@@ -52436,7 +52441,6 @@ MonoBehaviour:
     SerializationNodes: []
   _udonSharpBackingUdonBehaviour: {fileID: 8795668871022005968}
   flapController: {fileID: 2757855736805147806}
-  adr: {fileID: 0}
 --- !u!114 &8795668871022005968
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -98052,7 +98056,7 @@ MonoBehaviour:
   - {fileID: 2229064709587556682}
   - {fileID: 6039713095650191557}
   - {fileID: 4842688161473671630}
-  - {fileID: 6238328396969455100}
+  - {fileID: 6412782057710105716}
   - {fileID: 9075378654478743726}
   - {fileID: 6648334287526963602}
   keepUpdateGroupTitle: 0

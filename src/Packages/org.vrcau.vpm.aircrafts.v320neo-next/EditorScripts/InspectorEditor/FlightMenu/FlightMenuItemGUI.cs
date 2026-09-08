@@ -1,10 +1,13 @@
 ﻿using System.Collections.Generic;
 using System.Text;
+using JetBrains.Annotations;
 using UdonSharpEditor;
 using UnityEditor;
 using UnityEngine;
+using VAU.V320NeoNext.Editor.InspectorEditor.FlightMenu.CustomItems;
 using VAU.V320NeoNext.Runtime.FlightMenu.MenuData;
 using VAU.V320NeoNext.Runtime.FlightMenu.MenuData.Item;
+using VAU.V320NeoNext.Runtime.FlightMenu.MenuData.Item.Custom.Slider;
 
 namespace VAU.V320NeoNext.Editor.InspectorEditor.FlightMenu
 {
@@ -45,6 +48,8 @@ namespace VAU.V320NeoNext.Editor.InspectorEditor.FlightMenu
 
         private bool _expandSubMenuPreview;
         private FlightMenuPreviewGUI _subMenuPreviewGui;
+        
+        [CanBeNull] private FlightMenuSliderItemExtendGUI _sliderItemExtendGui;
 
         public FlightMenuItemGUI(FlightMenuItemBase itemBase)
         {
@@ -85,6 +90,11 @@ namespace VAU.V320NeoNext.Editor.InspectorEditor.FlightMenu
 
             _isPopupMenuProperty = _itemSerializedObject.FindProperty(nameof(FlightMenuSubMenuItem.isPopupMenu));
             _subMenuProperty = _itemSerializedObject.FindProperty(nameof(FlightMenuSubMenuItem.subMenu));
+
+            if (_itemBase is FlightMenuSliderItem sliderItem)
+            {
+                _sliderItemExtendGui = new FlightMenuSliderItemExtendGUI(sliderItem);
+            }
         }
 
         public void OnGui()
@@ -199,6 +209,8 @@ namespace VAU.V320NeoNext.Editor.InspectorEditor.FlightMenu
                 _updateTitleFromEventTargetProperty.boolValue = false;
                 _itemSerializedObject.ApplyModifiedProperties();
             }
+
+            _sliderItemExtendGui?.OnGui();
 
             if (EditorGUI.EndChangeCheck())
             {

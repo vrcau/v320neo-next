@@ -5,6 +5,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using VAU.V320NeoNext.Runtime.FlightMenu.MenuData;
 using VAU.V320NeoNext.Runtime.FlightMenu.MenuData.Item;
+using VAU.V320NeoNext.Runtime.FlightMenu.MenuData.Item.Custom.Slider;
 
 namespace VAU.V320NeoNext.Runtime.FlightMenu
 {
@@ -23,6 +24,9 @@ namespace VAU.V320NeoNext.Runtime.FlightMenu
         public FlightMenuView mainMenuView;
         public GameObject popupMenuRoot;
         public FlightMenuView popupMenuView;
+        
+        [Header("Custom MenuItem Controller")]
+        public FlightMenuSliderController sliderController;
 
         [Header("Child Root")] 
         public Transform backgroundRoot;
@@ -364,6 +368,20 @@ namespace VAU.V320NeoNext.Runtime.FlightMenu
                 case FlightMenuTriggerResult.RequestClosePopup:
                     ReturnToMainMenu();
                     break;
+                case FlightMenuTriggerResult.OpenSliderMenu:
+                    if (isPopupMenu)
+                    {
+                        Debug.LogWarning(
+                            "_OnItemTrigger: triggerResult is OpenPopupMenu, but this menu is already a popup menu, itemIndex: " + 
+                            itemIndex);
+                        break;
+                    }
+
+                    var sliderItem = (FlightMenuSliderItem)menuItem;
+                    OpenPopupMenu(
+                        sliderController.GetSliderMenuAndShowSlider(sliderItem), itemIndex,
+                        sliderController, nameof(FlightMenuSliderController.CloseSlider));
+                    break;
                 default:
                     Debug.LogWarning(
                         "_OnItemTrigger: triggerResult is unknown, input: " + triggerResult + ", itemIndex: " +
@@ -380,7 +398,9 @@ namespace VAU.V320NeoNext.Runtime.FlightMenu
 
         #region Popup Menu Handling
 
-        private void OpenPopupMenu(FlightMenuGroup newMenuGroup, int itemIndex)
+        private void OpenPopupMenu(
+            FlightMenuGroup newMenuGroup, int itemIndex,
+            UdonSharpBehaviour callbackEventTarget = null, string callbackEventName = null)
         {
             if (!popupMenuView || !popupMenuRoot || !mainMenuView)
             {
@@ -389,10 +409,37 @@ namespace VAU.V320NeoNext.Runtime.FlightMenu
                 return;
             }
 
+            popupMenuView.SetPopupMenuCloseCallback(callbackEventTarget, callbackEventName);
+            mainMenuView.SetPopupMenuCloseCallback(callbackEventTarget, callbackEventName);
+
             popupMenuView.NavigateToMenu(newMenuGroup, true);
             popupMenuRoot.SetActive(true);
             popupMenuRoot.GetComponent<RectTransform>().anchoredPosition = menuController.GetPopupMenuPosition(itemIndex);
             mainMenuView.menuController.enabled = false;
+        }
+
+        // Save in both popup menu view and root menu view
+        private UdonSharpBehaviour _popupMenuCloseCallbackTarget;
+        private string _popupMenuCloseCallbackMethodName;
+
+        private void SetPopupMenuCloseCallback(UdonSharpBehaviour callbackTarget, string callbackMethodName)
+        {
+            _popupMenuCloseCallbackTarget = callbackTarget;
+            _popupMenuCloseCallbackMethodName = callbackMethodName;
+        }
+
+        private void SendPopupMenuCloseCallback()
+        {
+            if (_popupMenuCloseCallbackTarget && !string.IsNullOrEmpty(_popupMenuCloseCallbackMethodName))
+            {
+                _popupMenuCloseCallbackTarget.SendCustomEvent(_popupMenuCloseCallbackMethodName);
+            }
+        }
+
+        private void ClearPopupMenuCloseCallback()
+        {
+            _popupMenuCloseCallbackTarget = null;
+            _popupMenuCloseCallbackMethodName = null;
         }
 
         // For popup menu to bring main menu back and hide itself
@@ -404,6 +451,11 @@ namespace VAU.V320NeoNext.Runtime.FlightMenu
                     "ReturnToMainMenu: popupMenuView/popupMenuRoot/mainMenuView is null, cannot return to main menu");
                 return;
             }
+
+            SendPopupMenuCloseCallback();
+
+            mainMenuView.ClearPopupMenuCloseCallback();
+            popupMenuView.ClearPopupMenuCloseCallback();
 
             popupMenuView.NavigateToMenu(popupMenuView.rootMenuGroup, true);
             popupMenuRoot.SetActive(false);
