@@ -161,6 +161,8 @@ namespace VAU.V320NeoNext.Editor.InspectorEditor.FlightMenu
             if (isEventTargetExist)
             {
                 EditorGUILayout.PropertyField(_triggerEventNameProperty);
+
+                GUILayout.BeginVertical(EditorStyles.helpBox);
                 EditorGUILayout.PropertyField(_updateIsActivatedFromEventTargetProperty);
                 if (_itemBase.updateIsActivatedFromEventTarget)
                 {
@@ -168,6 +170,9 @@ namespace VAU.V320NeoNext.Editor.InspectorEditor.FlightMenu
                     EditorGUILayout.PropertyField(_invertIsActivatedVariableProperty);
                 }
 
+                GUILayout.EndVertical();
+
+                GUILayout.BeginVertical(EditorStyles.helpBox);
                 EditorGUILayout.PropertyField(_updateTitleFromEventTargetProperty);
                 if (_itemBase.updateTitleFromEventTarget)
                 {
@@ -176,12 +181,17 @@ namespace VAU.V320NeoNext.Editor.InspectorEditor.FlightMenu
                     _titleTemplateProperty.stringValue = EditorGUILayout.TextArea(_titleTemplateProperty.stringValue);
                 }
 
+                GUILayout.EndVertical();
+
+                GUILayout.BeginVertical(EditorStyles.helpBox);
                 EditorGUILayout.PropertyField(_updateIsDisabledFromEventTargetProperty);
                 if (_itemBase.updateIsEnabledFromEventTarget)
                 {
                     EditorGUILayout.PropertyField(_isDisabledVariableNameProperty);
                     EditorGUILayout.PropertyField(_invertIsDisabledVariableProperty);
                 }
+
+                GUILayout.EndVertical();
             }
             else
             {
