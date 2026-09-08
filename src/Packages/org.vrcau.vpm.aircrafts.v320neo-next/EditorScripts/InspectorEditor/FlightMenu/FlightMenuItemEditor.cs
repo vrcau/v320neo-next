@@ -4,7 +4,7 @@ using VAU.V320NeoNext.Runtime.FlightMenu.MenuData.Item;
 
 namespace VAU.V320NeoNext.Editor.InspectorEditor.FlightMenu
 {
-    [CustomEditor(typeof(FlightMenuItemBase))]
+    [CustomEditor(typeof(FlightMenuItemBase), true)]
     public sealed class FlightMenuItemEditor : UnityEditor.Editor
     {
         private FlightMenuItemGUI _previewGUI;
