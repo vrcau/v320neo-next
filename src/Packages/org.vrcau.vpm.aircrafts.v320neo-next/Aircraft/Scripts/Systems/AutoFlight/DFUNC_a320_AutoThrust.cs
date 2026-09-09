@@ -7,9 +7,11 @@ using VAU.V320NeoNext.Runtime.Systems.Engine.SaccExt;
 using VAU.V320NeoNext.Runtime.Systems.LegacyFlightDataProvider;
 using VRC.SDKBase;
 
-namespace VAU.V320NeoNext.Runtime.Systems.AutoThrust.SaccExt {
+namespace VAU.V320NeoNext.Runtime.Systems.AutoFlight
+{
     [UdonBehaviourSyncMode(BehaviourSyncMode.None)]
-    public class DFUNC_a320_AutoThrust : UdonSharpBehaviour {
+    public class DFUNC_a320_AutoThrust : UdonSharpBehaviour
+    {
         public SFEXT_a320_AdvancedEngine[] engines = { };
 
         private DependenciesInjector _injector;
@@ -24,9 +26,11 @@ namespace VAU.V320NeoNext.Runtime.Systems.AutoThrust.SaccExt {
         [NonSerialized] public bool isAutoThrustArm;
 
         public float kp = .5f;
+
         //public float CruiseIntegral = .1f;
         public float kd = .1f;
         public float CruiseDerivative = 0f;
+
         public float CruiseDerivativeLastFrame = 0f;
         //public float CruiseIntegrator;
         //public float CruiseIntegratorMax = 5;
@@ -37,6 +41,8 @@ namespace VAU.V320NeoNext.Runtime.Systems.AutoThrust.SaccExt {
         [NonSerialized] public int SetSpeed = 194;
 
         [NonSerialized] public bool Cruise;
+        [NonSerialized] public bool OP_CLB = false;
+        [NonSerialized] public bool OP_DES = false;
         private bool func_active;
         private bool Piloting;
 
@@ -48,50 +54,60 @@ namespace VAU.V320NeoNext.Runtime.Systems.AutoThrust.SaccExt {
         private bool EngineOn => IsEngineOn();
         private bool InReverse => IsReverse();
 
-        private void Init() {
+        private void Init()
+        {
             _injector = DependenciesInjector.GetInstance(this);
             _aircraftSystemData = _injector.equipmentData;
             _saccAirVehicle = _injector.saccAirVehicle;
             _SetSpeedInKt(200);
         }
 
-        private void Start() {
+        private void Start()
+        {
             Init();
         }
 
-        public void SFEXT_L_EntityStart() {
+        public void SFEXT_L_EntityStart()
+        {
             Init();
         }
 
-        private bool IsReverse() {
-            foreach (var engine in engines) {
+        private bool IsReverse()
+        {
+            foreach (var engine in engines)
+            {
                 if (engine.reversing) return true;
             }
 
             return false;
         }
 
-        private bool IsEngineOn() {
-            foreach (var engine in engines) {
+        private bool IsEngineOn()
+        {
+            foreach (var engine in engines)
+            {
                 if (engine.fuel) return true;
             }
 
             return false;
         }
 
-        public void SFEXT_O_PilotEnter() {
+        public void SFEXT_O_PilotEnter()
+        {
             gameObject.SetActive(true);
 
             Piloting = true;
         }
 
-        public void SFEXT_O_PilotExit() {
+        public void SFEXT_O_PilotExit()
+        {
             gameObject.SetActive(false);
 
             Piloting = false;
         }
 
-        public void SFEXT_G_Explode() {
+        public void SFEXT_G_Explode()
+        {
             isAutoThrustArm = false;
             SetCruiseOff();
         }
@@ -100,24 +116,29 @@ namespace VAU.V320NeoNext.Runtime.Systems.AutoThrust.SaccExt {
 
         private float _keyboardSpeedDelta;
 
-        private void LateUpdate() {
+        private void LateUpdate()
+        {
             if (!_aircraftSystemData)
                 return; // Temp workaround
 
-            if (_aircraftSystemData.isAircraftGrounded) {
+            if (_aircraftSystemData.isAircraftGrounded)
+            {
                 if ((_aircraftSystemData.throttleLevelerSlot == ThrottleLevelerSlot.TOGA ||
                      _aircraftSystemData.throttleLevelerSlot == ThrottleLevelerSlot.FlexMct)
                     &&
-                    (_aircraftSystemData.isEngine1Running || _aircraftSystemData.isEngine2Running)) {
+                    (_aircraftSystemData.isEngine1Running || _aircraftSystemData.isEngine2Running))
+                {
                     isAutoThrustArm = true;
 
                     if (Cruise)
                         SetCruiseOff();
                 }
             }
-            else {
+            else
+            {
                 if ((_aircraftSystemData.throttleLevelerSlot != ThrottleLevelerSlot.CLB &&
-                     _aircraftSystemData.throttleLevelerSlot != ThrottleLevelerSlot.Manuel) && Cruise) {
+                     _aircraftSystemData.throttleLevelerSlot != ThrottleLevelerSlot.Manuel) && Cruise)
+                {
                     isAutoThrustArm = true;
 
                     if (Cruise)
@@ -125,14 +146,16 @@ namespace VAU.V320NeoNext.Runtime.Systems.AutoThrust.SaccExt {
                 }
             }
 
-            if (_aircraftSystemData.throttleLevelerSlot == ThrottleLevelerSlot.IDLE) {
+            if (_aircraftSystemData.throttleLevelerSlot == ThrottleLevelerSlot.IDLE)
+            {
                 isAutoThrustArm = false;
 
                 if (Cruise)
                     SetCruiseOff();
             }
 
-            if (!EngineOn) {
+            if (!EngineOn)
+            {
                 isAutoThrustArm = false;
 
                 if (Cruise)
@@ -141,7 +164,8 @@ namespace VAU.V320NeoNext.Runtime.Systems.AutoThrust.SaccExt {
 
             if ((_aircraftSystemData.throttleLevelerSlot == ThrottleLevelerSlot.CLB ||
                  _aircraftSystemData.throttleLevelerSlot == ThrottleLevelerSlot.Manuel) && isAutoThrustArm &&
-                !_aircraftSystemData.isAircraftGrounded) {
+                !_aircraftSystemData.isAircraftGrounded)
+            {
                 SetCruiseOn();
                 isAutoThrustArm = false;
             }
@@ -168,58 +192,80 @@ namespace VAU.V320NeoNext.Runtime.Systems.AutoThrust.SaccExt {
                 _keyboardSpeedDelta = 0;
             }
 
-            if (func_active) {
+            if (func_active)
+            {
                 var error = SetSpeed * KtToMeter - _saccAirVehicle.AirSpeed;
 
-                CruiseDerivative = (error - CruiseDerivativeLastFrame) / DeltaTime;
-                
-                //CruiseIntegrator += error * DeltaTime;
+//CruiseIntegrator += error * DeltaTime;
                 //CruiseIntegrator = Mathf.Clamp(CruiseIntegrator, CruiseIntegratorMin, CruiseIntegratorMax);
+                var autoThrustInput = Mathf.Clamp((kp * error) + (kd * CruiseDerivative), 0, 1);
 
-                foreach (var engine in engines) {
-                    engine.autoThrustInput =
-                        Mathf.Clamp((kp * error) + (kd * CruiseDerivative), 0, 1);
+                if (OP_CLB && !OP_DES)
+                {
+                    autoThrustInput = 1;
                 }
+
+                if (!OP_CLB && OP_DES)
+                {
+                    autoThrustInput = 0;
+                }
+
+                foreach (var engine in engines)
+                {
+                    engine.autoThrustInput = autoThrustInput;
+                }
+
                 CruiseDerivativeLastFrame = error;
             }
         }
 
-        public void KeyboardInput() {
-            if (!(isAutoThrustArm || Cruise)) {
+        public void KeyboardInput()
+        {
+            if (!(isAutoThrustArm || Cruise))
+            {
                 isAutoThrustArm = true;
             }
-            else {
+            else
+            {
                 isAutoThrustArm = false;
                 SetCruiseOff();
             }
         }
 
-        public void SetCruiseOn() {
-            if (Cruise) {
+        public void SetCruiseOn()
+        {
+            if (Cruise)
+            {
                 return;
             }
 
-            if (Piloting) {
+            if (Piloting)
+            {
                 func_active = true;
             }
 
-            foreach (var engine in engines) {
+            foreach (var engine in engines)
+            {
                 engine.isAutoThrustActive = true;
             }
 
             Cruise = true;
         }
 
-        public void SetCruiseOff() {
-            if (!Cruise) {
+        public void SetCruiseOff()
+        {
+            if (!Cruise)
+            {
                 return;
             }
 
-            if (Piloting) {
+            if (Piloting)
+            {
                 func_active = false;
             }
 
-            foreach (var engine in engines) {
+            foreach (var engine in engines)
+            {
                 engine.isAutoThrustActive = false;
             }
 
@@ -243,10 +289,12 @@ namespace VAU.V320NeoNext.Runtime.Systems.AutoThrust.SaccExt {
             SetSpeed = Mathf.Clamp(speed, MinSpeedInKt, MaxSpeedInKt);
         }
 
-        public void SFEXT_O_LoseOwnership() {
+        public void SFEXT_O_LoseOwnership()
+        {
             gameObject.SetActive(false);
             func_active = false;
-            if (Cruise) {
+            if (Cruise)
+            {
                 SetCruiseOff();
             }
         }

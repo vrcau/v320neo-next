@@ -742,7 +742,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &2193420561277070675
 RectTransform:
   m_ObjectHideFlags: 0
@@ -2612,6 +2612,7 @@ MonoBehaviour:
     PrefabModifications: []
     SerializationNodes: []
   _udonSharpBackingUdonBehaviour: {fileID: 7004343545175485341}
+  flightDirector: {fileID: 0}
   flightDirectionIndicator: {fileID: 0}
   landingSystemIndicator: {fileID: 0}
   VSbackground: {fileID: 6924686126374162417}
@@ -2624,7 +2625,12 @@ MonoBehaviour:
   TargetSpeedBottom: {fileID: 4055242758224003066}
   TargetSpeedBottomText: {fileID: 1422787716840036664}
   landingSystem: {fileID: 3944916800490897782}
-  flightDirectionFail: {fileID: 2098524173152254024}
+  flightDirectorUI: {fileID: 2150652121370121907}
+  flightDirectorFail: {fileID: 0}
+  flightDirectorPitchBarObject: {fileID: 4047212010168230556}
+  flightDirectorRollBarObject: {fileID: 4917293186728329163}
+  flightDirectorYawBarObject: {fileID: 0}
+  flightDirectorFpdTargetObject: {fileID: 5566673810684807683}
   disableOnGround:
   - {fileID: 2829544746010125352}
   - {fileID: 7294229835733747282}

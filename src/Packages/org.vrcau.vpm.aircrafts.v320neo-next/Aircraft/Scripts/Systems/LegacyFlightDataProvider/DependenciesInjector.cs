@@ -2,7 +2,7 @@
 using UdonSharp;
 using UnityEditor;
 using UnityEngine;
-using VAU.V320NeoNext.Runtime.Systems.AutoThrust.SaccExt;
+using VAU.V320NeoNext.Runtime.Systems.AutoFlight;
 using VAU.V320NeoNext.Runtime.Systems.AuxiliaryPowerUnit;
 using VAU.V320NeoNext.Runtime.Systems.Engine.SaccExt;
 using VAU.V320NeoNext.Runtime.Systems.FlightControl.SaccExt;

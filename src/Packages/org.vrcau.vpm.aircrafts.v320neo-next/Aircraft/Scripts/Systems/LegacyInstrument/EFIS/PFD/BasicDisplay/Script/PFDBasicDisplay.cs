@@ -2,32 +2,36 @@
 using UdonSharp;
 using UnityEngine;
 using UnityEngine.UI;
+using VAU.V320NeoNext.Runtime.Systems.AutoFlight;
 using VAU.V320NeoNext.Runtime.Systems.LegacyFlightDataProvider;
 using VAU.V320NeoNext.Runtime.Systems.LegacyFlightDataProvider.LegacyADRIRU;
 using VAU.V320NeoNext.Runtime.Systems.LegacyInstrument.Utils;
 using VRC.SDKBase;
 
-namespace VAU.V320NeoNext.Runtime.Systems.LegacyInstrument.EFIS.PFD.BasicDisplay.Script {
-    [UdonBehaviourSyncMode(BehaviourSyncMode.Manual)]//PFD需要网络同步！（LS按键，FD按键之类）
-    public class PFDBasicDisplay : UdonSharpBehaviour {
-    #region Aircraft Systems
+namespace VAU.V320NeoNext.Runtime.Systems.LegacyInstrument.EFIS.PFD.BasicDisplay.Script
+{
+    [UdonBehaviourSyncMode(BehaviourSyncMode.Manual)] //PFD需要网络同步！（LS按键，FD按键之类）
+    public class PFDBasicDisplay : UdonSharpBehaviour
+    {
+        #region Aircraft Systems
 
         private DependenciesInjector _injector;
 
         private ADIRU _adiru;
         private RadioAltimeter.RadioAltimeter _radioAltimeter;
         private AircraftSystemData _aircraftSystemData;
+
         private FCU.Scripts.FCU _fcu;
+
         //private DFUNC_a320_FlapController _flaps;
         private SystemEventBus _eventBus;
+        public FlightDirector flightDirector;
 
-    #endregion
+        #endregion
 
         private VRCPlayerApi _localPlayer;
 
-        [Header("EFIS Indicator")]
-        public GameObject flightDirectionIndicator;
-
+        [Header("EFIS Indicator")] public GameObject flightDirectionIndicator;
         public GameObject landingSystemIndicator;
 
         private float _altitude;
@@ -40,7 +44,9 @@ namespace VAU.V320NeoNext.Runtime.Systems.LegacyInstrument.EFIS.PFD.BasicDisplay
         [PublicAPI] public bool isFlightDirectionOn { get; private set; } = true;
         [PublicAPI] public bool isLandingSystemOn { get; private set; }
 
-        private void Start() {
+
+        private void Start()
+        {
             _injector = DependenciesInjector.GetInstance(this);
 
             _adiru = _injector.adiru;
@@ -56,36 +62,37 @@ namespace VAU.V320NeoNext.Runtime.Systems.LegacyInstrument.EFIS.PFD.BasicDisplay
 
             // Reset Flight Direction and Landing System
             flightDirectionIndicator.SetActive(isFlightDirectionOn);
-            flightDirectionFail.SetActive(isFlightDirectionOn);
-
+            flightDirectorUI.SetActive(isFlightDirectionOn);
             landingSystem.SetActive(isLandingSystemOn);
             landingSystemIndicator.SetActive(isLandingSystemOn);
         }
 
-        public void SFEXT_O_RespawnButton() {
+        public void SFEXT_O_RespawnButton()
+        {
             isFlightDirectionOn = true;
             isLandingSystemOn = false;
 
             flightDirectionIndicator.SetActive(isFlightDirectionOn);
-            flightDirectionFail.SetActive(isFlightDirectionOn);
-
+            flightDirectorUI.SetActive(isFlightDirectionOn);
+            //flightDirectorFail.SetActive(isFlightDirectionOn);
+            //flightDirector.isFDOn = isFlightDirectionOn;
             landingSystem.SetActive(isLandingSystemOn);
             landingSystemIndicator.SetActive(isLandingSystemOn);
         }
 
-    #region Math
+        #region Math
 
-        private static float Remap01(float value, float valueMin, float valueMax) {
+        private static float Remap01(float value, float valueMin, float valueMax)
+        {
             value = Mathf.Clamp01((value - valueMin) / (valueMax - valueMin));
             return value;
         }
 
-    #endregion
+        #endregion
 
-    #region UI Elements
+        #region UI Elements
 
-        [Header("UI Elements")]
-        public GameObject VSbackground;
+        [Header("UI Elements")] public GameObject VSbackground;
 
         public Text VSText;
         public Text RadioHeightText;
@@ -99,61 +106,53 @@ namespace VAU.V320NeoNext.Runtime.Systems.LegacyInstrument.EFIS.PFD.BasicDisplay
 
         public GameObject landingSystem;
 
-        public GameObject flightDirectionFail;
+        public GameObject flightDirectorUI;
+        public GameObject flightDirectorFail;
+        public GameObject flightDirectorPitchBarObject;
+        public GameObject flightDirectorRollBarObject;
+        public GameObject flightDirectorYawBarObject;
+        public GameObject flightDirectorFpdTargetObject;
 
-        [Header("Speed element")]
-        public GameObject[] disableOnGround;
+        [Header("Speed element")] public GameObject[] disableOnGround;
 
         public GameObject[] enableOnGround;
 
         public GameObject pilotInputDisplay;
 
-    #endregion
+        #endregion
 
-    #region Indicator Settings
+        #region Indicator Settings
 
-        [Header("Indicator Settings")]
-        [Tooltip("仪表的动画控制器")]
+        [Header("Indicator Settings")] [Tooltip("仪表的动画控制器")]
         public Animator IndicatorAnimator;
 
-        [Header("下面的量程都是单侧的")]
-        [Tooltip("速度表最大量程(节)")]
+        [Header("下面的量程都是单侧的")] [Tooltip("速度表最大量程(节)")]
         public float MAXSPEED = 600f;
 
-        [Tooltip("俯仰角最大量程(度)")]
-        public float MAXPITCH = 90f;
+        [Tooltip("俯仰角最大量程(度)")] public float MAXPITCH = 90f;
 
-        [Tooltip("滚转角最大量程(度)")]
-        public float MAXBANK = 180f;
+        [Tooltip("滚转角最大量程(度)")] public float MAXBANK = 180f;
 
-        [Tooltip("高度表最大量程(英尺)")]
-        public float MAXALT = 99990f;
+        [Tooltip("高度表最大量程(英尺)")] public float MAXALT = 99990f;
 
-        [Tooltip("标高指示范围")]
-        public float MAXRHE = 600f;
+        [Tooltip("标高指示范围")] public float MAXRHE = 600f;
 
-        [Tooltip("速度趋势指示范围")]
-        public float MAXSPDTRND = 42f;
+        [Tooltip("速度趋势指示范围")] public float MAXSPDTRND = 42f;
 
-        [Header("对于数字每一位都需要单独动画的仪表")]
-        public bool altbybit = true;
+        [Header("对于数字每一位都需要单独动画的仪表")] public bool altbybit = true;
 
-        [Tooltip("一些罗盘动画起始角度并不为0")]
-        public float HDGoffset = 180;
+        [Tooltip("一些罗盘动画起始角度并不为0")] public float HDGoffset = 180;
 
-        [Tooltip("爬升率最大量程(英尺/分钟)")]
-        public float MAXVS = 6000;
+        [Tooltip("爬升率最大量程(英尺/分钟)")] public float MAXVS = 6000;
 
         //侧滑这个数值先固定着
-        [Tooltip("最大侧滑角")]
-        public float MAXSLIPANGLE = 40;
+        [Tooltip("最大侧滑角")] public float MAXSLIPANGLE = 40;
 
-        [Tooltip("最大垂直侧滑")]
-        public float MAXTRACKPITCH = 25;
+        [Tooltip("最大垂直侧滑")] public float MAXTRACKPITCH = 25;
 
-    #endregion
+        #endregion
 
-    #region Animation Hashs
+        #region Animation Hashs
 
         // animator strings that are sent every frame are converted to int for optimization
         private readonly int AIRSPEED_HASH = Animator.StringToHash("AirSpeedNormalize");
@@ -178,11 +177,15 @@ namespace VAU.V320NeoNext.Runtime.Systems.LegacyInstrument.EFIS.PFD.BasicDisplay
         private readonly int INPUT_Y_HASH = Animator.StringToHash("PilotInputY");
         private readonly int SPEED_TREND = Animator.StringToHash("SpeedTrend");
 
-    #endregion
+        private readonly int animHashFDVer = Animator.StringToHash("FD_ver");
+        private readonly int animHashFDHor = Animator.StringToHash("FD_hor");
 
-    #region Update
+        #endregion
 
-        private void FixedUpdate() {
+        #region Update
+
+        private void FixedUpdate()
+        {
             //这里可以用来做仪表更新延迟之类的逻辑
             PitchAngle = _adiru.irs.pitch;
             BankAngle = _adiru.irs.bank;
@@ -192,7 +195,7 @@ namespace VAU.V320NeoNext.Runtime.Systems.LegacyInstrument.EFIS.PFD.BasicDisplay
             //Altitude
             UpdateAltitude();
             //RH
-            UpdateRadioHeight();
+            UpdateRadioAltitude();
             //VS
             UpdateVerticalSpeed();
             //Heading
@@ -204,22 +207,23 @@ namespace VAU.V320NeoNext.Runtime.Systems.LegacyInstrument.EFIS.PFD.BasicDisplay
             //Slip
             UpdateSlip();
             //TrackPitch
-            UpdateTrickPitch();
+            UpdateTrackPitch();
 
             UpdateMachNumber();
 
             UpdatePilotInput();
+
+            UpdateFD();
         }
 
-    #region Speed
+        #region Speed
 
-        [Header("Speed")]
-        public int VMO = 350;
+        [Header("Speed")] public int VMO = 350;
 
         public int VLE = 280;
 
         // VSW
-        public float VSWCONF0 = 140; 
+        public float VSWCONF0 = 140;
         public float VSWCONF1 = 136; //1
         public float VSWCONF2 = 133; //2
         public float VSWCONF3 = 127; //3
@@ -231,8 +235,8 @@ namespace VAU.V320NeoNext.Runtime.Systems.LegacyInstrument.EFIS.PFD.BasicDisplay
 
         public int GreenDotSpeed = 195;
 
-        private float _lastDeltaAirSpeed = 0f;
-        private void UpdateAirspeed() {
+        private void UpdateAirspeed()
+        {
             foreach (var item in disableOnGround) item.SetActive(!_aircraftSystemData.isAircraftGrounded);
             foreach (var item in enableOnGround) item.SetActive(_aircraftSystemData.isAircraftGrounded);
 
@@ -243,27 +247,28 @@ namespace VAU.V320NeoNext.Runtime.Systems.LegacyInstrument.EFIS.PFD.BasicDisplay
 
             #region Target Speed
 
-            IndicatorAnimator.SetFloat(AIRSPEED_SECLECT_HASH, _fcu.TargetSpeed / 500f);
+            IndicatorAnimator.SetFloat(AIRSPEED_SECLECT_HASH, _fcu.targetSpeed / 500f);
 
-            TargetSpeedTopText.text = _fcu.TargetSpeed.ToString();
-            TargetSpeedBottomText.text = _fcu.TargetSpeed.ToString();
+            TargetSpeedTopText.text = _fcu.targetSpeed.ToString();
+            TargetSpeedBottomText.text = _fcu.targetSpeed.ToString();
 
             TargetSpeedBottom.SetActive(false);
             TargetSpeedTop.SetActive(false);
-            if (_adiru.adr.instrumentAirSpeed - _fcu.TargetSpeed > 45)
+            if (_adiru.adr.instrumentAirSpeed - _fcu.targetSpeed > 45)
                 TargetSpeedBottom.SetActive(true);
 
-            if (_fcu.TargetSpeed - _adiru.adr.instrumentAirSpeed > 45)
+            if (_fcu.targetSpeed - _adiru.adr.instrumentAirSpeed > 45)
                 TargetSpeedTop.SetActive(true);
 
             #endregion
 
             #region Speed Trend
-            
+
             var deltaT = Time.fixedDeltaTime;
-            deltaAirSpeed = Mathf.Lerp(_lastDeltaAirSpeed, deltaAirSpeed / deltaT * 10f, 0.8f);
-            _lastDeltaAirSpeed = deltaAirSpeed;
-            IndicatorAnimator.SetFloat(SPEED_TREND, Remap01(Mathf.Abs(deltaAirSpeed)>2? deltaAirSpeed:0, -MAXSPDTRND, MAXSPDTRND));
+            deltaAirSpeed = deltaAirSpeed * 10f / deltaT;
+            IndicatorAnimator.SetFloat(SPEED_TREND,
+                Remap01(Mathf.Abs(deltaAirSpeed) > 5 ? deltaAirSpeed : 0, -MAXSPDTRND, MAXSPDTRND));
+
             #endregion
 
             #region VMAX
@@ -286,7 +291,8 @@ namespace VAU.V320NeoNext.Runtime.Systems.LegacyInstrument.EFIS.PFD.BasicDisplay
             #region VSW
 
             var VSW = VSWCONF0;
-            switch (_aircraftSystemData.flapCurrentIndex) {
+            switch (_aircraftSystemData.flapCurrentIndex)
+            {
                 case 1:
                     VSW = VSWCONF1;
                     break;
@@ -310,9 +316,9 @@ namespace VAU.V320NeoNext.Runtime.Systems.LegacyInstrument.EFIS.PFD.BasicDisplay
 
             #region VFE NEXT
 
-            
             var VFENext = flaps.speedLimits[1]; //0
-            switch (flaps.targetDetentIndex) {
+            switch (flaps.targetDetentIndex)
+            {
                 case 1: //1
                     VFENext = flaps.speedLimits[3];
                     break;
@@ -326,12 +332,13 @@ namespace VAU.V320NeoNext.Runtime.Systems.LegacyInstrument.EFIS.PFD.BasicDisplay
 
             IndicatorAnimator.SetFloat(VFE_NEXT_HASH, VFENext / 240f);
 
-        #endregion
+            #endregion
 
-        #region VLS
+            #region VLS
 
             var VLS = 1.28f * VSW;
-            switch (flaps.detentIndex) {
+            switch (flaps.detentIndex)
+            {
                 case 4:
                     VLS = 1.28f * VSW;
                     break;
@@ -342,24 +349,28 @@ namespace VAU.V320NeoNext.Runtime.Systems.LegacyInstrument.EFIS.PFD.BasicDisplay
 
             IndicatorAnimator.SetFloat(VLS_HASH, VLS / 200f);
 
-        #endregion
+            #endregion
         }
 
-        private void UpdateMachNumber() {
-            if (_adiru.adr.mach > 0.5f) {
+        private void UpdateMachNumber()
+        {
+            if (_adiru.adr.mach > 0.5f)
+            {
                 MachNumberText.gameObject.SetActive(true);
-                MachNumberText.text = "." + (_adiru.adr.mach*100f).ToString("f0");
+                MachNumberText.text = "." + (_adiru.adr.mach * 100f).ToString("f0");
             }
-            else {
+            else
+            {
                 MachNumberText.gameObject.SetActive(false);
             }
         }
 
-    #endregion
+        #endregion
 
-    #region Altitude
+        #region Altitude
 
-        private void UpdateAltitude() {
+        private void UpdateAltitude()
+        {
             //默认都会写Altitude
             _altitude = _adiru.adr.pressureAltitude;
             IndicatorAnimator.SetFloat(ALT_HASH, _altitude / MAXALT);
@@ -374,11 +385,14 @@ namespace VAU.V320NeoNext.Runtime.Systems.LegacyInstrument.EFIS.PFD.BasicDisplay
             IndicatorAnimator.SetFloat(ALT10000_HASH, (int)(_altitude / 10000f) % 10 / 10f);
         }
 
-        private void UpdateRadioHeight() {
-            if (!_radioAltimeter.isAvailable | RadioHeight > 2500f) {
+        private void UpdateRadioAltitude()
+        {
+            if (!_radioAltimeter.isAvailable | RadioHeight > 2500f)
+            {
                 RadioHeightText.gameObject.SetActive(false);
             }
-            else {
+            else
+            {
                 RadioHeightText.gameObject.SetActive(true);
                 RadioHeightText.text = RadioHeight.ToString("f0");
                 var RadioAltitudeNormal = Remap01(RadioHeight, -MAXRHE, MAXRHE);
@@ -386,13 +400,15 @@ namespace VAU.V320NeoNext.Runtime.Systems.LegacyInstrument.EFIS.PFD.BasicDisplay
             }
         }
 
-    #endregion
+        #endregion
 
-        private void UpdateVerticalSpeed() {
+        private void UpdateVerticalSpeed()
+        {
             var verticalSpeed = _adiru.adr.verticalSpeed;
             var VerticalSpeedNormal = Remap01(_adiru.adr.verticalSpeed, -MAXVS, MAXVS);
             IndicatorAnimator.SetFloat(ROC_HASH, VerticalSpeedNormal);
-            if (Mathf.Abs(verticalSpeed) > 200) {
+            if (Mathf.Abs(verticalSpeed) > 200)
+            {
                 VSbackground.SetActive(true);
                 if (Mathf.Abs(verticalSpeed) > 6000)
                     VSText.color = new Color(0.91373f, 0.54901f, 0);
@@ -405,58 +421,68 @@ namespace VAU.V320NeoNext.Runtime.Systems.LegacyInstrument.EFIS.PFD.BasicDisplay
 
                 VSText.text = Mathf.Abs(verticalSpeed / 100).ToString("f0");
             }
-            else {
+            else
+            {
                 VSbackground.gameObject.SetActive(false);
             }
         }
 
-        private void UpdateHeading() {
+        private void UpdateHeading()
+        {
             IndicatorAnimator.SetFloat(HEADING_HASH, (_adiru.irs.heading - HDGoffset + 360) % 360 / 360f);
         }
 
-        private void UpdatePitch() {
+        private void UpdatePitch()
+        {
             //玄学问题，Pitch 跟 Bank 调用不了Remap01??
             //可能不是玄学问题，Pitch与Bank可能为负数值
             var PitchAngleNormal = Mathf.Clamp01((PitchAngle + MAXPITCH) / (MAXPITCH + MAXPITCH));
             IndicatorAnimator.SetFloat(PITCH_HASH, PitchAngleNormal);
         }
 
-        private void UpdateBank() {
+        private void UpdateBank()
+        {
             var BankAngleNormal = Mathf.Clamp01((BankAngle + MAXBANK) / (MAXBANK + MAXBANK));
             IndicatorAnimator.SetFloat(BANK_HASH, BankAngleNormal);
         }
 
-        private void UpdateSlip() {
+        private void UpdateSlip()
+        {
             IndicatorAnimator.SetFloat(SLIP_ANGLE_HASH,
                 Mathf.Clamp01((_adiru.irs.trackSlipAngle + MAXSLIPANGLE) / (MAXSLIPANGLE + MAXSLIPANGLE)));
         }
 
-        private void UpdateTrickPitch() {
+        private void UpdateTrackPitch()
+        {
             IndicatorAnimator.SetFloat(TRKPCH_HASH,
                 Mathf.Clamp01((_adiru.irs.trackPitchAngle + MAXTRACKPITCH) / (MAXTRACKPITCH + MAXTRACKPITCH)));
         }
 
         private Vector3 ownerRotationInputs;
 
-        private void UpdatePilotInput() {
+        private void UpdatePilotInput()
+        {
             pilotInputDisplay.SetActive(_aircraftSystemData.isAircraftGrounded &&
                                         (_aircraftSystemData.isEngine1Avail || _aircraftSystemData.isEngine2Avail));
 
             if (!pilotInputDisplay.activeSelf) return;
 
             var rotationInputs = _aircraftSystemData.pilotInput;
-            if (_aircraftSystemData.isOwner) {
-                if (_localPlayer.IsUserInVR()) {
+            if (_aircraftSystemData.isOwner)
+            {
+                if (_localPlayer.IsUserInVR())
+                {
                     ownerRotationInputs = rotationInputs;
                 }
-                else {
+                else
+                {
                     // prevent instant movement in desktop mode
-                    ownerRotationInputs = Vector3.MoveTowards(ownerRotationInputs, rotationInputs, 7 * Time.fixedDeltaTime);
+                    ownerRotationInputs = Vector3.MoveTowards(ownerRotationInputs, rotationInputs, 7 * Time.deltaTime);
                 }
 
                 IndicatorAnimator.SetFloat(INPUT_Y_HASH, ownerRotationInputs.x * 0.5f + 0.5f);
                 IndicatorAnimator.SetFloat(INPUT_X_HASH, ownerRotationInputs.z * 0.5f + 0.5f);
-                
+
                 return;
             }
 
@@ -464,24 +490,74 @@ namespace VAU.V320NeoNext.Runtime.Systems.LegacyInstrument.EFIS.PFD.BasicDisplay
             IndicatorAnimator.SetFloat(INPUT_X_HASH, rotationInputs.z * 0.5f + 0.5f);
         }
 
-    #endregion
+        private void UpdateFD()
+        {
+            if (flightDirector == null) return;
 
-    #region Touch Switch Event
+            // 1. 驱动 FD 运算逻辑（传入 PFD 当前解算的姿态数据）
+            flightDirector.UpdateFDLogic(_adiru.adr.instrumentAirSpeed,
+                _adiru.adr.verticalSpeed, PitchAngle, BankAngle,
+                _adiru.irs.trackPitchAngle,
+                _adiru.irs.trackSlipAngle,
+                _adiru.irs.heading,
+                _adiru.adr.pressureAltitude,
+                RadioHeight,
+                _aircraftSystemData.isAircraftGrounded);
+
+            // 2. 将归一化偏转参数传给 Animator
+            if (IndicatorAnimator != null)
+            {
+                IndicatorAnimator.SetFloat(animHashFDVer, flightDirector.fdVerNormalized);
+                IndicatorAnimator.SetFloat(animHashFDHor, flightDirector.fdHorNormalized);
+            }
+
+            // 3. 更新 UI 显示与隐藏模式 (Crossbars vs FPD 绿鸟模式)
+            if (!flightDirector.isFPDMode)
+            {
+                // 十字杆模式
+                if (flightDirectorPitchBarObject != null)
+                    flightDirectorPitchBarObject.SetActive(flightDirector.isPitchBarVisible);
+                if (flightDirectorRollBarObject != null)
+                    flightDirectorRollBarObject.SetActive(flightDirector.isRollBarVisible);
+                if (flightDirectorYawBarObject != null)
+                    flightDirectorYawBarObject.SetActive(flightDirector.isYawBarVisible);
+                if (flightDirectorFpdTargetObject != null) flightDirectorFpdTargetObject.SetActive(false);
+            }
+            else
+            {
+                // FPD (TRK-FPA) 绿鸟指引圈模式
+                if (flightDirectorPitchBarObject != null) flightDirectorPitchBarObject.SetActive(false);
+                if (flightDirectorRollBarObject != null) flightDirectorRollBarObject.SetActive(false);
+                if (flightDirectorYawBarObject != null) flightDirectorYawBarObject.SetActive(false);
+                if (flightDirectorFpdTargetObject != null)
+                    flightDirectorFpdTargetObject.SetActive(flightDirector.isPitchBarVisible ||
+                                                            flightDirector.isRollBarVisible);
+            }
+        }
+
+        #endregion
+
+        #region Touch Switch Event
 
         [PublicAPI]
-        public void ToggleFlightDirection() {
+        public void ToggleFlightDirection()
+        {
             isFlightDirectionOn = !isFlightDirectionOn;
             flightDirectionIndicator.SetActive(isFlightDirectionOn);
-            flightDirectionFail.SetActive(isFlightDirectionOn);
+
+            flightDirectorUI.SetActive(isFlightDirectionOn);
+            //flightDirector.isFDOn = isFlightDirectionOn;
+            //flightDirectorFail.SetActive(isFlightDirectionOn);
         }
 
         [PublicAPI]
-        public void ToggleLandingSystem() {
+        public void ToggleLandingSystem()
+        {
             isLandingSystemOn = !isLandingSystemOn;
             landingSystem.SetActive(isLandingSystemOn);
             landingSystemIndicator.SetActive(isLandingSystemOn);
         }
 
-    #endregion
+        #endregion
     }
 }

@@ -1,30 +1,27 @@
-﻿using SaccFlightAndVehicles;
-using UdonSharp;
+﻿using UdonSharp;
 using UnityEngine;
 using UnityEngine.UI;
-using VAU.V320NeoNext.Runtime.Systems.AutoThrust.SaccExt;
 using VAU.V320NeoNext.Runtime.Systems.LegacyAutoBrake;
 using VAU.V320NeoNext.Runtime.Systems.LegacyFlightDataProvider;
 using VAU.V320NeoNext.Runtime.Systems.LegacyInstrument.Utils;
 
-namespace VAU.V320NeoNext.Runtime.Systems.LegacyInstrument.EFIS.PFD.FMADisplay {
+namespace VAU.V320NeoNext.Runtime.Systems.LegacyInstrument.EFIS.PFD.FMADisplay
+{
     [UdonBehaviourSyncMode(BehaviourSyncMode.None)]
-    public class FMAController : UdonSharpBehaviour {
+    public class FMAController : UdonSharpBehaviour
+    {
         private AircraftSystemData _aircraftSystemData;
-        private DFUNC_AltHold _altHoldDFunc;
-        private DFUNC_a320_AutoThrust _cruiseDFunc;
         private AutoBrake _autoBrake;
         private DependenciesInjector _injector;
-        
+
         private readonly float UPDATE_INTERVAL = UpdateIntervalUtil.GetUpdateIntervalFromFPS(30);
         private float _lastUpdate;
 
-        private void Start() {
+        private void Start()
+        {
             _injector = DependenciesInjector.GetInstance(this);
 
             _aircraftSystemData = _injector.equipmentData;
-            _cruiseDFunc = _injector.autoThrust;
-            _altHoldDFunc = _injector.altHold;
             _autoBrake = _injector.autoBrake;
 
             AutoThrustModeText.text = "";
@@ -52,10 +49,12 @@ namespace VAU.V320NeoNext.Runtime.Systems.LegacyInstrument.EFIS.PFD.FMADisplay {
             MessageText.text = "";
         }
 
-        public void LateUpdate() {
+        public void LateUpdate()
+        {
             if (!UpdateIntervalUtil.CanUpdate(ref _lastUpdate, UPDATE_INTERVAL)) return;
 
-            switch (_aircraftSystemData.throttleLevelerSlot) {
+            switch (_aircraftSystemData.throttleLevelerSlot)
+            {
                 case ThrottleLevelerSlot.TOGA:
                     ManThrType = ManThrType.TOGA;
                     break;
@@ -67,6 +66,7 @@ namespace VAU.V320NeoNext.Runtime.Systems.LegacyInstrument.EFIS.PFD.FMADisplay {
                     break;
             }
 
+            /*
             if (_altHoldDFunc.AltHold) {
                 VerticalActiveMode = "ALT";
                 LateralActiveMode = "HDG";
@@ -77,37 +77,24 @@ namespace VAU.V320NeoNext.Runtime.Systems.LegacyInstrument.EFIS.PFD.FMADisplay {
                 LateralActiveMode = "";
                 IsAutoPilot1Active = false;
             }
+            */
 
-            if (_cruiseDFunc.Cruise || _cruiseDFunc.isAutoThrustArm) {
-                IsAutoThrustActive = true;
-                IsAutoThrustArm = _cruiseDFunc.isAutoThrustArm;
 
-                if (_cruiseDFunc.Cruise) {
-                    AutoThrustMode = "SPEED";
-                }
-                else {
-                    AutoThrustMode = "";
-                }
-            }
-            else {
-                IsAutoThrustActive = false;
-                AutoThrustMode = "";
-            }
-
-            switch (_autoBrake.currentAutoBrakeMode) {
-                case LegacyAutoBrake.AutoBrakeMode.Low:
+            switch (_autoBrake.currentAutoBrakeMode)
+            {
+                case AutoBrakeMode.Low:
                     IsAutoBrakeArm = true;
-                    AutoBrakeMode = AutoBrakeMode.LOW;
+                    AutoBrakeMode = AutoBrakeMode.Low;
                     break;
-                case LegacyAutoBrake.AutoBrakeMode.Med:
+                case AutoBrakeMode.Med:
                     IsAutoBrakeArm = true;
-                    AutoBrakeMode = AutoBrakeMode.MED;
+                    AutoBrakeMode = AutoBrakeMode.Med;
                     break;
-                case LegacyAutoBrake.AutoBrakeMode.Max:
+                case AutoBrakeMode.Max:
                     IsAutoBrakeArm = true;
-                    AutoBrakeMode = AutoBrakeMode.MAX;
+                    AutoBrakeMode = AutoBrakeMode.Max;
                     break;
-                case LegacyAutoBrake.AutoBrakeMode.None:
+                case AutoBrakeMode.None:
                     IsAutoBrakeArm = false;
                     AutoBrakeMode = AutoBrakeMode.None;
                     break;
@@ -119,24 +106,26 @@ namespace VAU.V320NeoNext.Runtime.Systems.LegacyInstrument.EFIS.PFD.FMADisplay {
 
             IsAutoBrakeActive = _autoBrake.isAutoBrakeActive;
 
-            if (_autoBrake.isAutoBrakeActive) {
-
+            if (_autoBrake.isAutoBrakeActive)
+            {
             }
         }
 
-        private void UpdateAutoThrustDisplay() {
+        private void UpdateAutoThrustDisplay()
+        {
             ManThrRoot.SetActive((_isAutoThrustArm || !_isAutoThrustActive) && ManThrType != ManThrType.None);
             AutoBrkArmModeGameObject.SetActive(!_isAutoBrakeActive);
 
             var autoBrakeString = "";
-            switch (AutoBrakeMode) {
-                case AutoBrakeMode.MAX:
+            switch (AutoBrakeMode)
+            {
+                case AutoBrakeMode.Max:
                     autoBrakeString = "MAX";
                     break;
-                case AutoBrakeMode.MED:
+                case AutoBrakeMode.Med:
                     autoBrakeString = "MED";
                     break;
-                case AutoBrakeMode.LOW:
+                case AutoBrakeMode.Low:
                     autoBrakeString = "LOW";
                     break;
             }
@@ -144,7 +133,8 @@ namespace VAU.V320NeoNext.Runtime.Systems.LegacyInstrument.EFIS.PFD.FMADisplay {
             AutoThrustModeText.text = IsAutoBrakeActive ? $"BRK {autoBrakeString}" : AutoThrustMode;
             AutoBrkArmModeText.text = IsAutoBrakeArm ? $"BRK {autoBrakeString}" : "";
 
-            switch (ManThrType) {
+            switch (ManThrType)
+            {
                 case ManThrType.TOGA:
                     ManThrText.text = "MAN\nTOGA";
                     break;
@@ -160,21 +150,25 @@ namespace VAU.V320NeoNext.Runtime.Systems.LegacyInstrument.EFIS.PFD.FMADisplay {
             }
         }
 
-        private void UpdateLateralModeDisplay() {
+        private void UpdateLateralModeDisplay()
+        {
             UpdateCommonModeDisplay();
             HorizontalModeText.text = LateralActiveMode;
             HorizontalArmModeText.text = LateralArmMode;
         }
 
-        private void UpdateVerticalModeDisplay() {
+        private void UpdateVerticalModeDisplay()
+        {
             UpdateCommonModeDisplay();
             VerticalModeText.text = VerticalActiveMode;
             VerticalArmModeText.text = VerticalArmMode;
         }
 
-        private void UpdateApproachDisplay() {
+        private void UpdateApproachDisplay()
+        {
             var approachAbilityString = "";
-            switch (ApproachAbility) {
+            switch (ApproachAbility)
+            {
                 case ApproachAbility.Cat1:
                     approachAbilityString += "CAT 1";
                     break;
@@ -186,9 +180,11 @@ namespace VAU.V320NeoNext.Runtime.Systems.LegacyInstrument.EFIS.PFD.FMADisplay {
                     break;
             }
 
-            if (ApproachMinimumType != ApproachMinimumType.None && ApproachMinimumHeight > 0) {
+            if (ApproachMinimumType != ApproachMinimumType.None && ApproachMinimumHeight > 0)
+            {
                 var approachMinimumTypeString = "";
-                switch (ApproachMinimumType) {
+                switch (ApproachMinimumType)
+                {
                     case ApproachMinimumType.BARO:
                         approachMinimumTypeString = "BARO";
                         break;
@@ -201,7 +197,8 @@ namespace VAU.V320NeoNext.Runtime.Systems.LegacyInstrument.EFIS.PFD.FMADisplay {
                     $"{approachMinimumTypeString} <color=#38FFFE>{ApproachMinimumHeight}</color>";
             }
 
-            if (ApproachAbility != ApproachAbility.None && (IsAutoPilot1Active || IsAutoPilot2Active)) {
+            if (ApproachAbility != ApproachAbility.None && (IsAutoPilot1Active || IsAutoPilot2Active))
+            {
                 var channels = "\nSINGLE";
                 if (IsAutoPilot1Active && IsAutoPilot2Active)
                     channels = "\nDUAL";
@@ -212,12 +209,14 @@ namespace VAU.V320NeoNext.Runtime.Systems.LegacyInstrument.EFIS.PFD.FMADisplay {
             ApproachAbilityText.text = approachAbilityString;
         }
 
-        private void UpdateAutopilotStatusDisplay() {
+        private void UpdateAutopilotStatusDisplay()
+        {
             AutoThrustGameObject.SetActive(_isAutoThrustActive);
             AutoThrustText.text = IsAutoThrustArm ? $"<color={AirbusAvionicsTheme.Blue}>A/THR</color>" : "A/THR";
 
             AutoPilotText.text = "";
-            if (IsAutoPilot1Active && IsAutoPilot2Active) {
+            if (IsAutoPilot1Active && IsAutoPilot2Active)
+            {
                 AutoPilotText.text = "AP1+2";
                 return;
             }
@@ -228,7 +227,8 @@ namespace VAU.V320NeoNext.Runtime.Systems.LegacyInstrument.EFIS.PFD.FMADisplay {
                 AutoPilotText.text = "AP2";
 
             FlightDirectorText.text = "";
-            if (IsFlightDirector1Active && IsFlightDirector2Active) {
+            if (IsFlightDirector1Active && IsFlightDirector2Active)
+            {
                 FlightDirectorText.text = "1 FD 2";
                 return;
             }
@@ -239,7 +239,8 @@ namespace VAU.V320NeoNext.Runtime.Systems.LegacyInstrument.EFIS.PFD.FMADisplay {
                 FlightDirectorText.text = "- FD 2";
         }
 
-        private void UpdateSpecialMessageDisplay() {
+        private void UpdateSpecialMessageDisplay()
+        {
             SpecialMessageRoot.SetActive(!string.IsNullOrWhiteSpace(SpecialMessage));
             MessageText.text = SpecialMessage;
 
@@ -247,16 +248,18 @@ namespace VAU.V320NeoNext.Runtime.Systems.LegacyInstrument.EFIS.PFD.FMADisplay {
                 MessageText.text = $"<color={SpecialMessageRoot}>{SpecialMessage}</color>";
         }
 
-        private void UpdateCommonModeDisplay() {
-            if (!string.IsNullOrWhiteSpace(LateralActiveMode) && !string.IsNullOrWhiteSpace(VerticalActiveMode)) {
+        private void UpdateCommonModeDisplay()
+        {
+            if (!string.IsNullOrWhiteSpace(LateralActiveMode) && !string.IsNullOrWhiteSpace(VerticalActiveMode))
+            {
                 CommonModeRoot.SetActive(LateralActiveMode == VerticalActiveMode);
                 CommonModeText.text = LateralActiveMode;
             }
         }
 
-    #region UI Control
+        #region UI Control
 
-    #region Autothrust Mode
+        #region Autothrust Mode
 
         public Text AutoThrustModeText;
         public GameObject ManThrRoot;
@@ -264,64 +267,66 @@ namespace VAU.V320NeoNext.Runtime.Systems.LegacyInstrument.EFIS.PFD.FMADisplay {
         public GameObject AutoBrkArmModeGameObject;
         public Text AutoBrkArmModeText;
 
-    #endregion
+        #endregion
 
-    #region Vertical Mode
+        #region Vertical Mode
 
         public Text VerticalModeText;
         public Text VerticalArmModeText;
 
-    #endregion
+        #endregion
 
-    #region Lateral Mode
+        #region Lateral Mode
 
         public Text HorizontalModeText;
         public Text HorizontalArmModeText;
 
-    #endregion
+        #endregion
 
-    #region Approach
+        #region Approach
 
         public Text ApproachAbilityText;
         public Text ApproachMinimumText;
 
-    #endregion
+        #endregion
 
-    #region Autopilot Status
+        #region Autopilot Status
 
         public Text AutoPilotText;
         public Text FlightDirectorText;
         public GameObject AutoThrustGameObject;
         public Text AutoThrustText;
 
-    #endregion
+        #endregion
 
-    #region Common Mode
+        #region Common Mode
 
         public GameObject CommonModeRoot;
         public Text CommonModeText;
 
-    #endregion
+        #endregion
 
-    #region Special Message
+        #region Special Message
 
         public GameObject SpecialMessageRoot;
         public Text MessageText;
 
-    #endregion
+        #endregion
 
-    #endregion
+        #endregion
 
-    #region Property
+        #region Property
 
-    #region AutoThrust
+        #region AutoThrust
 
         [FieldChangeCallback(nameof(IsAutoThrustArm))]
         public bool _isAutoThrustArm;
 
-        public bool IsAutoThrustArm {
+        public bool IsAutoThrustArm
+        {
             get => _isAutoThrustArm;
-            set {
+            set
+            {
                 _isAutoThrustArm = value;
                 UpdateAutoThrustDisplay();
                 UpdateAutopilotStatusDisplay();
@@ -331,9 +336,11 @@ namespace VAU.V320NeoNext.Runtime.Systems.LegacyInstrument.EFIS.PFD.FMADisplay {
         [FieldChangeCallback(nameof(AutoThrustMode))]
         public string _autoThrustMode = "";
 
-        public string AutoThrustMode {
+        public string AutoThrustMode
+        {
             get => _autoThrustMode;
-            set {
+            set
+            {
                 _autoThrustMode = value;
                 UpdateAutoThrustDisplay();
             }
@@ -342,9 +349,11 @@ namespace VAU.V320NeoNext.Runtime.Systems.LegacyInstrument.EFIS.PFD.FMADisplay {
         [FieldChangeCallback(nameof(IsAutoThrustActive))]
         public bool _isAutoThrustActive;
 
-        public bool IsAutoThrustActive {
+        public bool IsAutoThrustActive
+        {
             get => _isAutoThrustActive;
-            set {
+            set
+            {
                 _isAutoThrustActive = value;
                 UpdateAutoThrustDisplay();
                 UpdateAutopilotStatusDisplay();
@@ -354,9 +363,11 @@ namespace VAU.V320NeoNext.Runtime.Systems.LegacyInstrument.EFIS.PFD.FMADisplay {
         [FieldChangeCallback(nameof(ManThrType))]
         public ManThrType _manThrType = ManThrType.None;
 
-        public ManThrType ManThrType {
+        public ManThrType ManThrType
+        {
             get => _manThrType;
-            set {
+            set
+            {
                 _manThrType = value;
                 UpdateAutoThrustDisplay();
             }
@@ -365,9 +376,11 @@ namespace VAU.V320NeoNext.Runtime.Systems.LegacyInstrument.EFIS.PFD.FMADisplay {
         [FieldChangeCallback(nameof(AutoBrakeMode))]
         public AutoBrakeMode _autoBrakeMode = AutoBrakeMode.None;
 
-        public AutoBrakeMode AutoBrakeMode {
+        public AutoBrakeMode AutoBrakeMode
+        {
             get => _autoBrakeMode;
-            set {
+            set
+            {
                 _autoBrakeMode = value;
                 UpdateAutoThrustDisplay();
             }
@@ -376,35 +389,41 @@ namespace VAU.V320NeoNext.Runtime.Systems.LegacyInstrument.EFIS.PFD.FMADisplay {
         [FieldChangeCallback(nameof(IsAutoBrakeActive))]
         public bool _isAutoBrakeActive;
 
-        public bool IsAutoBrakeActive {
+        public bool IsAutoBrakeActive
+        {
             get => _isAutoBrakeActive;
-            set {
+            set
+            {
                 _isAutoBrakeActive = value;
                 UpdateAutoThrustDisplay();
             }
         }
 
-        [FieldChangeCallback(nameof(IsAutoBrakeActive))]
+        [FieldChangeCallback(nameof(IsAutoBrakeArm))]
         public bool _isAutoBrakeArm;
 
-        public bool IsAutoBrakeArm {
+        public bool IsAutoBrakeArm
+        {
             get => _isAutoBrakeArm;
-            set {
+            set
+            {
                 _isAutoBrakeArm = value;
                 UpdateAutoThrustDisplay();
             }
         }
 
-    #endregion
+        #endregion
 
-    #region Vertical Mode
+        #region Vertical Mode
 
         [FieldChangeCallback(nameof(VerticalActiveMode))]
         public string _verticalActiveMode = "";
 
-        public string VerticalActiveMode {
+        public string VerticalActiveMode
+        {
             get => _verticalActiveMode;
-            set {
+            set
+            {
                 _verticalActiveMode = value;
                 UpdateVerticalModeDisplay();
             }
@@ -413,24 +432,28 @@ namespace VAU.V320NeoNext.Runtime.Systems.LegacyInstrument.EFIS.PFD.FMADisplay {
         [FieldChangeCallback(nameof(VerticalArmMode))]
         public string _verticalArmMode = "";
 
-        public string VerticalArmMode {
+        public string VerticalArmMode
+        {
             get => _verticalArmMode;
-            set {
+            set
+            {
                 _verticalArmMode = value;
                 UpdateVerticalModeDisplay();
             }
         }
 
-    #endregion
+        #endregion
 
-    #region Lateral Mode
+        #region Lateral Mode
 
         [FieldChangeCallback(nameof(LateralActiveMode))]
         public string _lateralActiveMode = "";
 
-        public string LateralActiveMode {
+        public string LateralActiveMode
+        {
             get => _lateralActiveMode;
-            set {
+            set
+            {
                 _lateralActiveMode = value;
                 UpdateLateralModeDisplay();
             }
@@ -439,24 +462,28 @@ namespace VAU.V320NeoNext.Runtime.Systems.LegacyInstrument.EFIS.PFD.FMADisplay {
         [FieldChangeCallback(nameof(LateralArmMode))]
         public string _lateralArmMode = "";
 
-        public string LateralArmMode {
+        public string LateralArmMode
+        {
             get => _lateralArmMode;
-            set {
+            set
+            {
                 _lateralArmMode = value;
                 UpdateLateralModeDisplay();
             }
         }
 
-    #endregion
+        #endregion
 
-    #region Approach
+        #region Approach
 
         [FieldChangeCallback(nameof(ApproachAbility))]
         public ApproachAbility _approachAbility = ApproachAbility.None;
 
-        public ApproachAbility ApproachAbility {
+        public ApproachAbility ApproachAbility
+        {
             get => _approachAbility;
-            set {
+            set
+            {
                 _approachAbility = value;
                 UpdateApproachDisplay();
             }
@@ -465,9 +492,11 @@ namespace VAU.V320NeoNext.Runtime.Systems.LegacyInstrument.EFIS.PFD.FMADisplay {
         [FieldChangeCallback(nameof(ApproachMinimumType))]
         public ApproachMinimumType _approachMinimumType = ApproachMinimumType.None;
 
-        public ApproachMinimumType ApproachMinimumType {
+        public ApproachMinimumType ApproachMinimumType
+        {
             get => _approachMinimumType;
-            set {
+            set
+            {
                 _approachMinimumType = value;
                 UpdateApproachDisplay();
             }
@@ -476,26 +505,30 @@ namespace VAU.V320NeoNext.Runtime.Systems.LegacyInstrument.EFIS.PFD.FMADisplay {
         [FieldChangeCallback(nameof(ApproachMinimumHeight))]
         public int _approachMinimumHeight;
 
-        public int ApproachMinimumHeight {
+        public int ApproachMinimumHeight
+        {
             get => _approachMinimumHeight;
-            set {
+            set
+            {
                 _approachMinimumHeight = value;
                 UpdateApproachDisplay();
             }
         }
 
-    #endregion
+        #endregion
 
-    #region Autopilot Status
+        #region Autopilot Status
 
-    #region Autopilot
+        #region Autopilot
 
         [FieldChangeCallback(nameof(IsAutoPilot1Active))]
         public bool _isAutoPilot1Active;
 
-        public bool IsAutoPilot1Active {
+        public bool IsAutoPilot1Active
+        {
             get => _isAutoPilot1Active;
-            set {
+            set
+            {
                 _isAutoPilot1Active = value;
                 UpdateAutopilotStatusDisplay();
             }
@@ -505,24 +538,28 @@ namespace VAU.V320NeoNext.Runtime.Systems.LegacyInstrument.EFIS.PFD.FMADisplay {
         [FieldChangeCallback(nameof(IsAutoPilot2Active))]
         public bool _isAutoPilot2Active;
 
-        public bool IsAutoPilot2Active {
+        public bool IsAutoPilot2Active
+        {
             get => _isAutoPilot2Active;
-            set {
+            set
+            {
                 _isAutoPilot2Active = value;
                 UpdateAutopilotStatusDisplay();
             }
         }
 
-    #endregion
+        #endregion
 
-    #region FlightDirector
+        #region FlightDirector
 
         [FieldChangeCallback(nameof(IsFlightDirector1Active))]
         public bool _isFlightDirector1Active;
 
-        public bool IsFlightDirector1Active {
+        public bool IsFlightDirector1Active
+        {
             get => _isFlightDirector1Active;
-            set {
+            set
+            {
                 _isFlightDirector1Active = value;
                 UpdateAutopilotStatusDisplay();
             }
@@ -531,26 +568,30 @@ namespace VAU.V320NeoNext.Runtime.Systems.LegacyInstrument.EFIS.PFD.FMADisplay {
         [FieldChangeCallback(nameof(IsFlightDirector2Active))]
         public bool _isFlightDirector2Active;
 
-        public bool IsFlightDirector2Active {
+        public bool IsFlightDirector2Active
+        {
             get => _isFlightDirector2Active;
-            set {
+            set
+            {
                 _isFlightDirector2Active = value;
                 UpdateAutopilotStatusDisplay();
             }
         }
 
-    #endregion
+        #endregion
 
-    #endregion
+        #endregion
 
-    #region Special Message
+        #region Special Message
 
         [FieldChangeCallback(nameof(SpecialMessage))]
         public string _specialMessage = "";
 
-        public string SpecialMessage {
+        public string SpecialMessage
+        {
             get => _specialMessage;
-            set {
+            set
+            {
                 _specialMessage = value;
                 UpdateSpecialMessageDisplay();
             }
@@ -559,41 +600,39 @@ namespace VAU.V320NeoNext.Runtime.Systems.LegacyInstrument.EFIS.PFD.FMADisplay {
         [FieldChangeCallback(nameof(SpecialMessageColor))]
         public string _specialMessageColor = "";
 
-        public string SpecialMessageColor {
+        public string SpecialMessageColor
+        {
             get => _specialMessageColor;
-            set {
+            set
+            {
                 _specialMessageColor = value;
                 UpdateSpecialMessageDisplay();
             }
         }
 
-    #endregion
+        #endregion
 
-    #endregion
+        #endregion
     }
 
-    public enum ManThrType {
+    public enum ManThrType
+    {
         TOGA = 0,
         FLEX = 1,
         MCT = 2,
         None = 3
     }
 
-    public enum AutoBrakeMode {
-        MAX = 0,
-        MED = 1,
-        LOW = 3,
-        None = 4
-    }
-
-    public enum ApproachAbility {
+    public enum ApproachAbility
+    {
         Cat1,
         Cat2,
         Cat3,
         None
     }
 
-    public enum ApproachMinimumType {
+    public enum ApproachMinimumType
+    {
         BARO,
         RADIO,
         None

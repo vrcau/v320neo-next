@@ -928,8 +928,7 @@ MonoBehaviour:
       Data: 50|System.RuntimeType, mscorlib
     - Name: 
       Entry: 1
-      Data: VAU.V320NeoNext.Runtime.Systems.AutoThrust.SaccExt.DFUNC_a320_AutoThrust,
-        VAU.V320NeoNext.Runtime
+      Data: VAU.V320NeoNext.Runtime.Systems.AutoFlight.DFUNC_a320_AutoThrust, VAU.V320NeoNext.Runtime
     - Name: 
       Entry: 8
       Data: 

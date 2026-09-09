@@ -2,12 +2,14 @@
 using UnityEngine;
 using VAU.V320NeoNext.Runtime.Systems.LegacyFlightDataProvider;
 using VAU.V320NeoNext.Runtime.Systems.LegacyFlightDataProvider.LegacyADRIRU;
+using VAU.V320NeoNext.Runtime.Systems.LegacyInstrument.FCU.Scripts;
 using VAU.V320NeoNext.Runtime.Systems.LegacyInstrument.Utils;
 
 namespace VAU.V320NeoNext.Runtime.Systems.LegacFmgc {
     [UdonBehaviourSyncMode(BehaviourSyncMode.Manual)]
     public class FMGCFlightPhase : UdonSharpBehaviour {
         public FMGC fmgc;
+        public FCU fcu;
 
         private DependenciesInjector _injector;
         private AircraftSystemData _aircraftSystemData;
@@ -29,6 +31,7 @@ namespace VAU.V320NeoNext.Runtime.Systems.LegacFmgc {
             set {
                 _currentFlightPhase = value;
 
+                OnFlightPhaseChanged(value);
                 LogCurrentFlightPhase();
                 _eventBus.SendEvent("FlightPhaseChanged");
             }
@@ -61,6 +64,38 @@ namespace VAU.V320NeoNext.Runtime.Systems.LegacFmgc {
                 return;
 
             ShouldGoToNextPhase();
+        }
+
+        private void OnFlightPhaseChanged(FlightPhase toPhase) {
+            if (fcu == null) return;
+            if (toPhase == FlightPhase.PreFlight) { 
+                fcu.verticalMode = VerticalFlightMode.None;
+                fcu.lateralMode = LateralFlightMode.None;
+            }
+
+            // 1. 进入 Takeoff 阶段：推油门起飞时写入 SRS 与 RWY
+            if (toPhase == FlightPhase.Takeoff) {
+                fcu.verticalMode = VerticalFlightMode.SRS;
+                fcu.verticalGuidance = GuidanceMode.Managed;
+
+                fcu.lateralMode = LateralFlightMode.RWY;
+                fcu.lateralGuidance = GuidanceMode.Managed;
+            }
+
+            // 2. 达到加速高度进入 Climb 阶段：SRS 退场，自动切入 CLB 与 NAV
+            if (toPhase == FlightPhase.Climb) {
+                if (fcu.verticalMode == VerticalFlightMode.SRS) {
+                    fcu.verticalMode = (fcu.verticalGuidance == GuidanceMode.Managed)
+                        ? VerticalFlightMode.CLB
+                        : VerticalFlightMode.OP_CLB;
+                }
+
+                if (fcu.lateralMode == LateralFlightMode.RWY_TRK || fcu.lateralMode == LateralFlightMode.RWY) {
+                    fcu.lateralMode = (fcu.lateralGuidance == GuidanceMode.Managed)
+                        ? LateralFlightMode.NAV
+                        : LateralFlightMode.HDG;
+                }
+            }
         }
 
         private void LogCurrentFlightPhase() {
