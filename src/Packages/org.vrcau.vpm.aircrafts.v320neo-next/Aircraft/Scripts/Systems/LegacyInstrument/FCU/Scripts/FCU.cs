@@ -20,7 +20,7 @@ namespace VAU.V320NeoNext.Runtime.Systems.LegacyInstrument.FCU.Scripts
         public FMAController fmaController2;
         public PFDBasicDisplay PFD_PF;
         public PFDBasicDisplay PFD_PM;
-        private DFUNC_a320_AutoThrust _ATHRDFunc;
+        public DFUNC_a320_AutoThrust athrdFunc;
         private DependenciesInjector _injector;
         private ADIRU _adiru;
         [SerializeField] private AircraftSystemData _aircraftSystemData;
@@ -135,7 +135,7 @@ namespace VAU.V320NeoNext.Runtime.Systems.LegacyInstrument.FCU.Scripts
             else
                 targetSpeed = Mathf.Clamp(targetSpeed + delta, 100f, 390f);
 
-            _ATHRDFunc.SetSpeed = Convert.ToInt32(targetSpeed);
+            athrdFunc.SetSpeed = Convert.ToInt32(targetSpeed);
         }
 
         public void PushSpeedKnob()
@@ -596,12 +596,12 @@ namespace VAU.V320NeoNext.Runtime.Systems.LegacyInstrument.FCU.Scripts
             fmaController.LateralArmMode = GetLateralArmedMode();
 
             //4.推力模式
-            if (_ATHRDFunc.Cruise || _ATHRDFunc.isAutoThrustArm)
+            if (athrdFunc.Cruise || athrdFunc.isAutoThrustArm)
             {
                 fmaController.IsAutoThrustActive = true;
-                fmaController.IsAutoThrustArm = _ATHRDFunc.isAutoThrustArm;
+                fmaController.IsAutoThrustArm = athrdFunc.isAutoThrustArm;
 
-                if (_ATHRDFunc.Cruise)
+                if (athrdFunc.Cruise)
                 {
                     if (verticalMode == VerticalFlightMode.OP_CLB)
                         fmaController.AutoThrustMode = "THR CLB";
@@ -625,16 +625,15 @@ namespace VAU.V320NeoNext.Runtime.Systems.LegacyInstrument.FCU.Scripts
         private void Start()
         {
             _injector = DependenciesInjector.GetInstance(this);
-            _ATHRDFunc = _injector.autoThrust;
             _adiru = _injector.adiru;
         }
 
         private void LateUpdate()
         {
             if (!UpdateIntervalUtil.CanUpdate(ref _lastUpdate, UPDATE_INTERVAL)) return;
-            targetSpeed = Convert.ToInt32(_ATHRDFunc.SetSpeed);
+            targetSpeed = Convert.ToInt32(athrdFunc.SetSpeed);
             _current_altitude = _adiru.adr.pressureAltitude;
-            isATHRActive = _ATHRDFunc.Cruise;
+            isATHRActive = athrdFunc.Cruise;
             CheckAltitudeCapture();
             isFD1Active = PFD_PF.isFlightDirectionOn;
             isFD2Active = PFD_PM.isFlightDirectionOn;
@@ -743,18 +742,18 @@ namespace VAU.V320NeoNext.Runtime.Systems.LegacyInstrument.FCU.Scripts
 
             if (verticalMode == VerticalFlightMode.OP_CLB)
             {
-                _ATHRDFunc.OP_CLB = true;
-                _ATHRDFunc.OP_DES = false;
+                athrdFunc.OP_CLB = true;
+                athrdFunc.OP_DES = false;
             }
             else if (verticalMode == VerticalFlightMode.OP_DES)
             {
-                _ATHRDFunc.OP_CLB = false;
-                _ATHRDFunc.OP_DES = true;
+                athrdFunc.OP_CLB = false;
+                athrdFunc.OP_DES = true;
             }
             else
             {
-                _ATHRDFunc.OP_CLB = false;
-                _ATHRDFunc.OP_DES = false;
+                athrdFunc.OP_CLB = false;
+                athrdFunc.OP_DES = false;
             }
 
             float altDiff = Mathf.Abs(_current_altitude - targetAltitude);

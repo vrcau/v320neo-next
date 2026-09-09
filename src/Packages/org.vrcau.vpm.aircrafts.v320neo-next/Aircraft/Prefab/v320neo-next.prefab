@@ -42194,7 +42194,7 @@ MonoBehaviour:
   autoBrake: {fileID: 5308657593052714099}
   landingLight: {fileID: 1968102284611630082}
   canopy: {fileID: 8039740003811797684}
-  autoThrust: {fileID: 0}
+  autoThrust: {fileID: 906793013950430918}
   altHold: {fileID: 0}
   gpws: {fileID: 4232945956050540103}
   radioAltimeter: {fileID: 779023235862565368}
@@ -133858,6 +133858,10 @@ PrefabInstance:
       propertyPath: PFD_PM
       value: 
       objectReference: {fileID: 8228364137017257182}
+    - target: {fileID: 835394437956664082, guid: 5ae2b67e97dae074a99a5c424aaa38c4, type: 3}
+      propertyPath: athrdFunc
+      value: 
+      objectReference: {fileID: 906793013950430918}
     - target: {fileID: 835394437956664082, guid: 5ae2b67e97dae074a99a5c424aaa38c4, type: 3}
       propertyPath: fmaController1
       value: 
