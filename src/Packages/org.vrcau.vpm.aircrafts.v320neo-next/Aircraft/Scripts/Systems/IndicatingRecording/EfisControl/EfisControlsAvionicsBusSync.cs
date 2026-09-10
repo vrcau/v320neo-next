@@ -85,17 +85,13 @@ namespace VAU.V320NeoNext.Runtime.Systems.IndicatingRecording.EfisControl
         public void _OnEfisControlsChanged()
         {
             // 正在应用远端数据，不要回写
-            Debug.Log("On Efis Controls Changed!");
             if (_isApplyingSyncedData) return;
 
-            Debug.Log("Efis Controls Changed, packing and requesting serialization.");
             // 和已同步的值一致就什么都不做：既不抢所有权也不发同步请求
             ushort packed = _PackFromBus();
             if (packed == _data) return;
-            Debug.Log($"Packed data changed from {_data} to {packed}, requesting serialization.");
 
             EnsureOwnership();
-            Debug.Log("Ownership ensured, setting _data and requesting serialization.");
 
             _data = packed;
             RequestSerialization();
