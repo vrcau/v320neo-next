@@ -1,3 +1,4 @@
+using System;
 using UdonSharp;
 using UnityEngine;
 
@@ -23,12 +24,14 @@ namespace VAU.V320NeoNext.Runtime.Bus
         /// <summary>由 AvionicsBus 在初始化时注入，不要手动赋值。</summary>
         [HideInInspector] public AvionicsBus _avionicsBus;
 
-        // 数据数组引用，在 _AvionicsBusStart() 中从 Bus 复制；之后读写都是直接操作 Bus 的同一份数组
-        private float[] _floatData;
-        private int[] _intData;
-        private bool[] _boolData;
-        private string[] _stringData;
-        private Vector3[] _vector3Data;
+        // 数据数组引用，在 _AvionicsBusStart() 中从 Bus 复制；之后读写都是直接操作 Bus 的同一份数组。
+        // public 是为了让 AbstractAvionicsBusClientExtensions 能直接使用（否则每次读写都要跳一次 bus）；
+        // [NonSerialized] 防止它们被序列化进 prefab。
+        [NonSerialized] public float[] _floatData;
+        [NonSerialized] public int[] _intData;
+        [NonSerialized] public bool[] _boolData;
+        [NonSerialized] public string[] _stringData;
+        [NonSerialized] public Vector3[] _vector3Data;
 
         #region Lifetime
 
