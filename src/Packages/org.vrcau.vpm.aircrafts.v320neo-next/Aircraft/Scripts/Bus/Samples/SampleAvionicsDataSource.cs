@@ -59,7 +59,7 @@ namespace VAU.V320NeoNext.Runtime.Bus.Samples
             _WriteFloat(AvionicsBusFloatDataIds.V32NN_Frequent_ADR_IndicatedAirspeed, 0f);
             _WriteFloat(AvionicsBusFloatDataIds.V32NN_Frequent_ADR_VerticalSpeedFeetPerMinute, 0f);
             _WriteVector3(AvionicsBusVector3DataIds.V32NN_Frequent_ADR_VelocityNED, Vector3.zero);
-            _WriteBool(AvionicsBusBoolDataIds.V32NN_Frequent_ADR_IsDataValid, false);
+            _WriteBool(AvionicsBusBoolDataIds.V32NN_Infrequent_EFIS_Left_Sync_LandingSystemOn, false);
 
             _frequentTimer = frequentInterval + 1f; // 让下一次 Update 立刻重新发布
 
@@ -104,7 +104,7 @@ namespace VAU.V320NeoNext.Runtime.Bus.Samples
             _WriteAndNotifyFloat(AvionicsBusFloatDataIds.V32NN_Frequent_ADR_VerticalSpeedFeetPerMinute, verticalSpeed);
             _WriteAndNotifyInt(AvionicsBusIntDataIds.V32NN_Frequent_ADR_HeadingDegrees, (int)_heading);
             _WriteAndNotifyVector3(AvionicsBusVector3DataIds.V32NN_Frequent_ADR_VelocityNED, new Vector3(airspeed * 0.514444f, verticalSpeed * 0.00508f, 0f));
-            _WriteAndNotifyBool(AvionicsBusBoolDataIds.V32NN_Frequent_ADR_IsDataValid, _isDataValid);
+            _WriteAndNotifyBool(AvionicsBusBoolDataIds.V32NN_Infrequent_EFIS_Left_Sync_LandingSystemOn, _isDataValid);
 
             if (logWrites) Debug.Log("[Bus Sample] DataSource wrote altitude = " + altitude);
         }
@@ -118,7 +118,8 @@ namespace VAU.V320NeoNext.Runtime.Bus.Samples
 
             _WriteAndNotifyFloat(AvionicsBusFloatDataIds.V32NN_Infrequent_FCU_SelectedAltitudeFeet, 30000f + step * 1000f);
             _WriteAndNotifyInt(AvionicsBusIntDataIds.V32NN_Frequent_ADIRS_AlignmentState, _alignmentState);
-            _WriteAndNotifyBool(AvionicsBusBoolDataIds.V32NN_Infrequent_ADIRS_IsAligned, _isAligned);
+            _WriteAndNotifyByte(AvionicsBusByteDataIds.V32NN_Infrequent_EFIS_Left_Sync_NavigationDisplayFilter, (byte)_alignmentState);
+            _WriteAndNotifyBool(AvionicsBusBoolDataIds.V32NN_Infrequent_EFIS_Left_Sync_FlightDirectorOn, _isAligned);
             _WriteAndNotifyString(AvionicsBusStringDataIds.V32NN_Infrequent_ECAM_ActiveMessage, "ADR 1 (step " + step + ")");
             _WriteAndNotifyVector3(AvionicsBusVector3DataIds.V32NN_Infrequent_ND_WindVector, new Vector3(12f, 0f, -5f - step));
 

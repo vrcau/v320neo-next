@@ -52,7 +52,7 @@ namespace VAU.V320NeoNext.Runtime.Bus.Samples
             _boolData = avionicsBus.boolData;
 
             // 订阅必须登记到 bus 的订阅表上，这是初始化期的一次性开销
-            avionicsBus._SubscribeBool((int)AvionicsBusBoolDataIds.V32NN_Frequent_ADR_IsDataValid, this, nameof(BusSample_OnDataValidChanged));
+            avionicsBus._SubscribeBool((int)AvionicsBusBoolDataIds.V32NN_Infrequent_EFIS_Left_Sync_LandingSystemOn, this, nameof(BusSample_OnDataValidChanged));
             avionicsBus._SubscribeFloat((int)AvionicsBusFloatDataIds.V32NN_Infrequent_FCU_SelectedAltitudeFeet, this, nameof(BusSample_OnSelectedAltitudeChanged));
 
             Debug.Log("[Bus Sample] NonClientConsumer 订阅完成，当前高度 = "
@@ -83,7 +83,7 @@ namespace VAU.V320NeoNext.Runtime.Bus.Samples
         public void BusSample_OnDataValidChanged()
         {
             Debug.Log("[Bus Sample] NonClientConsumer: IsDataValid = "
-                + _boolData[(int)AvionicsBusBoolDataIds.V32NN_Frequent_ADR_IsDataValid]);
+                + _boolData[(int)AvionicsBusBoolDataIds.V32NN_Infrequent_EFIS_Left_Sync_LandingSystemOn]);
         }
 
         public void BusSample_OnSelectedAltitudeChanged()

@@ -635,8 +635,8 @@ namespace VAU.V320NeoNext.Runtime.Systems.LegacyInstrument.FCU.Scripts
             _current_altitude = _adiru.adr.pressureAltitude;
             isATHRActive = athrdFunc.Cruise;
             CheckAltitudeCapture();
-            isFD1Active = PFD_PF.isFlightDirectionOn;
-            isFD2Active = PFD_PM.isFlightDirectionOn;
+            isFD1Active = PFD_PF.IsFlightDirectorOn;
+            isFD2Active = PFD_PM.IsFlightDirectorOn;
             UpdateFCUDisplay();
             SyncToFMA(fmaController2);
             SyncToFMA(fmaController1);

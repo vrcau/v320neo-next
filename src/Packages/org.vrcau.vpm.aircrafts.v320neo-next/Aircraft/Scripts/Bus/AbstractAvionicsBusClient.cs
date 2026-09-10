@@ -25,13 +25,13 @@ namespace VAU.V320NeoNext.Runtime.Bus
         [HideInInspector] public AvionicsBus _avionicsBus;
 
         // 数据数组引用，在 _AvionicsBusStart() 中从 Bus 复制；之后读写都是直接操作 Bus 的同一份数组。
-        // public 是为了让 AbstractAvionicsBusClientExtensions 能直接使用（否则每次读写都要跳一次 bus）；
         // [NonSerialized] 防止它们被序列化进 prefab。
-        [NonSerialized] public float[] _floatData;
-        [NonSerialized] public int[] _intData;
-        [NonSerialized] public bool[] _boolData;
-        [NonSerialized] public string[] _stringData;
-        [NonSerialized] public Vector3[] _vector3Data;
+        [NonSerialized] private float[] _floatData;
+        [NonSerialized] private byte[] _byteData;
+        [NonSerialized] private int[] _intData;
+        [NonSerialized] private bool[] _boolData;
+        [NonSerialized] private string[] _stringData;
+        [NonSerialized] private Vector3[] _vector3Data;
 
         #region Lifetime
 
@@ -43,6 +43,7 @@ namespace VAU.V320NeoNext.Runtime.Bus
             if (_avionicsBus == null) return;
 
             _floatData = _avionicsBus.floatData;
+            _byteData = _avionicsBus.byteData;
             _intData = _avionicsBus.intData;
             _boolData = _avionicsBus.boolData;
             _stringData = _avionicsBus.stringData;
@@ -76,6 +77,7 @@ namespace VAU.V320NeoNext.Runtime.Bus
         #region Read
 
         protected float _ReadFloat(AvionicsBusFloatDataIds id) { return _floatData[(int)id]; }
+        protected byte _ReadByte(AvionicsBusByteDataIds id) { return _byteData[(int)id]; }
         protected int _ReadInt(AvionicsBusIntDataIds id) { return _intData[(int)id]; }
         protected bool _ReadBool(AvionicsBusBoolDataIds id) { return _boolData[(int)id]; }
         protected string _ReadString(AvionicsBusStringDataIds id) { return _stringData[(int)id]; }
@@ -86,6 +88,7 @@ namespace VAU.V320NeoNext.Runtime.Bus
         #region Write
 
         protected void _WriteFloat(AvionicsBusFloatDataIds id, float value) { _floatData[(int)id] = value; }
+        protected void _WriteByte(AvionicsBusByteDataIds id, byte value) { _byteData[(int)id] = value; }
         protected void _WriteInt(AvionicsBusIntDataIds id, int value) { _intData[(int)id] = value; }
         protected void _WriteBool(AvionicsBusBoolDataIds id, bool value) { _boolData[(int)id] = value; }
         protected void _WriteString(AvionicsBusStringDataIds id, string value) { _stringData[(int)id] = value; }
@@ -95,6 +98,12 @@ namespace VAU.V320NeoNext.Runtime.Bus
         {
             _floatData[(int)id] = value;
             _avionicsBus._NotifyFloat((int)id);
+        }
+
+        protected void _WriteAndNotifyByte(AvionicsBusByteDataIds id, byte value)
+        {
+            _byteData[(int)id] = value;
+            _avionicsBus._NotifyByte((int)id);
         }
 
         protected void _WriteAndNotifyInt(AvionicsBusIntDataIds id, int value)
@@ -130,6 +139,7 @@ namespace VAU.V320NeoNext.Runtime.Bus
         /// SendCustomEvent(eventName)。所以 eventName 必须是本类或其子类上的 public 方法名。
         /// </summary>
         protected void _SubscribeFloat(AvionicsBusFloatDataIds id, string eventName) { _avionicsBus._SubscribeFloat((int)id, this, eventName); }
+        protected void _SubscribeByte(AvionicsBusByteDataIds id, string eventName) { _avionicsBus._SubscribeByte((int)id, this, eventName); }
         protected void _SubscribeInt(AvionicsBusIntDataIds id, string eventName) { _avionicsBus._SubscribeInt((int)id, this, eventName); }
         protected void _SubscribeBool(AvionicsBusBoolDataIds id, string eventName) { _avionicsBus._SubscribeBool((int)id, this, eventName); }
         protected void _SubscribeString(AvionicsBusStringDataIds id, string eventName) { _avionicsBus._SubscribeString((int)id, this, eventName); }

@@ -33,11 +33,38 @@ namespace VAU.V320NeoNext.Runtime.Bus
         Count = 2
     }
 
+    public enum AvionicsBusByteDataIds
+    {
+        // ATA31. Indicating Recording / EFIS Control
+        // Left EFIS
+        V32NN_Infrequent_EFIS_Left_Sync_NavigationDisplayFilter,
+        V32NN_Infrequent_EFIS_Left_Sync_NavigationDisplayPage,
+        V32NN_Infrequent_EFIS_Left_Sync_NavigationDisplayRange,
+        V32NN_Infrequent_EFIS_Left_Sync_NavigationDisplayVorAdfSelector,
+
+        // Right EFIS
+        V32NN_Infrequent_EFIS_Right_Sync_NavigationDisplayFilter,
+        V32NN_Infrequent_EFIS_Right_Sync_NavigationDisplayPage,
+        V32NN_Infrequent_EFIS_Right_Sync_NavigationDisplayRange,
+        V32NN_Infrequent_EFIS_Right_Sync_NavigationDisplayVorAdfSelector,
+
+        // Avionics Bus
+        Count
+    }
+
     public enum AvionicsBusBoolDataIds
     {
-        V32NN_Frequent_ADR_IsDataValid = 0,
-        V32NN_Infrequent_ADIRS_IsAligned = 1,
-        Count = 2
+        // ATA31. Indicating Recording / EFIS Control
+        // Left EFIS
+        V32NN_Infrequent_EFIS_Left_Sync_FlightDirectorOn,
+        V32NN_Infrequent_EFIS_Left_Sync_LandingSystemOn,
+
+        // Right EFIS
+        V32NN_Infrequent_EFIS_Right_Sync_FlightDirectorOn,
+        V32NN_Infrequent_EFIS_Right_Sync_LandingSystemOn,
+
+        // Avionics Bus
+        Count
     }
 
     public enum AvionicsBusStringDataIds

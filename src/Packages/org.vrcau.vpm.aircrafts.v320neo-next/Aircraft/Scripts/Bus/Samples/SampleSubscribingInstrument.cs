@@ -41,15 +41,16 @@ namespace VAU.V320NeoNext.Runtime.Bus.Samples
             // 所以只有 _OnAvionicsBusStart() 里的注册才是有效的。
             _SubscribeFloat(AvionicsBusFloatDataIds.V32NN_Frequent_ADR_AltitudeFeet, nameof(Sample_OnAdrAltitudeChanged));
             _SubscribeFloat(AvionicsBusFloatDataIds.V32NN_Frequent_ADR_VerticalSpeedFeetPerMinute, nameof(Sample_OnAdrVerticalSpeedChanged));
-            _SubscribeBool(AvionicsBusBoolDataIds.V32NN_Frequent_ADR_IsDataValid, nameof(Sample_OnAdrDataValidChanged));
+            _SubscribeBool(AvionicsBusBoolDataIds.V32NN_Infrequent_EFIS_Left_Sync_LandingSystemOn, nameof(Sample_OnAdrDataValidChanged));
             _SubscribeFloat(AvionicsBusFloatDataIds.V32NN_Infrequent_FCU_SelectedAltitudeFeet, nameof(Sample_OnFcuSelectedAltitudeChanged));
-            _SubscribeBool(AvionicsBusBoolDataIds.V32NN_Infrequent_ADIRS_IsAligned, nameof(Sample_OnAdirsAlignedChanged));
+            _SubscribeBool(AvionicsBusBoolDataIds.V32NN_Infrequent_EFIS_Left_Sync_FlightDirectorOn, nameof(Sample_OnAdirsAlignedChanged));
             _SubscribeString(AvionicsBusStringDataIds.V32NN_Infrequent_ECAM_ActiveMessage, nameof(Sample_OnEcamMessageChanged));
+            _SubscribeByte(AvionicsBusByteDataIds.V32NN_Infrequent_EFIS_Left_Sync_NavigationDisplayFilter, nameof(Sample_OnAdirsAlignmentStateChanged));
             _SubscribeVector3(AvionicsBusVector3DataIds.V32NN_Infrequent_ND_WindVector, nameof(Sample_OnNdWindChanged));
 
             // 没有订阅的数据（例如只为读数用的空速）直接读一次即可，不需要订阅
             _altitudeFeet = _ReadFloat(AvionicsBusFloatDataIds.V32NN_Frequent_ADR_AltitudeFeet);
-            _isDataValid = _ReadBool(AvionicsBusBoolDataIds.V32NN_Frequent_ADR_IsDataValid);
+            _isDataValid = _ReadBool(AvionicsBusBoolDataIds.V32NN_Infrequent_EFIS_Left_Sync_LandingSystemOn);
 
             if (logOnNotify) Debug.Log("[Bus Sample] SubscribingInstrument subscribed");
         }
@@ -87,7 +88,7 @@ namespace VAU.V320NeoNext.Runtime.Bus.Samples
 
         public void Sample_OnAdrDataValidChanged()
         {
-            _isDataValid = _ReadBool(AvionicsBusBoolDataIds.V32NN_Frequent_ADR_IsDataValid);
+            _isDataValid = _ReadBool(AvionicsBusBoolDataIds.V32NN_Infrequent_EFIS_Left_Sync_LandingSystemOn);
 
             if (_isDataValid) return;
 
@@ -104,7 +105,7 @@ namespace VAU.V320NeoNext.Runtime.Bus.Samples
 
         public void Sample_OnAdirsAlignedChanged()
         {
-            bool aligned = _ReadBool(AvionicsBusBoolDataIds.V32NN_Infrequent_ADIRS_IsAligned);
+            bool aligned = _ReadBool(AvionicsBusBoolDataIds.V32NN_Infrequent_EFIS_Left_Sync_FlightDirectorOn);
 
             if (logOnNotify) Debug.Log("[Bus Sample] SubscribingInstrument ADIRS aligned = " + aligned);
         }
@@ -121,6 +122,13 @@ namespace VAU.V320NeoNext.Runtime.Bus.Samples
             Vector3 wind = _ReadVector3(AvionicsBusVector3DataIds.V32NN_Infrequent_ND_WindVector);
 
             if (logOnNotify) Debug.Log("[Bus Sample] SubscribingInstrument wind = " + wind.x + " / " + wind.z);
+        }
+
+        public void Sample_OnAdirsAlignmentStateChanged()
+        {
+            byte alignmentState = _ReadByte(AvionicsBusByteDataIds.V32NN_Infrequent_EFIS_Left_Sync_NavigationDisplayFilter);
+
+            if (logOnNotify) Debug.Log("[Bus Sample] SubscribingInstrument ADIRS alignment state = " + alignmentState);
         }
 
         #endregion

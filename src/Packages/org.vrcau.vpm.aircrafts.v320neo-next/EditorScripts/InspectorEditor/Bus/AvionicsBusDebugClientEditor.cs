@@ -21,8 +21,8 @@ namespace VAU.V320NeoNext.Editor.InspectorEditor.Bus
     {
         private const int MaxSearchResults = 12;
 
-        private static readonly string[] TypeFilterLabels = { "全部", "Float", "Int", "Bool", "String", "Vector3" };
-        private static readonly string[] TypeNames = { "Float", "Int", "Bool", "String", "Vector3" };
+        private static readonly string[] TypeFilterLabels = { "全部", "Float", "Int", "Bool", "String", "Vector3", "Byte" };
+        private static readonly string[] TypeNames = { "Float", "Int", "Bool", "String", "Vector3", "Byte" };
 
         private sealed class DataIdInfo
         {
@@ -312,6 +312,17 @@ namespace VAU.V320NeoNext.Editor.InspectorEditor.Bus
 
                 udon.SetProgramVariable(nameof(AvionicsBusDebugClient._debugWriteFloat), parsed);
             }
+            else if (dataType == (int)AvionicsBusDataType.Byte)
+            {
+                byte parsed;
+                if (!byte.TryParse(text, NumberStyles.Integer, CultureInfo.InvariantCulture, out parsed))
+                {
+                    _message = "无法解析为 byte（0-255）：" + text;
+                    return;
+                }
+
+                udon.SetProgramVariable(nameof(AvionicsBusDebugClient._debugWriteByte), parsed);
+            }
             else if (dataType == (int)AvionicsBusDataType.Int)
             {
                 int parsed;
@@ -528,6 +539,7 @@ namespace VAU.V320NeoNext.Editor.InspectorEditor.Bus
             _catalog = new List<DataIdInfo>();
 
             _AddEnumToCatalog(typeof(AvionicsBusFloatDataIds), (int)AvionicsBusDataType.Float);
+            _AddEnumToCatalog(typeof(AvionicsBusByteDataIds), (int)AvionicsBusDataType.Byte);
             _AddEnumToCatalog(typeof(AvionicsBusIntDataIds), (int)AvionicsBusDataType.Int);
             _AddEnumToCatalog(typeof(AvionicsBusBoolDataIds), (int)AvionicsBusDataType.Bool);
             _AddEnumToCatalog(typeof(AvionicsBusStringDataIds), (int)AvionicsBusDataType.String);

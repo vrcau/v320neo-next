@@ -2,16 +2,16 @@
 using UdonSharp;
 using UnityEngine;
 using UnityEngine.UI;
+using VAU.V320NeoNext.Runtime.Bus;
 using VAU.V320NeoNext.Runtime.Systems.AutoFlight;
 using VAU.V320NeoNext.Runtime.Systems.LegacyFlightDataProvider;
 using VAU.V320NeoNext.Runtime.Systems.LegacyFlightDataProvider.LegacyADRIRU;
-using VAU.V320NeoNext.Runtime.Systems.LegacyInstrument.Utils;
 using VRC.SDKBase;
 
 namespace VAU.V320NeoNext.Runtime.Systems.LegacyInstrument.EFIS.PFD.BasicDisplay.Script
 {
-    [UdonBehaviourSyncMode(BehaviourSyncMode.Manual)] //PFD需要网络同步！（LS按键，FD按键之类）
-    public class PFDBasicDisplay : UdonSharpBehaviour
+    [UdonBehaviourSyncMode(BehaviourSyncMode.None)]
+    public class PFDBasicDisplay : AbstractAvionicsBusClient
     {
         #region Aircraft Systems
 
@@ -34,6 +34,8 @@ namespace VAU.V320NeoNext.Runtime.Systems.LegacyInstrument.EFIS.PFD.BasicDisplay
         [Header("EFIS Indicator")] public GameObject flightDirectionIndicator;
         public GameObject landingSystemIndicator;
 
+        public bool useRightEfis;
+
         private float _altitude;
         private float BankAngle;
 
@@ -41,9 +43,21 @@ namespace VAU.V320NeoNext.Runtime.Systems.LegacyInstrument.EFIS.PFD.BasicDisplay
         private float RadioHeight;
 
         private float instrumentAirSpeedLastFrame = 0;
-        [PublicAPI] public bool isFlightDirectionOn { get; private set; } = true;
-        [PublicAPI] public bool isLandingSystemOn { get; private set; }
 
+        private AvionicsBusBoolDataIds _flightDirectorOnId;
+        private AvionicsBusBoolDataIds _landingSystemOnId;
+
+        public bool IsFlightDirectorOn
+        {
+            get => _ReadBool(_flightDirectorOnId);
+            set => _WriteAndNotifyBool(_flightDirectorOnId, value);
+        }
+
+        public bool IsLandingSystemOn
+        {
+            get => _ReadBool(_landingSystemOnId);
+            set => _WriteAndNotifyBool(_landingSystemOnId, value);
+        }
 
         private void Start()
         {
@@ -59,23 +73,61 @@ namespace VAU.V320NeoNext.Runtime.Systems.LegacyInstrument.EFIS.PFD.BasicDisplay
             _eventBus.RegisterSaccEvent(this);
 
             _localPlayer = Networking.LocalPlayer;
+        }
 
-            // Reset Flight Direction and Landing System
+        protected override void _OnAvionicsBusStart()
+        {
+            _flightDirectorOnId = useRightEfis
+                ? AvionicsBusBoolDataIds.V32NN_Infrequent_EFIS_Right_Sync_FlightDirectorOn
+                : AvionicsBusBoolDataIds.V32NN_Infrequent_EFIS_Left_Sync_FlightDirectorOn;
+            _landingSystemOnId = useRightEfis
+                ? AvionicsBusBoolDataIds.V32NN_Infrequent_EFIS_Right_Sync_LandingSystemOn
+                : AvionicsBusBoolDataIds.V32NN_Infrequent_EFIS_Left_Sync_LandingSystemOn;
+
+            var isFlightDirectionOn = IsFlightDirectorOn;
+            var isLandingSystemOn = IsLandingSystemOn;
+
             flightDirectionIndicator.SetActive(isFlightDirectionOn);
             flightDirectorUI.SetActive(isFlightDirectionOn);
             landingSystem.SetActive(isLandingSystemOn);
             landingSystemIndicator.SetActive(isLandingSystemOn);
+
+            _SubscribeBool(_flightDirectorOnId, nameof(_OnFlightDirectorOnChanged));
+            _SubscribeBool(_landingSystemOnId, nameof(_OnLandingSystemOnChanged));
         }
 
         public void SFEXT_O_RespawnButton()
         {
-            isFlightDirectionOn = true;
-            isLandingSystemOn = false;
+            _WriteAndNotifyBool(useRightEfis
+                ? AvionicsBusBoolDataIds.V32NN_Infrequent_EFIS_Left_Sync_FlightDirectorOn
+                : AvionicsBusBoolDataIds.V32NN_Infrequent_EFIS_Right_Sync_LandingSystemOn, true);
+            _WriteAndNotifyBool(useRightEfis
+                ? AvionicsBusBoolDataIds.V32NN_Infrequent_EFIS_Left_Sync_LandingSystemOn
+                : AvionicsBusBoolDataIds.V32NN_Infrequent_EFIS_Right_Sync_LandingSystemOn, true);
+
+            var isFlightDirectionOn = IsFlightDirectorOn;
+            var isLandingSystemOn = IsLandingSystemOn;
 
             flightDirectionIndicator.SetActive(isFlightDirectionOn);
             flightDirectorUI.SetActive(isFlightDirectionOn);
+            // flightDirectorFail.SetActive(isFlightDirectionOn);
+            flightDirector.isFDOn = isFlightDirectionOn;
+            landingSystem.SetActive(isLandingSystemOn);
+            landingSystemIndicator.SetActive(isLandingSystemOn);
+        }
+
+        public void _OnFlightDirectorOnChanged()
+        {
+            var isFlightDirectionOn = IsFlightDirectorOn;
+            flightDirectionIndicator.SetActive(isFlightDirectionOn);
+            flightDirectorUI.SetActive(isFlightDirectionOn);
+            flightDirector.isFDOn = isFlightDirectionOn;
             //flightDirectorFail.SetActive(isFlightDirectionOn);
-            //flightDirector.isFDOn = isFlightDirectionOn;
+        }
+
+        public void _OnLandingSystemOnChanged()
+        {
+            var isLandingSystemOn = IsLandingSystemOn;
             landingSystem.SetActive(isLandingSystemOn);
             landingSystemIndicator.SetActive(isLandingSystemOn);
         }
@@ -542,20 +594,13 @@ namespace VAU.V320NeoNext.Runtime.Systems.LegacyInstrument.EFIS.PFD.BasicDisplay
         [PublicAPI]
         public void ToggleFlightDirection()
         {
-            isFlightDirectionOn = !isFlightDirectionOn;
-            flightDirectionIndicator.SetActive(isFlightDirectionOn);
-
-            flightDirectorUI.SetActive(isFlightDirectionOn);
-            //flightDirector.isFDOn = isFlightDirectionOn;
-            //flightDirectorFail.SetActive(isFlightDirectionOn);
+            IsFlightDirectorOn = !IsFlightDirectorOn;
         }
 
         [PublicAPI]
         public void ToggleLandingSystem()
         {
-            isLandingSystemOn = !isLandingSystemOn;
-            landingSystem.SetActive(isLandingSystemOn);
-            landingSystemIndicator.SetActive(isLandingSystemOn);
+            IsLandingSystemOn = !IsLandingSystemOn;
         }
 
         #endregion

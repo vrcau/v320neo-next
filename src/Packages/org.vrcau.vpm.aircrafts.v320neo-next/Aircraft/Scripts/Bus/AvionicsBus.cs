@@ -19,6 +19,7 @@ namespace VAU.V320NeoNext.Runtime.Bus
         // 数组下标即对应 enum 的 id；初始化阶段会把引用复制给各 client，
         // 之后 client 的读写都是直接操作这些数组（不走方法调用），所以要保持 public。
         [NonSerialized] public readonly float[] floatData = new float[(int)AvionicsBusFloatDataIds.Count];
+        [NonSerialized] public readonly byte[] byteData = new byte[(int)AvionicsBusByteDataIds.Count];
         [NonSerialized] public readonly int[] intData = new int[(int)AvionicsBusIntDataIds.Count];
         [NonSerialized] public readonly bool[] boolData = new bool[(int)AvionicsBusBoolDataIds.Count];
         [NonSerialized] public readonly string[] stringData = new string[(int)AvionicsBusStringDataIds.Count];
@@ -36,6 +37,9 @@ namespace VAU.V320NeoNext.Runtime.Bus
 
         private UdonSharpBehaviour[][] _intSubscriberTargets;
         private string[][] _intSubscriberEvents;
+
+        private UdonSharpBehaviour[][] _byteSubscriberTargets;
+        private string[][] _byteSubscriberEvents;
 
         private UdonSharpBehaviour[][] _boolSubscriberTargets;
         private string[][] _boolSubscriberEvents;
@@ -97,6 +101,9 @@ namespace VAU.V320NeoNext.Runtime.Bus
             _floatSubscriberTargets = _CreateTargetTable((int)AvionicsBusFloatDataIds.Count);
             _floatSubscriberEvents = _CreateEventTable((int)AvionicsBusFloatDataIds.Count);
 
+            _byteSubscriberTargets = _CreateTargetTable((int)AvionicsBusByteDataIds.Count);
+            _byteSubscriberEvents = _CreateEventTable((int)AvionicsBusByteDataIds.Count);
+
             _intSubscriberTargets = _CreateTargetTable((int)AvionicsBusIntDataIds.Count);
             _intSubscriberEvents = _CreateEventTable((int)AvionicsBusIntDataIds.Count);
 
@@ -134,6 +141,7 @@ namespace VAU.V320NeoNext.Runtime.Bus
 
         /// <summary>注册订阅者，由 AbstractAvionicsBusClient._SubscribeFloat 转发调用。</summary>
         public void _SubscribeFloat(int id, UdonSharpBehaviour subscriber, string eventName) { _Subscribe(_floatSubscriberTargets, _floatSubscriberEvents, id, subscriber, eventName); }
+        public void _SubscribeByte(int id, UdonSharpBehaviour subscriber, string eventName) { _Subscribe(_byteSubscriberTargets, _byteSubscriberEvents, id, subscriber, eventName); }
         public void _SubscribeInt(int id, UdonSharpBehaviour subscriber, string eventName) { _Subscribe(_intSubscriberTargets, _intSubscriberEvents, id, subscriber, eventName); }
         public void _SubscribeBool(int id, UdonSharpBehaviour subscriber, string eventName) { _Subscribe(_boolSubscriberTargets, _boolSubscriberEvents, id, subscriber, eventName); }
         public void _SubscribeString(int id, UdonSharpBehaviour subscriber, string eventName) { _Subscribe(_stringSubscriberTargets, _stringSubscriberEvents, id, subscriber, eventName); }
@@ -155,6 +163,7 @@ namespace VAU.V320NeoNext.Runtime.Bus
 
         /// <summary>数据变更后通知该 id 的所有订阅者，由 _WriteAndNotifyXxx 触发。</summary>
         public void _NotifyFloat(int id) { _Notify(_floatSubscriberTargets, _floatSubscriberEvents, id); }
+        public void _NotifyByte(int id) { _Notify(_byteSubscriberTargets, _byteSubscriberEvents, id); }
         public void _NotifyInt(int id) { _Notify(_intSubscriberTargets, _intSubscriberEvents, id); }
         public void _NotifyBool(int id) { _Notify(_boolSubscriberTargets, _boolSubscriberEvents, id); }
         public void _NotifyString(int id) { _Notify(_stringSubscriberTargets, _stringSubscriberEvents, id); }

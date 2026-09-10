@@ -12,7 +12,10 @@ namespace VAU.V320NeoNext.Runtime.Bus
         Int = 1,
         Bool = 2,
         String = 3,
-        Vector3 = 4
+        Vector3 = 4,
+
+        // Byte 追加在末尾：不改动已有取值，避免 prefab 里已经保存的 watch 列表错位
+        Byte = 5
     }
 
     /// <summary>
@@ -49,6 +52,7 @@ namespace VAU.V320NeoNext.Runtime.Bus
 
         [HideInInspector] public int _debugEntryIndex = -1;
         [HideInInspector] public float _debugWriteFloat;
+        [HideInInspector] public byte _debugWriteByte;
         [HideInInspector] public int _debugWriteInt;
         [HideInInspector] public bool _debugWriteBool;
         [HideInInspector] public string _debugWriteString = "";
@@ -94,6 +98,11 @@ namespace VAU.V320NeoNext.Runtime.Bus
                 if (notify) _WriteAndNotifyFloat((AvionicsBusFloatDataIds)id, _debugWriteFloat);
                 else _WriteFloat((AvionicsBusFloatDataIds)id, _debugWriteFloat);
             }
+            else if (dataType == (int)AvionicsBusDataType.Byte)
+            {
+                if (notify) _WriteAndNotifyByte((AvionicsBusByteDataIds)id, _debugWriteByte);
+                else _WriteByte((AvionicsBusByteDataIds)id, _debugWriteByte);
+            }
             else if (dataType == (int)AvionicsBusDataType.Int)
             {
                 if (notify) _WriteAndNotifyInt((AvionicsBusIntDataIds)id, _debugWriteInt);
@@ -121,6 +130,7 @@ namespace VAU.V320NeoNext.Runtime.Bus
             if (!_IsIdInRange(dataType, id)) return "<无效的数据 id>";
 
             if (dataType == (int)AvionicsBusDataType.Float) return _FloatText(_ReadFloat((AvionicsBusFloatDataIds)id));
+            if (dataType == (int)AvionicsBusDataType.Byte) return "" + _ReadByte((AvionicsBusByteDataIds)id);
             if (dataType == (int)AvionicsBusDataType.Int) return "" + _ReadInt((AvionicsBusIntDataIds)id);
             if (dataType == (int)AvionicsBusDataType.Bool) return "" + _ReadBool((AvionicsBusBoolDataIds)id);
 
@@ -154,6 +164,7 @@ namespace VAU.V320NeoNext.Runtime.Bus
             if (id < 0) return false;
 
             if (dataType == (int)AvionicsBusDataType.Float) return id < (int)AvionicsBusFloatDataIds.Count;
+            if (dataType == (int)AvionicsBusDataType.Byte) return id < (int)AvionicsBusByteDataIds.Count;
             if (dataType == (int)AvionicsBusDataType.Int) return id < (int)AvionicsBusIntDataIds.Count;
             if (dataType == (int)AvionicsBusDataType.Bool) return id < (int)AvionicsBusBoolDataIds.Count;
             if (dataType == (int)AvionicsBusDataType.String) return id < (int)AvionicsBusStringDataIds.Count;
