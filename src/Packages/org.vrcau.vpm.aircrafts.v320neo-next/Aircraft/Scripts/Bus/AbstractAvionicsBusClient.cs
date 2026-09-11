@@ -65,9 +65,18 @@ namespace VAU.V320NeoNext.Runtime.Bus
 
         /// <summary>
         /// 子类重写：在这里做订阅注册之类的自定义初始化逻辑。
-        /// 注意此时 Bus 的订阅表已经清空重建，直接 _SubscribeXxx 即可。
         /// </summary>
         protected virtual void _OnAvionicsBusStart() { }
+
+        public void _AvionicsBusPostStart()
+        {
+            _OnAvionicsBusPostStart();
+        }
+
+        /// <summary>
+        /// 子类重写：在 _OnAvionicsBusStart 之后调用，可以做网络同步脚本的订阅操作
+        /// </summary>
+        protected virtual void _OnAvionicsBusPostStart() { }
 
         /// <summary>
         /// 由 AvionicsBus 在本地玩家请求飞机重生时调用。

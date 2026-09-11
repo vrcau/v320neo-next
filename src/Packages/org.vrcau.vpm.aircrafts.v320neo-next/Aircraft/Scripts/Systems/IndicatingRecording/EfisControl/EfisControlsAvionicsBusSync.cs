@@ -45,12 +45,9 @@ namespace VAU.V320NeoNext.Runtime.Systems.IndicatingRecording.EfisControl
         // 正在把远端数据写回 bus 时置位，避免自己的订阅回调又把同样的值同步出去
         private bool _isApplyingSyncedData;
 
-        // OnDeserialization 可能早于 _OnAvionicsBusStart（bus 数组引用还没复制过来）
-        private bool _hasPendingSyncedData;
-
         #region Bus lifetime
 
-        protected override void _OnAvionicsBusStart()
+        protected override void _OnAvionicsBusPostStart()
         {
             _ResolveDataIds();
 
@@ -61,14 +58,6 @@ namespace VAU.V320NeoNext.Runtime.Systems.IndicatingRecording.EfisControl
             _SubscribeByte(_vorAdfId, nameof(_OnEfisControlsChanged));
             _SubscribeBool(_flightDirectorId, nameof(_OnEfisControlsChanged));
             _SubscribeBool(_landingSystemId, nameof(_OnEfisControlsChanged));
-
-            // 启动前收到过远端数据，这里补一次
-            if (_hasPendingSyncedData)
-            {
-                _hasPendingSyncedData = false;
-
-                _ApplySyncedDataToBus();
-            }
         }
 
         #endregion
@@ -150,14 +139,6 @@ namespace VAU.V320NeoNext.Runtime.Systems.IndicatingRecording.EfisControl
 
         private void _ApplySyncedDataToBus()
         {
-            if (_avionicsBus == null)
-            {
-                // bus 还没初始化，记下来等 _OnAvionicsBusStart 再应用
-                _hasPendingSyncedData = true;
-
-                return;
-            }
-
             Unpack(_data, out var flags, out var filter, out var page, out var range, out var vorAdf);
 
             var flagsBits = (int)flags;
@@ -165,8 +146,10 @@ namespace VAU.V320NeoNext.Runtime.Systems.IndicatingRecording.EfisControl
             _isApplyingSyncedData = true;
 
             // 用 WriteAndNotify：本机上订阅了这些 id 的仪表也会收到通知
-            _WriteAndNotifyBool(_flightDirectorId, (flagsBits & (int)FlightDirectorLandingSystemFlags.FlightDirectorOn) != 0);
-            _WriteAndNotifyBool(_landingSystemId, (flagsBits & (int)FlightDirectorLandingSystemFlags.LandingSystemOn) != 0);
+            _WriteAndNotifyBool(_flightDirectorId,
+                (flagsBits & (int)FlightDirectorLandingSystemFlags.FlightDirectorOn) != 0);
+            _WriteAndNotifyBool(_landingSystemId,
+                (flagsBits & (int)FlightDirectorLandingSystemFlags.LandingSystemOn) != 0);
             _WriteAndNotifyByte(_filterId, Convert.ToByte(filter));
             _WriteAndNotifyByte(_pageId, Convert.ToByte(page));
             _WriteAndNotifyByte(_rangeId, Convert.ToByte(range));
