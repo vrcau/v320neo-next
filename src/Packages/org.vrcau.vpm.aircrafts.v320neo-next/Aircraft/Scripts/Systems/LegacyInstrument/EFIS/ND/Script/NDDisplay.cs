@@ -1,24 +1,45 @@
-﻿using JetBrains.Annotations;
+﻿using System;
+using JetBrains.Annotations;
 using UdonSharp;
 using UnityEngine;
 using UnityEngine.UI;
+using VAU.V320NeoNext.Runtime.Bus;
+using VAU.V320NeoNext.Runtime.Systems.IndicatingRecording.EfisControl;
 using VAU.V320NeoNext.Runtime.Systems.LegacFmgc;
 using VAU.V320NeoNext.Runtime.Systems.LegacyFlightDataProvider;
 using VAU.V320NeoNext.Runtime.Systems.LegacyFlightDataProvider.LegacyADRIRU;
 using VAU.V320NeoNext.Runtime.Systems.LegacyInstrument.Utils;
 using VirtualCNS;
 
-namespace VAU.V320NeoNext.Runtime.Systems.LegacyInstrument.EFIS.ND.Script {
-    [UdonBehaviourSyncMode(BehaviourSyncMode.Manual)]
-    public class NDDisplay : UdonSharpBehaviour {
+namespace VAU.V320NeoNext.Runtime.Systems.LegacyInstrument.EFIS.ND.Script
+{
+    [UdonBehaviourSyncMode(BehaviourSyncMode.None)]
+    public class NDDisplay : AbstractAvionicsBusClient
+    {
         private const float MAX_SLIP_ANGLE = 50;
 
-        public int MainDataSource = 1;
+        private int _mainDataSource = 1;
 
-        [Tooltip("仪表的动画控制器")]
-        public Animator IndicatorAnimator;
+        public bool useRightEfis;
+
+        private AvionicsBusByteDataIds _navigationDisplayPageId;
+        private AvionicsBusByteDataIds _navigationDisplayFilterId;
+
+        private NavigationDisplayPage NavigationDisplayPage
+        {
+            get => (NavigationDisplayPage)Convert.ToInt32(_ReadByte(_navigationDisplayPageId));
+            set => _WriteAndNotifyByte(_navigationDisplayPageId, Convert.ToByte(value));
+        }
+
+        private NavigationDisplayFilter NavigationDisplayMapFilterType
+        {
+            get => (NavigationDisplayFilter)Convert.ToInt32(_ReadByte(_navigationDisplayFilterId));
+            set => _WriteAndNotifyByte(_navigationDisplayFilterId, Convert.ToByte(value));
+        }
+
+        [Tooltip("仪表的动画控制器")] public Animator IndicatorAnimator;
         public CDIAnimationDriver CDIAnimator;
-        [FieldChangeCallback(nameof(NDMode))] public NDMode _ndMode;
+
         private FMGC _fmgc;
 
         private DependenciesInjector _injector;
@@ -36,15 +57,25 @@ namespace VAU.V320NeoNext.Runtime.Systems.LegacyInstrument.EFIS.ND.Script {
 
         public Transform receiverTransform;
 
-        public NDMode NDMode {
-            get => _ndMode;
-            set {
-                _ndMode = (NDMode)((int)value < 0 ? 0 : (int)value % 5);
-                NDModeChanged();
+        protected override void _OnAvionicsBusStart()
+        {
+            if (useRightEfis)
+            {
+                _navigationDisplayPageId =
+                    AvionicsBusByteDataIds.V32NN_Infrequent_EFIS_Right_Sync_NavigationDisplayPage;
+                _navigationDisplayFilterId =
+                    AvionicsBusByteDataIds.V32NN_Infrequent_EFIS_Right_Sync_NavigationDisplayFilter;
+                _mainDataSource = 2;
             }
-        }
+            else
+            {
+                _navigationDisplayPageId =
+                    AvionicsBusByteDataIds.V32NN_Infrequent_EFIS_Left_Sync_NavigationDisplayPage;
+                _navigationDisplayFilterId =
+                    AvionicsBusByteDataIds.V32NN_Infrequent_EFIS_Left_Sync_NavigationDisplayFilter;
+                _mainDataSource = 1;
+            }
 
-        private void Start() {
             _injector = DependenciesInjector.GetInstance(this);
             _adiru = _injector.adiru;
             _fmgc = _injector.fmgc;
@@ -55,36 +86,35 @@ namespace VAU.V320NeoNext.Runtime.Systems.LegacyInstrument.EFIS.ND.Script {
 
             _currentNavDataSource = _ils;
 
-            _eventBus = _injector.systemEventBus;
-
-            _eventBus.RegisterSaccEvent(this);
+            _mapDisplays = GetComponentsInChildren<MapDisplay>(true);
 
             if (!receiverTransform) receiverTransform = transform;
 
-            NDModeChanged();
-            _mapDisplays = GetComponentsInChildren<MapDisplay>(true);
+            foreach (var mapDisplay in _mapDisplays)
+            {
+                mapDisplay._Init();
+            }
+
+            UpdateNavigationDisplayPage();
+            UpdateNavigationDisplayMapFilter();
+
+            _SubscribeByte(_navigationDisplayPageId, nameof(_OnNavigationDisplayPageChanged));
+            _SubscribeByte(_navigationDisplayFilterId, nameof(_OnNavigationDisplayMapFilterChanged));
         }
 
-        private void OnEnable() {
-            NDModeChanged();
-        }
+        public void _OnNavigationDisplayPageChanged() => UpdateNavigationDisplayPage();
+        public void _OnNavigationDisplayMapFilterChanged() => UpdateNavigationDisplayMapFilter();
 
-        public void SFEXT_O_RespawnButton() {
-            NDMode = NDMode.ARC;
-            SetVisibilityType(EFISVisibilityType.NONE);
-        }
-
-    #region Animation Hashs
+        #region Animation Hashs
 
         private readonly int HEADING_HASH = Animator.StringToHash("HeadingNormalize");
         private readonly int SLIP_ANGLE_HASH = Animator.StringToHash("SlipAngleNormalize");
 
-    #endregion
+        #endregion
 
-    #region UI Elements
+        #region UI Elements
 
-        [Header("UI element")]
-        public Text TASText;
+        [Header("UI element")] public Text TASText;
 
         public Text GSText;
 
@@ -95,8 +125,7 @@ namespace VAU.V320NeoNext.Runtime.Systems.LegacyInstrument.EFIS.ND.Script {
         public Text line3Text; //NI下 "CRS"
         public Text line4Text; //NI下 NAME
 
-        [Header("Navaid indication")]
-        public Text VOR1Name;
+        [Header("Navaid indication")] public Text VOR1Name;
 
         public Text VOR1Dist;
 
@@ -109,33 +138,26 @@ namespace VAU.V320NeoNext.Runtime.Systems.LegacyInstrument.EFIS.ND.Script {
 
         public GameObject GSIndicator;
 
-    #endregion
+        #endregion
 
-    #region EFIS Indicator Elements
+        #region EFIS Indicator Elements
 
-        // [Header("EFIS Status Display")]
-        // public Animator cockpitAnimator;
-
-        // private readonly int EFIS_STATUS_HASH = Animator.StringToHash("EFISStatus");
-
-        [Header("Pages")]
-        public GameObject ARCPage;
+        [Header("Pages")] public GameObject ARCPage;
 
         public GameObject VORPage;
         public GameObject ILSPage;
 
-        private EFISVisibilityType _efisVisibilityType;
+        #endregion
 
-    #endregion
-
-    #region Update
+        #region Update
 
         private readonly float UPDATE_INTERVAL = UpdateIntervalUtil.GetUpdateIntervalFromFPS(30);
         private float _lastUpdate;
-        
-        private void LateUpdate() {
+
+        private void LateUpdate()
+        {
             if (!UpdateIntervalUtil.CanUpdate(ref _lastUpdate, UPDATE_INTERVAL)) return;
-            
+
             UpdateHeading();
             UpdateSlip();
             TASText.text = _adiru.adr.trueAirSpeed.ToString("f0");
@@ -144,21 +166,24 @@ namespace VAU.V320NeoNext.Runtime.Systems.LegacyInstrument.EFIS.ND.Script {
             UpdateNavigation();
         }
 
-        private void UpdateHeading() {
+        private void UpdateHeading()
+        {
             IndicatorAnimator.SetFloat(HEADING_HASH, _adiru.irs.heading / 360f);
         }
 
-        private void UpdateSlip() {
+        private void UpdateSlip()
+        {
             IndicatorAnimator.SetFloat(SLIP_ANGLE_HASH,
                 Mathf.Clamp01((_adiru.irs.trackSlipAngle + MAX_SLIP_ANGLE) / (MAX_SLIP_ANGLE + MAX_SLIP_ANGLE)));
         }
 
-    #region Navaid
+        #region Navaid
 
-        private void UpdateNavigation() {
+        private void UpdateNavigation()
+        {
             VOR1SelectOnly.SetActive(_vor1.Index >= 0);
             VOR2SelectOnly.SetActive(_vor2.Index >= 0);
-            
+
 
             NavInfoIndicatior.SetActive(_vor2.Index >= 0);
 
@@ -167,7 +192,7 @@ namespace VAU.V320NeoNext.Runtime.Systems.LegacyInstrument.EFIS.ND.Script {
             //种类
 
             UpdateNavigationInfo();
-            
+
             //switch (MainDataSource) {
             //    case 1:
             //        UpdateNavigationInfo(_vor1);
@@ -181,29 +206,37 @@ namespace VAU.V320NeoNext.Runtime.Systems.LegacyInstrument.EFIS.ND.Script {
             //}
         }
 
-        private void UpdateNavigationInfo() {
+        private void UpdateNavigationInfo()
+        {
             if (_currentNavDataSource == null) return;
 
-            if (NDMode != NDMode.PLAN) {
-                if (_vor1.Index >= 0) {
+            if (NavigationDisplayPage != NavigationDisplayPage.Plan)
+            {
+                if (_vor1.Index >= 0)
+                {
                     VOR1Name.text = _vor1.Identity;
                     VOR1Dist.text = _vor1.HasDME
-                        ? (Vector3.Distance(receiverTransform.position, GetNavaidPosition(_vor1)) / 1852.0f).ToString("f2")
+                        ? (Vector3.Distance(receiverTransform.position, GetNavaidPosition(_vor1)) / 1852.0f)
+                        .ToString("f2")
                         : "--.-";
                 }
 
-                if (_vor2.Index >= 0) {
+                if (_vor2.Index >= 0)
+                {
                     VOR2Name.text = _vor2.Identity;
                     VOR2Dist.text = _vor2.HasDME
-                        ? (Vector3.Distance(receiverTransform.position, GetNavaidPosition(_vor2)) / 1852.0f).ToString("f2")
+                        ? (Vector3.Distance(receiverTransform.position, GetNavaidPosition(_vor2)) / 1852.0f)
+                        .ToString("f2")
                         : "--.-";
                 }
             }
 
-            switch (NDMode) {
-                case NDMode.LS:
-                    line1Text.text = $"ILS{MainDataSource}";
-                    if (_currentNavDataSource.Index >= 0) {
+            switch (NavigationDisplayPage)
+            {
+                case NavigationDisplayPage.Ils:
+                    line1Text.text = $"ILS{_mainDataSource}";
+                    if (_currentNavDataSource.Index >= 0)
+                    {
                         //频率
                         line2Text.text =
                             $"<color={AirbusAvionicsTheme.Carmine}>{(_currentNavDataSource.Index >= 0 ? _currentNavDataSource.database.frequencies[_currentNavDataSource.Index].ToString("f2") : "---.--")}</color>";
@@ -214,9 +247,10 @@ namespace VAU.V320NeoNext.Runtime.Systems.LegacyInstrument.EFIS.ND.Script {
                     }
 
                     break;
-                case NDMode.VOR:
-                    if (_currentNavDataSource.Index >= 0) {
-                        line1Text.text = $"VOR{MainDataSource}";
+                case NavigationDisplayPage.Vor:
+                    if (_currentNavDataSource.Index >= 0)
+                    {
+                        line1Text.text = $"VOR{_mainDataSource}";
                         //频率
                         line2Text.text = _currentNavDataSource.Index >= 0
                             ? _currentNavDataSource.database.frequencies[_currentNavDataSource.Index].ToString("f2")
@@ -230,134 +264,123 @@ namespace VAU.V320NeoNext.Runtime.Systems.LegacyInstrument.EFIS.ND.Script {
             }
         }
 
-        private Vector3 GetNavaidPosition(NavSelector navSelector) {
+        private Vector3 GetNavaidPosition(NavSelector navSelector)
+        {
             var t = navSelector.NavaidTransform;
             return (t ? t : transform).position;
         }
 
-    #endregion
+        #endregion
 
-    #endregion
+        #endregion
 
-    #region Navigation Display Pages
+        #region Navigation Display Pages
 
-        private void NDModeChanged() {
+        private void UpdateNavigationDisplayPage()
+        {
             ARCPage.SetActive(false);
             VORPage.SetActive(false);
             ILSPage.SetActive(false);
 
-            switch (NDMode) {
-                case NDMode.LS:
+            switch (NavigationDisplayPage)
+            {
+                case NavigationDisplayPage.Ils:
                     ILSPage.SetActive(true);
                     _currentNavDataSource = _ils;
                     break;
-                case NDMode.VOR:
+                case NavigationDisplayPage.Vor:
                     VORPage.SetActive(true);
                     _currentNavDataSource = _vor1;
                     break;
-                case NDMode.ARC:
+                case NavigationDisplayPage.Arc:
                     ARCPage.SetActive(true);
                     _currentNavDataSource = _ils;
                     break;
                 default:
                     //ARCPage.SetActive(true);
-                    NDMode = (NDMode)(((int)NDMode + 1) % 5);//页面为空的话自动跳到下一个页面
+                    NavigationDisplayPage =
+                        (NavigationDisplayPage)(((int)NavigationDisplayPage + 1) % 5); //页面为空的话自动跳到下一个页面
                     break;
             }
+
             CDIAnimator.navaidSelector = _currentNavDataSource;
         }
 
         [PublicAPI]
-        public void NDPageNextLocal() {
-            NDMode = (NDMode)((int)NDMode + 1);
+        public void NDPageNextLocal()
+        {
+            NavigationDisplayPage = (NavigationDisplayPage)((int)NavigationDisplayPage + 1);
         }
 
         [PublicAPI]
-        public void NDPagePrevLocal() {
-            NDMode = (NDMode)((int)NDMode - 1);
+        public void NDPagePrevLocal()
+        {
+            NavigationDisplayPage = (NavigationDisplayPage)((int)NavigationDisplayPage - 1);
         }
 
         [PublicAPI]
-        public void NDPageChangeLocal() {
-            Debug.Log("OnNDPageChange");
+        public void NDPageChangeLocal()
+        {
             // for one direction
-            NDMode = (NDMode)(((int)NDMode + 1) % 5);
+            NavigationDisplayPage = (NavigationDisplayPage)(((int)NavigationDisplayPage + 1) % 5);
         }
 
-    #endregion
+        #endregion
 
-    #region EFIS
+        #region EFIS
 
-        private void SetVisibilityType(EFISVisibilityType visibilityType) {
-            _efisVisibilityType = visibilityType;
+        private void SetVisibilityType(NavigationDisplayFilter visibilityType)
+        {
+            Debug.Log(nameof(SetVisibilityType) + " " + visibilityType);
+            NavigationDisplayMapFilterType = visibilityType;
+        }
+
+        private void UpdateNavigationDisplayMapFilter()
+        {
+            Debug.Log(nameof(UpdateNavigationDisplayMapFilter) + " " + NavigationDisplayMapFilterType);
             foreach (var mapDisplay in _mapDisplays)
-                mapDisplay.SetVisibilityType(visibilityType);
-
-            // To make Udon Happy
-            var animationValue = 0f;
-            switch (visibilityType) {
-                case EFISVisibilityType.CSTR:
-                    animationValue = 0f;
-                    break;
-                case EFISVisibilityType.WPT:
-                    animationValue = 1f;
-                    break;
-                case EFISVisibilityType.VORDME:
-                    animationValue = 2f;
-                    break;
-                case EFISVisibilityType.NDB:
-                    animationValue = 3f;
-                    break;
-                case EFISVisibilityType.APPT:
-                    animationValue = 4f;
-                    break;
-                case EFISVisibilityType.NONE:
-                    animationValue = 5f;
-                    break;
-            }
-
-            // cockpitAnimator.SetFloat(EFIS_STATUS_HASH, animationValue / 5f);
+                mapDisplay.SetVisibilityType(NavigationDisplayMapFilterType);
         }
 
         // For TouchSwitch Event
         [PublicAPI]
-        public void ToggleVisibilityTypeCSTR() {
-            ToggleVisibilityType(EFISVisibilityType.CSTR);
+        public void ToggleVisibilityTypeCSTR()
+        {
+            ToggleVisibilityType(NavigationDisplayFilter.Constraint);
         }
 
         [PublicAPI]
-        public void ToggleVisibilityTypeWPT() {
-            ToggleVisibilityType(EFISVisibilityType.WPT);
+        public void ToggleVisibilityTypeWPT()
+        {
+            Debug.Log(nameof(ToggleVisibilityTypeWPT));
+            ToggleVisibilityType(NavigationDisplayFilter.Waypoint);
         }
 
         [PublicAPI]
-        public void ToggleVisibilityTypeVORD() {
-            ToggleVisibilityType(EFISVisibilityType.VORDME);
+        public void ToggleVisibilityTypeVORD()
+        {
+            Debug.Log(nameof(ToggleVisibilityTypeVORD));
+            ToggleVisibilityType(NavigationDisplayFilter.VorDme);
         }
 
         [PublicAPI]
-        public void ToggleVisibilityTypeNDB() {
-            ToggleVisibilityType(EFISVisibilityType.NDB);
+        public void ToggleVisibilityTypeNDB()
+        {
+            ToggleVisibilityType(NavigationDisplayFilter.Ndb);
         }
 
         [PublicAPI]
-        public void ToggleVisibilityTypeAPPT() {
-            ToggleVisibilityType(EFISVisibilityType.APPT);
+        public void ToggleVisibilityTypeAPPT()
+        {
+            ToggleVisibilityType(NavigationDisplayFilter.Airport);
         }
 
         [PublicAPI]
-        private void ToggleVisibilityType(EFISVisibilityType type) {
-            SetVisibilityType(_efisVisibilityType == type ? EFISVisibilityType.NONE : type);
+        private void ToggleVisibilityType(NavigationDisplayFilter type)
+        {
+            SetVisibilityType(NavigationDisplayMapFilterType == type ? NavigationDisplayFilter.None : type);
         }
 
-    #endregion
-    }
-
-    public enum NDMode {
-        LS,
-        VOR,
-        NAV,
-        ARC,
-        PLAN
+        #endregion
     }
 }

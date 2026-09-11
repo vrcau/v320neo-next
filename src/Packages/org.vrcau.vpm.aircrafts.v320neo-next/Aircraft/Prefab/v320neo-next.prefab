@@ -6192,7 +6192,7 @@ MonoBehaviour:
   maxPlayerDistance: 5
   awakeCheckInterval: 5
   ownerOnly: 0
-  networked: 1
+  networked: 0
   networkEventTarget: 0
   eventTarget: {fileID: 862073387797803480}
   eventName: ToggleVisibilityTypeNDB
@@ -6920,7 +6920,7 @@ MonoBehaviour:
   maxPlayerDistance: 5
   awakeCheckInterval: 5
   ownerOnly: 0
-  networked: 1
+  networked: 0
   networkEventTarget: 0
   eventTarget: {fileID: 2628704160490200336}
   eventName: ToggleVisibilityTypeVORD
@@ -18837,6 +18837,7 @@ MonoBehaviour:
     SerializationNodes: []
   _udonSharpBackingUdonBehaviour: {fileID: 3167079395228685345}
   _avionicsBus: {fileID: 0}
+  EntityControl: {fileID: 0}
 --- !u!114 &3167079395228685345
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -42516,6 +42517,7 @@ MonoBehaviour:
     PrefabModifications: []
     SerializationNodes: []
   _udonSharpBackingUdonBehaviour: {fileID: 3180877084754873009}
+  _avionicsBus: {fileID: 0}
   navaidDatabaseOverride: {fileID: 0}
   voiceProtocolForVhfOverride: {fileID: 0}
   globalAircraftSettings: {fileID: 0}
@@ -55112,7 +55114,7 @@ MonoBehaviour:
   maxPlayerDistance: 5
   awakeCheckInterval: 5
   ownerOnly: 0
-  networked: 1
+  networked: 0
   networkEventTarget: 0
   eventTarget: {fileID: 862073387797803480}
   eventName: ToggleVisibilityTypeCSTR
@@ -61882,7 +61884,7 @@ MonoBehaviour:
   maxPlayerDistance: 5
   awakeCheckInterval: 5
   ownerOnly: 0
-  networked: 1
+  networked: 0
   networkEventTarget: 0
   eventTarget: {fileID: 2628704160490200336}
   eventName: ToggleVisibilityTypeAPPT
@@ -65404,7 +65406,7 @@ MonoBehaviour:
   maxPlayerDistance: 5
   awakeCheckInterval: 5
   ownerOnly: 0
-  networked: 1
+  networked: 0
   networkEventTarget: 0
   eventTarget: {fileID: 862073387797803480}
   eventName: ToggleVisibilityTypeAPPT
@@ -76522,7 +76524,7 @@ MonoBehaviour:
   maxPlayerDistance: 5
   awakeCheckInterval: 5
   ownerOnly: 0
-  networked: 1
+  networked: 0
   networkEventTarget: 0
   eventTarget: {fileID: 2628704160490200336}
   eventName: ToggleVisibilityTypeCSTR
@@ -86482,7 +86484,7 @@ MonoBehaviour:
   maxPlayerDistance: 5
   awakeCheckInterval: 5
   ownerOnly: 0
-  networked: 1
+  networked: 0
   networkEventTarget: 0
   eventTarget: {fileID: 862073387797803480}
   eventName: NDPageChangeLocal
@@ -92050,7 +92052,7 @@ MonoBehaviour:
   maxPlayerDistance: 5
   awakeCheckInterval: 5
   ownerOnly: 0
-  networked: 1
+  networked: 0
   networkEventTarget: 0
   eventTarget: {fileID: 2628704160490200336}
   eventName: NDPageChangeLocal
@@ -112255,7 +112257,7 @@ MonoBehaviour:
   maxPlayerDistance: 5
   awakeCheckInterval: 5
   ownerOnly: 0
-  networked: 1
+  networked: 0
   networkEventTarget: 0
   eventTarget: {fileID: 862073387797803480}
   eventName: ToggleVisibilityTypeWPT
@@ -113457,7 +113459,7 @@ MonoBehaviour:
   maxPlayerDistance: 5
   awakeCheckInterval: 5
   ownerOnly: 0
-  networked: 1
+  networked: 0
   networkEventTarget: 0
   eventTarget: {fileID: 2628704160490200336}
   eventName: ToggleVisibilityTypeNDB
@@ -120366,7 +120368,7 @@ MonoBehaviour:
   maxPlayerDistance: 5
   awakeCheckInterval: 5
   ownerOnly: 0
-  networked: 1
+  networked: 0
   networkEventTarget: 0
   eventTarget: {fileID: 862073387797803480}
   eventName: ToggleVisibilityTypeVORD
@@ -135231,6 +135233,10 @@ PrefabInstance:
       propertyPath: CDIAnimator
       value: 
       objectReference: {fileID: 456627365864101981}
+    - target: {fileID: 7354455306329576924, guid: dc24ebb95cee31740bfafb6d263e0d9c, type: 3}
+      propertyPath: useRightEfis
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 7354455306329576924, guid: dc24ebb95cee31740bfafb6d263e0d9c, type: 3}
       propertyPath: receiverTransform
       value: 

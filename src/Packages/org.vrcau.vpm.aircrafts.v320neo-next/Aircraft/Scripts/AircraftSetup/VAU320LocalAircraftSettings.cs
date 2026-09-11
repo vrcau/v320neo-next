@@ -2,13 +2,14 @@ using JetBrains.Annotations;
 using UdonRadioCommunicationRedux;
 using UdonSharp;
 using UnityEngine;
+using VAU.V320NeoNext.Runtime.Bus;
 using VAU.V320NeoNext.Runtime.Systems.LegacyFlightDataProvider;
 using VirtualCNS;
 
 namespace VAU.V320NeoNext.Runtime.AircraftSetup
 {
     [UdonBehaviourSyncMode(BehaviourSyncMode.None)]
-    public sealed class VAU320LocalAircraftSettings : UdonSharpBehaviour
+    public sealed class VAU320LocalAircraftSettings : AbstractAvionicsBusClient
     {
         #region Override Settings Fields
 
@@ -46,7 +47,7 @@ namespace VAU.V320NeoNext.Runtime.AircraftSetup
 
         #endregion
 
-        private void Start()
+        protected override void _OnAvionicsBusInitialize()
         {
             Setup();
             // Do null check only once for performance

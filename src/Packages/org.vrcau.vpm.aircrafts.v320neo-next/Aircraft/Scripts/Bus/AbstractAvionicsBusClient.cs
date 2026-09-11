@@ -36,12 +36,10 @@ namespace VAU.V320NeoNext.Runtime.Bus
         #region Lifetime
 
         /// <summary>
-        /// 由 AvionicsBus 调用，不要手动调用，也不要在子类里重写。
+        /// 超早期初始化事件，如无必要请勿使用。由 AvionicsBus 调用，不要手动调用，也不要在子类里重写。
         /// </summary>
-        public void _AvionicsBusStart()
+        public void _AvionicsBusInitialize()
         {
-            if (_avionicsBus == null) return;
-
             _floatData = _avionicsBus.floatData;
             _byteData = _avionicsBus.byteData;
             _intData = _avionicsBus.intData;
@@ -49,6 +47,19 @@ namespace VAU.V320NeoNext.Runtime.Bus
             _stringData = _avionicsBus.stringData;
             _vector3Data = _avionicsBus.vector3Data;
 
+            _OnAvionicsBusInitialize();
+        }
+
+        /// <summary>
+        /// 超早期初始化事件，如无必要请勿使用。
+        /// </summary>
+        protected virtual void _OnAvionicsBusInitialize() { }
+
+        /// <summary>
+        /// 由 AvionicsBus 调用，不要手动调用，也不要在子类里重写。
+        /// </summary>
+        public void _AvionicsBusStart()
+        {
             _OnAvionicsBusStart();
         }
 

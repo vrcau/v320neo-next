@@ -72,13 +72,21 @@ namespace VAU.V320NeoNext.Runtime.Bus
             _ClearSubscribers();
 
             _clients = GetComponentsInChildren<AbstractAvionicsBusClient>(true);
-
+            
             for (int i = 0; i < _clients.Length; i++)
             {
                 AbstractAvionicsBusClient client = _clients[i];
                 if (client == null) continue;
 
                 client._avionicsBus = this;
+                client._AvionicsBusInitialize();
+            }
+
+            for (int i = 0; i < _clients.Length; i++)
+            {
+                AbstractAvionicsBusClient client = _clients[i];
+                if (client == null) continue;
+
                 client._AvionicsBusStart();
             }
         }
