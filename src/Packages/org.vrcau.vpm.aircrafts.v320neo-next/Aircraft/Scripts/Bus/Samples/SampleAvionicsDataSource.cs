@@ -52,7 +52,7 @@ namespace VAU.V320NeoNext.Runtime.Bus.Samples
             if (logWrites) Debug.Log("[Bus Sample] DataSource started");
         }
 
-        protected override void _OnAvionicsBusRespawn()
+        protected override void _OnAvionicsBusRespawnByLocalPlayer()
         {
             // 重生：数据复位为 0，等下一帧 Update 重新填充（也可以在这里直接 _PublishFrequent 一次）
             _WriteFloat(AvionicsBusFloatDataIds.V32NN_Frequent_ADR_AltitudeFeet, 0f);

@@ -68,9 +68,6 @@ namespace VAU.V320NeoNext.Runtime.Systems.LegacyInstrument.EFIS.PFD.BasicDisplay
             _aircraftSystemData = _injector.equipmentData;
             _fcu = _injector.fcu;
             //_flaps = _injector.flaps;
-            _eventBus = _injector.systemEventBus;
-
-            _eventBus.RegisterSaccEvent(this);
 
             _localPlayer = Networking.LocalPlayer;
         }
@@ -94,26 +91,6 @@ namespace VAU.V320NeoNext.Runtime.Systems.LegacyInstrument.EFIS.PFD.BasicDisplay
 
             _SubscribeBool(_flightDirectorOnId, nameof(_OnFlightDirectorOnChanged));
             _SubscribeBool(_landingSystemOnId, nameof(_OnLandingSystemOnChanged));
-        }
-
-        public void SFEXT_O_RespawnButton()
-        {
-            _WriteAndNotifyBool(useRightEfis
-                ? AvionicsBusBoolDataIds.V32NN_Infrequent_EFIS_Left_Sync_FlightDirectorOn
-                : AvionicsBusBoolDataIds.V32NN_Infrequent_EFIS_Right_Sync_LandingSystemOn, true);
-            _WriteAndNotifyBool(useRightEfis
-                ? AvionicsBusBoolDataIds.V32NN_Infrequent_EFIS_Left_Sync_LandingSystemOn
-                : AvionicsBusBoolDataIds.V32NN_Infrequent_EFIS_Right_Sync_LandingSystemOn, true);
-
-            var isFlightDirectionOn = IsFlightDirectorOn;
-            var isLandingSystemOn = IsLandingSystemOn;
-
-            flightDirectionIndicator.SetActive(isFlightDirectionOn);
-            flightDirectorUI.SetActive(isFlightDirectionOn);
-            // flightDirectorFail.SetActive(isFlightDirectionOn);
-            flightDirector.isFDOn = isFlightDirectionOn;
-            landingSystem.SetActive(isLandingSystemOn);
-            landingSystemIndicator.SetActive(isLandingSystemOn);
         }
 
         public void _OnFlightDirectorOnChanged()

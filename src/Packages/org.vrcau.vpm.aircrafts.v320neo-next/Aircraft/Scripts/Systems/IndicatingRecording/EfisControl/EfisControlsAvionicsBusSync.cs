@@ -71,12 +71,6 @@ namespace VAU.V320NeoNext.Runtime.Systems.IndicatingRecording.EfisControl
             }
         }
 
-        protected override void _OnAvionicsBusRespawn()
-        {
-            // 重生时各系统会把 bus 数据复位，这里以同步值为准把 EFIS 相关数据恢复回去
-            _ApplySyncedDataToBus();
-        }
-
         #endregion
 
         #region 同步出入口

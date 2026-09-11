@@ -55,7 +55,7 @@ namespace VAU.V320NeoNext.Runtime.Bus.Samples
             if (logOnNotify) Debug.Log("[Bus Sample] SubscribingInstrument subscribed");
         }
 
-        protected override void _OnAvionicsBusRespawn()
+        protected override void _OnAvionicsBusRespawnByLocalPlayer()
         {
             _altitudeNotifyCount = 0;
             _processedCount = 0;

@@ -10,8 +10,8 @@ namespace VAU.V320NeoNext.Runtime.Bus
     /// 生命周期完全由 AvionicsBus 驱动：Bus 会注入自己的引用，调用
     /// <see cref="_AvionicsBusStart"/>() 复制数据数组引用，然后触发
     /// <see cref="_OnAvionicsBusStart"/>() 让子类做订阅注册之类的自定义逻辑。
-    /// 飞机重生时 Bus 会调用 <see cref="_AvionicsBusResponse"/>()，进而触发
-    /// <see cref="_OnAvionicsBusRespawn"/>()。
+    /// 飞机重生时 Bus 会调用 <see cref="_AvionicsBusRespawnByLocalPlayer"/>()，进而触发
+    /// <see cref="_OnAvionicsBusRespawnByLocalPlayer"/>()。
     /// </para>
     /// <para>
     /// 注意：数据数组引用在 <see cref="_AvionicsBusStart"/>() 之前都是 null，
@@ -59,18 +59,31 @@ namespace VAU.V320NeoNext.Runtime.Bus
         protected virtual void _OnAvionicsBusStart() { }
 
         /// <summary>
-        /// 由 AvionicsBus 在飞机重生时调用。
+        /// 由 AvionicsBus 在本地玩家请求飞机重生时调用。
         /// </summary>
-        public void _AvionicsBusResponse()
+        public void _AvionicsBusRespawnByLocalPlayer()
         {
             // 客户端自身通用的 Respawn 逻辑写在这里（目前没有）
-            _OnAvionicsBusRespawn();
+            _OnAvionicsBusRespawnByLocalPlayer();
         }
 
         /// <summary>
-        /// 子类重写：在这里做重生后的自定义逻辑。
+        /// 由 AvionicsBus 在其他玩家请求飞机重生时调用。
         /// </summary>
-        protected virtual void _OnAvionicsBusRespawn() { }
+        public void _AvionicsBusRespawnByRemotePlayer()
+        {
+            _OnAvionicsBusRespawnByLocalPlayer();
+        }
+
+        /// <summary>
+        /// 子类重写：在这里做重生后的自定义逻辑。（如果是本地玩家请求的重生）
+        /// </summary>
+        protected virtual void _OnAvionicsBusRespawnByLocalPlayer() { }
+
+        /// <summary>
+        /// 子类重写：在这里做重生后的自定义逻辑。（如果是其他玩家请求的重生）
+        /// </summary>
+        protected virtual void _OnAvionicsBusRespawnByRemotePlayer() { }
 
         #endregion
 
