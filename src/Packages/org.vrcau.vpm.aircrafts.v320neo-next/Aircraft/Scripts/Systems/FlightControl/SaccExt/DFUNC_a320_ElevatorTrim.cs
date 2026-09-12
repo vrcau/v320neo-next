@@ -1,7 +1,6 @@
 using SaccFlightAndVehicles;
 using UdonSharp;
 using UnityEngine;
-using VAU.V320NeoNext.Runtime.FlightMenu.MenuData.Item;
 using VAU.V320NeoNext.Runtime.Systems.LegacyFlightDataProvider;
 
 //note:this code is original from https://github.com/esnya/EsnyaSFAddons
