@@ -46,6 +46,7 @@ namespace VAU.V320NeoNext.Runtime.Systems.FlightControl.Flybywire.Law.Pitch
                 targetPitchRate = pilotPitchInput * pilotInputAsPitchRateScale;
             if (overridePitchRateCommand)
                 targetPitchRate = overridePitchRateCommandValue;
+            _WriteFloat(AvionicsBusFloatDataIds.V32NN_Frequent_FlyByWireDebug_PitchRateTarget, targetPitchRate);
             var outputToSacc = RunPitchRateToSaccOutput(targetPitchRate);
 
             if (!_ReadBool(AvionicsBusBoolDataIds.V32NN_Infrequent_LandingGear_Sync_GearLeverUp))

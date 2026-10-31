@@ -12,6 +12,9 @@ namespace VAU.V320NeoNext.Runtime.Systems.FlightControl.Flybywire.Law.Pitch
         public float aoaToPitchRateKdMaxIntegrator = 1;
         public float aoaToPitchRateKdMinIntegrator = -1;
 
+        public float aoaToPitchRateMin = -5f;
+        public float aoaToPitchRateMax = 5f;
+
         public float _aoaToPitchRateIntegrator;
         public float _targetAoa;
         public float _aoaError;
@@ -19,6 +22,7 @@ namespace VAU.V320NeoNext.Runtime.Systems.FlightControl.Flybywire.Law.Pitch
         public float aoaToPitchRateOutput;
 
         private float _lastAoaProtectionWeight;
+        private float _aoaProtectionLastError;
         private bool _inAoAProtection;
 
         private float GetHighAoaProtectionWeight()
@@ -29,14 +33,19 @@ namespace VAU.V320NeoNext.Runtime.Systems.FlightControl.Flybywire.Law.Pitch
             if (!_inAoAProtection)
             {
                 _inAoAProtection = aoa > protectionAoa;
+                if (_inAoAProtection)
+                {
+                    _aoaToPitchRateIntegrator = 0;
+                    _aoaProtectionLastError = 0;
+                }
             }
-            else if (aoa < protectionAoa - 1)
+            else if (aoa < protectionAoa - 0.5f)
             {
                 _inAoAProtection = false;
             }
 
             var weightTarget = _inAoAProtection ? 1 : 0;
-            var weightMaxDelta = Time.fixedDeltaTime * (_inAoAProtection ? 1f : 0.3f);
+            var weightMaxDelta = Time.fixedDeltaTime * 1.5f;
 
             var weight =
                 Mathf.MoveTowards(_lastAoaProtectionWeight, weightTarget,  weightMaxDelta);
@@ -57,13 +66,14 @@ namespace VAU.V320NeoNext.Runtime.Systems.FlightControl.Flybywire.Law.Pitch
             _aoaError = aoaTarget - aoa;
             _WriteFloat(AvionicsBusFloatDataIds.V32NN_Frequent_FlyByWireDebug_HighAoAProtectionTargetAoA, aoaTarget);
 
-            aoaToPitchRateOutput = FlightControlLaw.RunPid(
+            aoaToPitchRateOutput = Mathf.Clamp(FlightControlLaw.RunPid(
                 aoaTarget, aoa,
-                ref _aoaToPitchRateIntegrator, ref highSpeedProtectionLastError,
+                ref _aoaToPitchRateIntegrator, ref _aoaProtectionLastError,
                 aoaToPitchRateKp, aoaToPitchRateKi, aoaToPitchRateKd,
                 aoaToPitchRateKdMinIntegrator, aoaToPitchRateKdMaxIntegrator
-            );
+            ), aoaToPitchRateMin, aoaToPitchRateMax);
 
+            _WriteFloat(AvionicsBusFloatDataIds.V32NN_Frequent_FlyByWireDebug_HighAoAProtectionIntegrator, _aoaToPitchRateIntegrator);
             _WriteFloat(AvionicsBusFloatDataIds.V32NN_Frequent_FlyByWireDebug_HighAoAProtectionOutput, aoaToPitchRateOutput);
             return aoaToPitchRateOutput;
         }

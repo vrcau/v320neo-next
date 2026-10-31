@@ -12,13 +12,17 @@ namespace VAU.V320NeoNext.Runtime.Systems.FlightControl.Flybywire.Law
             float ki,
             float kd,
             float minIntegrator,
-            float maxIntegrator)
+            float maxIntegrator,
+            bool frozeIntegrator = false)
         {
             var error = target - current;
             var lastErrorCopy = lastError;
             lastError = error;
 
-            integrator = Mathf.Clamp(integrator + error * Time.fixedDeltaTime, minIntegrator, maxIntegrator);
+            if (!frozeIntegrator)
+            {
+                integrator = Mathf.Clamp(integrator + error * Time.fixedDeltaTime, minIntegrator, maxIntegrator);
+            }
 
             return kp * error + ki * integrator + kd * (error - lastErrorCopy) / Time.fixedDeltaTime;
         }
