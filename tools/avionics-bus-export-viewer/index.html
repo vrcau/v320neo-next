@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>AvionicsBus 数据查看器</title>
+    <link rel="stylesheet" href="viewer.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"></script>
+    <script src="samples/sample-export.js"></script>
+</head>
+<body>
+<div id="app">
+    <aside id="sidebar">
+        <header class="app-header">
+            <h1>AvionicsBus 数据查看器</h1>
+            <p>JSON 只在本地浏览器处理，不会上传。</p>
+        </header>
+
+        <section class="panel">
+            <div id="drop-zone" class="drop-zone" tabindex="0" role="button">
+                <strong>拖放 JSON 到这里</strong>
+                <span>或点击选择文件</span>
+                <input id="file-input" type="file" accept=".json,.txt,.log,application/json,text/plain" hidden>
+            </div>
+            <div class="button-row">
+                <button id="sample-button" type="button">载入示例</button>
+                <button id="clear-button" type="button" disabled>清空</button>
+            </div>
+            <details id="paste-details">
+                <summary>粘贴 JSON / 日志</summary>
+                <textarea id="paste-input" placeholder="粘贴导出的 JSON，或包含 JSON 的 VRChat 日志"></textarea>
+                <button id="paste-button" type="button">载入粘贴内容</button>
+            </details>
+        </section>
+
+        <section id="metadata-section" class="panel hidden">
+            <h2>录制信息</h2>
+            <dl class="metadata-grid">
+                <dt>文件</dt><dd id="meta-file">—</dd>
+                <dt>录制时间</dt><dd id="meta-time">—</dd>
+                <dt>采样方式</dt><dd id="meta-method">—</dd>
+                <dt>采样率</dt><dd id="meta-rate">—</dd>
+                <dt>样本数</dt><dd id="meta-count">—</dd>
+                <dt>时长</dt><dd id="meta-duration">—</dd>
+            </dl>
+            <div id="meta-warnings" class="warning-list hidden"></div>
+        </section>
+
+        <section id="series-section" class="panel hidden">
+            <div class="section-title-row">
+                <h2>数值参数</h2>
+                <span id="series-count" class="section-count"></span>
+            </div>
+            <input id="series-search" class="series-search" type="search" placeholder="搜索参数名 / 类型 / id">
+            <div class="section-hint">点击数字把参数加入 / 移出对应视图</div>
+            <div id="series-list" class="series-list"></div>
+        </section>
+
+        <section id="string-section" class="panel hidden">
+            <div class="section-title-row">
+                <h2>文本参数</h2>
+                <span id="string-count" class="section-count"></span>
+            </div>
+            <div id="string-list" class="string-list"></div>
+        </section>
+    </aside>
+
+    <main id="main">
+        <div class="toolbar">
+            <button id="add-view-button" type="button" disabled>新增视图</button>
+            <button id="reset-zoom-button" type="button" disabled>重置缩放</button>
+            <span class="toolbar-hint">拖拽平移 · 滚轮缩放 · 双击重置 · 所有视图共享时间范围</span>
+        </div>
+
+        <div id="charts-container">
+            <div id="charts-empty" class="charts-empty">
+                <strong>还没有数据</strong>
+                <span>拖放导出的 JSON，或点击左侧“载入示例”。</span>
+            </div>
+        </div>
+
+        <div id="status-bar" class="status-bar neutral">等待载入 JSON。</div>
+    </main>
+</div>
+<script src="viewer.js"></script>
+</body>
+</html>

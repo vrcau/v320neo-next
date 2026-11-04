@@ -38,6 +38,7 @@ Currently v320neo-next fix serval issues that prevent original [VAU320][old-vau3
 - Instrument rendering in static camera to reduce instrument glitch when far away from world origin.
 - Functional ND map display. (map will move and rotation as aircraft moving, instead of stop at world origin).
 - Workaround for camera position shifting in desktop mode.
+- Avionics bus parameter recorder (`AvionicsBusRecorder`) with editor inspector, in-game JSON field / Debug.Log output, and a standalone web viewer for charts.
 
 ### Fixed
 
@@ -45,6 +46,12 @@ Currently v320neo-next fix serval issues that prevent original [VAU320][old-vau3
 - Gust wind won't show in ND wind display.
 - Speed trend in PFD show inflated readings.
 - U# asset of `FWSWanringData` will change every compile.
+
+## Avionics data export
+
+`AvionicsBusRecorder` can capture selected AvionicsBus parameters to JSON. The aircraft prefab already contains an idle recorder; configure it from the Inspector, or drive it from another UdonSharp script. A standalone web viewer is included under [tools/avionics-bus-export-viewer/](tools/avionics-bus-export-viewer/README.md).
+
+See [docs/avionics-bus-recorder.md](docs/avionics-bus-recorder.md) for usage, the runtime API, and the JSON schema.
 
 ## Install
 

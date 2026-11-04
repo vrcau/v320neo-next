@@ -103,7 +103,7 @@ namespace VAU.V320NeoNext.Runtime.InputSystem.SimplePilotInput.InputProvider
                     maxJoystickAngle.x,
                     -((Mathf.Acos(Mathf.Clamp(yawInput.x, -1, 1)) - 1.5707963268f) * Mathf.Rad2Deg) /
                     maxJoystickAngle.y,
-                    -((Mathf.Acos(Mathf.Clamp(joystickInput.x, -1, 1)) - 1.5707963268f) * Mathf.Rad2Deg) /
+                    (Mathf.Acos(Mathf.Clamp(joystickInput.x, -1, 1)) - 1.5707963268f) * Mathf.Rad2Deg /
                     maxJoystickAngle.z
                 );
             }

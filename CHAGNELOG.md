@@ -35,6 +35,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Instrument rendering in static camera to reduce instrument glitch when far away from world origin.
 - Functional ND map display. (map will move and rotation as aircraft moving, instead of stop at world origin).
 - Workaround for camera position shifting in desktop mode.
+- Avionics bus parameter recorder (`AvionicsBusRecorder`) with editor inspector, in-game JSON field / Debug.Log output, and a standalone web viewer for charts. See [docs/avionics-bus-recorder.md](docs/avionics-bus-recorder.md).
 
 ### Fixed
 

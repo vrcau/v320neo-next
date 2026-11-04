@@ -4,21 +4,6 @@ using UnityEngine;
 namespace VAU.V320NeoNext.Runtime.Bus
 {
     /// <summary>
-    /// watch 列表里一项的数据类型标记，值会存进 <see cref="AvionicsBusDebugClient.watchDataTypes"/>。
-    /// </summary>
-    public enum AvionicsBusDataType
-    {
-        Float = 0,
-        Int = 1,
-        Bool = 2,
-        String = 3,
-        Vector3 = 4,
-
-        // Byte 追加在末尾：不改动已有取值，避免 prefab 里已经保存的 watch 列表错位
-        Byte = 5
-    }
-
-    /// <summary>
     /// AvionicsBus 的调试客户端：把感兴趣的数据 id 加进 watch 列表，就能在 Inspector 的调试面板里
     /// 看实时值、改值（可选是否触发订阅事件）。
     /// <para>

@@ -112,7 +112,8 @@ namespace VAU.V320NeoNext.Runtime.Systems.FlightControl.Flybywire.Legacy
                     Debug.Log("[FBW]Flight Mode");
                 }
 
-                if (_ReadBool(AvionicsBusBoolDataIds.V32NN_Infrequent_AutoPilot_Engaged))
+                if (_ReadBool(AvionicsBusBoolDataIds.V32NN_Infrequent_AutoPilot_Engaged) ||
+                    _ReadBool(AvionicsBusBoolDataIds.V32NN_Infrequent_LandingGear_Sync_GearLeverUp))
                 {
                     Trim = _initialTrim;
                 }

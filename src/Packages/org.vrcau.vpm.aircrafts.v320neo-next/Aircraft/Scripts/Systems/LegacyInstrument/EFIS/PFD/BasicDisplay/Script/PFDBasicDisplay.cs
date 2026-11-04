@@ -202,6 +202,8 @@ namespace VAU.V320NeoNext.Runtime.Systems.LegacyInstrument.EFIS.PFD.BasicDisplay
         private readonly int VSW_HASH = Animator.StringToHash("VSWNormalize");
         private readonly int VFE_NEXT_HASH = Animator.StringToHash("VFENEXTNormalize");
         private readonly int VLS_HASH = Animator.StringToHash("VLSNormalize");
+        private readonly int VPROT_Hash = Animator.StringToHash("VAlphaProtection");
+        private readonly int VMaxAlpha_Hash = Animator.StringToHash("VMaxAlpha");
         private readonly int INPUT_X_HASH = Animator.StringToHash("PilotInputX");
         private readonly int INPUT_Y_HASH = Animator.StringToHash("PilotInputY");
         private readonly int SPEED_TREND = Animator.StringToHash("SpeedTrend");
@@ -247,27 +249,22 @@ namespace VAU.V320NeoNext.Runtime.Systems.LegacyInstrument.EFIS.PFD.BasicDisplay
 
         #region Speed
 
-        [Header("Speed")] public int VMO = 350;
-
-        public int VLE = 280;
-
-        // VSW
-        public float VSWCONF0 = 140;
-        public float VSWCONF1 = 136; //1
-        public float VSWCONF2 = 133; //2
-        public float VSWCONF3 = 127; //3
-        public float VSWCONFFULL = 120; //full
-
         // F and S
         // public int SSpeed = 178;
         // public int FSpeed = 137;
 
         public int GreenDotSpeed = 195;
+        private bool _lastOnGroundState;
 
         private void UpdateAirspeed()
         {
-            foreach (var item in disableOnGround) item.SetActive(!_aircraftSystemData.isAircraftGrounded);
-            foreach (var item in enableOnGround) item.SetActive(_aircraftSystemData.isAircraftGrounded);
+            var isAircraftGrounded = _ReadBool(AvionicsBusBoolDataIds.Sim_Frequent_Grounded);
+            if (_lastOnGroundState != isAircraftGrounded)
+            {
+                _lastOnGroundState = isAircraftGrounded;
+                foreach (var item in disableOnGround) item.SetActive(!isAircraftGrounded);
+                foreach (var item in enableOnGround) item.SetActive(isAircraftGrounded);
+            }
 
             var IAS = _adiru.adr.instrumentAirSpeed;
             IndicatorAnimator.SetFloat(AIRSPEED_HASH, IAS / MAXSPEED);
@@ -302,17 +299,7 @@ namespace VAU.V320NeoNext.Runtime.Systems.LegacyInstrument.EFIS.PFD.BasicDisplay
 
             #region VMAX
 
-            var VMAX = VMO;
-            var flaps = _aircraftSystemData.Flap;
-            if (_aircraftSystemData.flapTargetSpeedLimit < VMAX)
-                VMAX = (int)flaps.targetSpeedLimit;
-
-            if (_aircraftSystemData.flapCurrentSpeedLimit < VMAX)
-                VMAX = (int)flaps.speedLimit;
-
-            if (!_aircraftSystemData.isGearsUp && VLE < VMAX)
-                VMAX = VLE;
-
+            var VMAX = _ReadFloat(AvionicsBusFloatDataIds.V32NN_Frequent_FAC_1_MaxSpeed);
             IndicatorAnimator.SetFloat(VMAX_HASH, VMAX / 360f);
 
             #endregion
@@ -324,8 +311,19 @@ namespace VAU.V320NeoNext.Runtime.Systems.LegacyInstrument.EFIS.PFD.BasicDisplay
 
             #endregion
 
+            #region VProt & VMaxAlpha
+
+            var vProt = _ReadFloat(AvionicsBusFloatDataIds.V32NN_Frequent_FAC_1_AlphaProtectionSpeed);
+            var vMaxAlpha = _ReadFloat(AvionicsBusFloatDataIds.V32NN_Frequent_FAC_1_MaxAlphaSpeed);
+
+            IndicatorAnimator.SetFloat(VPROT_Hash, vProt / 640f);
+            IndicatorAnimator.SetFloat(VMaxAlpha_Hash, vMaxAlpha / 640f);
+
+            #endregion
+
             #region VFE NEXT
 
+            var flaps = _aircraftSystemData.Flap;
             var VFENext = flaps.speedLimits[1]; //0
             switch (flaps.targetDetentIndex)
             {
@@ -346,17 +344,7 @@ namespace VAU.V320NeoNext.Runtime.Systems.LegacyInstrument.EFIS.PFD.BasicDisplay
 
             #region VLS
 
-            var VLS = 1.28f * VSW;
-            switch (flaps.detentIndex)
-            {
-                case 4:
-                    VLS = 1.28f * VSW;
-                    break;
-                case 5:
-                    VLS = 1.13f * VSW;
-                    break;
-            }
-
+            var VLS = _ReadFloat(AvionicsBusFloatDataIds.v32NN_Frequent_FAC_1_LowestSelectableSpeed);
             IndicatorAnimator.SetFloat(VLS_HASH, VLS / 200f);
 
             #endregion

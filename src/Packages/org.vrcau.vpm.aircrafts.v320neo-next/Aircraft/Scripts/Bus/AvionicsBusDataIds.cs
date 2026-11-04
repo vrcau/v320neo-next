@@ -23,6 +23,12 @@ namespace VAU.V320NeoNext.Runtime.Bus
 
         // ATA22_40. Auto Flight / Flight Augmentation / FAC
         V32NN_Frequent_FAC_1_Stall_Warning_Speed,
+        V32NN_Frequent_FAC_1_MaxAoa,
+        V32NN_Frequent_FAC_1_ProtectionAoa,
+        V32NN_Frequent_FAC_1_AlphaProtectionSpeed,
+        V32NN_Frequent_FAC_1_MaxAlphaSpeed,
+        v32NN_Frequent_FAC_1_LowestSelectableSpeed,
+        V32NN_Frequent_FAC_1_MaxSpeed,
 
         // ATA32. Landing Gear / Brake
         V32NN_Frequent_Brake_Sync_PedalInput,
@@ -38,6 +44,9 @@ namespace VAU.V320NeoNext.Runtime.Bus
 
         // ATA34. Navigation / ADIRS / IR
         V32NN_Frequent_ADIRS_IR_1_Vertical_G_Load,
+        V32NN_Frequent_ADIRS_IR_1_Pitch,
+        V32NN_Frequent_ADIRS_IR_1_PitchRateInDegPerSecond,
+        V32NN_Frequent_ADIRS_IR_1_Roll,
 
         // ATA34. Navigation / Radio Altimeter
         V32NN_Frequent_RA_1_RadioAltitude,
@@ -45,6 +54,16 @@ namespace VAU.V320NeoNext.Runtime.Bus
         // ATA70. Engine
         V32NN_Frequent_Engine_Both_ThrustLever,
 
+        // ATA27. Flight Control / FlyByWire Debug
+        V32NN_Frequent_FlyByWireDebug_HighAoAProtectionWeight,
+        V32NN_Frequent_FlyByWireDebug_HighAoAProtectionOutput,
+        V32NN_Frequent_FlyByWireDebug_HighAoAProtectionTargetAoA,
+        V32NN_Frequent_FlyByWireDebug_HighAoAProtectionIntegrator,
+        V32NN_Frequent_FlyByWireDebug_NormalLawOutput,
+        V32NN_Frequent_FlyByWireDebug_NormalLawTargetCStar,
+        V32NN_Frequent_FlyByWireDebug_NormalLawCurrentCStar,
+        V32NN_Frequent_FlyByWireDebug_NormalLawIntegrator,
+        V32NN_Frequent_FlyByWireDebug_PitchRateTarget,
         // ATA27. Flight Control / Flaps & Elevator Trim
         // 襟翼移动期间每帧都会变：只写不 Notify，由 FlapFlightMenuController 轮询后自行算状态文本
         V32NN_Frequent_Flap_SlatAngle,

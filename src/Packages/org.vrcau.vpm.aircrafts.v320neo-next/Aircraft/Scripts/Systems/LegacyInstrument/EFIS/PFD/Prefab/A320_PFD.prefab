@@ -558,7 +558,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &5331743777937644158
 RectTransform:
   m_ObjectHideFlags: 0
@@ -1496,7 +1496,7 @@ MonoBehaviour:
   m_FallbackScreenDPI: 96
   m_DefaultSpriteDPI: 96
   m_DynamicPixelsPerUnit: 1
-  m_PresetInfoIsWorld: 1
+  m_PresetInfoIsWorld: 0
 --- !u!1 &3153789671308527607
 GameObject:
   m_ObjectHideFlags: 0
@@ -2612,9 +2612,11 @@ MonoBehaviour:
     PrefabModifications: []
     SerializationNodes: []
   _udonSharpBackingUdonBehaviour: {fileID: 7004343545175485341}
+  _avionicsBus: {fileID: 0}
   flightDirector: {fileID: 0}
   flightDirectionIndicator: {fileID: 0}
   landingSystemIndicator: {fileID: 0}
+  useRightEfis: 0
   VSbackground: {fileID: 6924686126374162417}
   VSText: {fileID: 5030881273890965475}
   RadioHeightText: {fileID: 2200053033432345715}
@@ -2636,11 +2638,12 @@ MonoBehaviour:
   - {fileID: 7294229835733747282}
   - {fileID: 2076916566377860525}
   - {fileID: 8564825836536236595}
-  - {fileID: 4925657915040523054}
   - {fileID: 4282435105612600569}
   - {fileID: 2829544746010125352}
   - {fileID: 6682264882821199957}
   - {fileID: 2829544746010125352}
+  - {fileID: 8696132191684666215}
+  - {fileID: 1836302420051863699}
   enableOnGround:
   - {fileID: 5437888068520422175}
   - {fileID: 1544908153842870692}
@@ -2658,13 +2661,6 @@ MonoBehaviour:
   MAXVS: 6000
   MAXSLIPANGLE: 40
   MAXTRACKPITCH: 70
-  VMO: 350
-  VLE: 280
-  VSWCONF0: 140
-  VSWCONF1: 136
-  VSWCONF2: 133
-  VSWCONF3: 127
-  VSWCONFFULL: 120
   GreenDotSpeed: 195
 --- !u!114 &7004343545175485341
 MonoBehaviour:
@@ -4133,7 +4129,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &7822584348126346961
 RectTransform:
   m_ObjectHideFlags: 0
@@ -5424,7 +5420,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &6477796223882335552
 RectTransform:
   m_ObjectHideFlags: 0

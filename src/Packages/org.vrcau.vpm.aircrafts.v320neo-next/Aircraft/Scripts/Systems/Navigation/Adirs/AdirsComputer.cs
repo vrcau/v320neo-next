@@ -16,6 +16,8 @@ namespace VAU.V320NeoNext.Runtime.Systems.Navigation.Adirs
         private AvionicsBusFloatDataIds _aoaId;
 
         private AvionicsBusFloatDataIds _verticalGLoadId;
+        private AvionicsBusFloatDataIds _pitchId;
+        private AvionicsBusFloatDataIds _rollId;
 
         private Transform _saccEntityTransform;
 
@@ -28,6 +30,8 @@ namespace VAU.V320NeoNext.Runtime.Systems.Navigation.Adirs
             _aoaId = AvionicsBusFloatDataIds.V32NN_Frequent_ADIRS_ADR_1_AoA;
 
             _verticalGLoadId = AvionicsBusFloatDataIds.V32NN_Frequent_ADIRS_IR_1_Vertical_G_Load;
+            _pitchId = AvionicsBusFloatDataIds.V32NN_Frequent_ADIRS_IR_1_Pitch;
+            _rollId = AvionicsBusFloatDataIds.V32NN_Frequent_ADIRS_IR_1_Roll;
 
             _saccEntityTransform = airVehicle.EntityControl.transform;
         }
@@ -56,6 +60,18 @@ namespace VAU.V320NeoNext.Runtime.Systems.Navigation.Adirs
             }
 
             _WriteFloat(_verticalGLoadId, airVehicle.VertGs);
+
+            var oldPitch = _ReadFloat(AvionicsBusFloatDataIds.V32NN_Frequent_ADIRS_IR_1_Pitch);
+            var pitch = -_saccEntityTransform.eulerAngles.x;
+            pitch = pitch < -180 ? 360 + pitch : pitch;
+            _WriteFloat(AvionicsBusFloatDataIds.V32NN_Frequent_ADIRS_IR_1_Pitch, pitch);
+
+            var pitchRateInDegPerSecond = (pitch - oldPitch) / Time.fixedDeltaTime;
+            _WriteFloat(AvionicsBusFloatDataIds.V32NN_Frequent_ADIRS_IR_1_PitchRateInDegPerSecond,
+                pitchRateInDegPerSecond);
+
+            var roll = -_saccEntityTransform.eulerAngles.z;
+            _WriteFloat(AvionicsBusFloatDataIds.V32NN_Frequent_ADIRS_IR_1_Roll, roll < -180 ? 360 + roll : roll);
         }
     }
 }

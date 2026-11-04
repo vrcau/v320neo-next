@@ -21,18 +21,6 @@ namespace VAU.V320NeoNext.Editor.InspectorEditor.Bus
     {
         private const int MaxSearchResults = 12;
 
-        private static readonly string[] TypeFilterLabels = { "全部", "Float", "Int", "Bool", "String", "Vector3", "Byte" };
-        private static readonly string[] TypeNames = { "Float", "Int", "Bool", "String", "Vector3", "Byte" };
-
-        private sealed class DataIdInfo
-        {
-            public string Name;
-            public int DataType;
-            public int Id;
-        }
-
-        private static List<DataIdInfo> _catalog;
-
         // 显示用的当前值 / 待写入的新值文本（编辑器侧状态，不进 prefab）
         private readonly List<string> _valueTexts = new List<string>();
         private readonly List<string> _writeTexts = new List<string>();
@@ -78,10 +66,10 @@ namespace VAU.V320NeoNext.Editor.InspectorEditor.Bus
             using (new EditorGUILayout.HorizontalScope())
             {
                 _search = EditorGUILayout.TextField(_search, EditorStyles.toolbarSearchField);
-                _typeFilter = EditorGUILayout.Popup(_typeFilter, TypeFilterLabels, GUILayout.Width(80f));
+                _typeFilter = EditorGUILayout.Popup(_typeFilter, AvionicsBusEditorUtil.TypeFilterLabels, GUILayout.Width(80f));
             }
 
-            List<DataIdInfo> matches = _FindMatches(client);
+            List<AvionicsBusEditorUtil.DataIdInfo> matches = _FindMatches(client);
 
             if (matches.Count == 0)
             {
@@ -95,11 +83,11 @@ namespace VAU.V320NeoNext.Editor.InspectorEditor.Bus
 
             for (int i = 0; i < shown; i++)
             {
-                DataIdInfo info = matches[i];
+                AvionicsBusEditorUtil.DataIdInfo info = matches[i];
 
                 using (new EditorGUILayout.HorizontalScope())
                 {
-                    EditorGUILayout.LabelField(_TypeName(info.DataType), GUILayout.Width(48f));
+                    EditorGUILayout.LabelField(AvionicsBusEditorUtil.TypeName(info.DataType), GUILayout.Width(48f));
                     EditorGUILayout.LabelField(info.Name);
 
                     if (GUILayout.Button("+", GUILayout.Width(24f)))
@@ -116,11 +104,11 @@ namespace VAU.V320NeoNext.Editor.InspectorEditor.Bus
             }
         }
 
-        private List<DataIdInfo> _FindMatches(AvionicsBusDebugClient client)
+        private List<AvionicsBusEditorUtil.DataIdInfo> _FindMatches(AvionicsBusDebugClient client)
         {
-            var matches = new List<DataIdInfo>();
+            var matches = new List<AvionicsBusEditorUtil.DataIdInfo>();
 
-            foreach (DataIdInfo info in _GetCatalog())
+            foreach (AvionicsBusEditorUtil.DataIdInfo info in AvionicsBusEditorUtil.GetCatalog())
             {
                 if (_typeFilter > 0 && info.DataType != _typeFilter - 1) continue;
                 if (_IsWatched(client, info)) continue;
@@ -171,7 +159,7 @@ namespace VAU.V320NeoNext.Editor.InspectorEditor.Bus
                 using (new EditorGUILayout.HorizontalScope())
                 {
                     EditorGUILayout.LabelField(
-                        "#" + index + "   " + _TypeName(dataType) + "   " + _GetDataIdName(dataType, id),
+                        "#" + index + "   " + AvionicsBusEditorUtil.TypeName(dataType) + "   " + AvionicsBusEditorUtil.GetDataIdName(dataType, id),
                         EditorStyles.boldLabel);
 
                     if (GUILayout.Button("移除", GUILayout.Width(40f)))
@@ -210,12 +198,12 @@ namespace VAU.V320NeoNext.Editor.InspectorEditor.Bus
             return false;
         }
 
-        private void _AddWatchEntry(AvionicsBusDebugClient client, DataIdInfo info)
+        private void _AddWatchEntry(AvionicsBusDebugClient client, AvionicsBusEditorUtil.DataIdInfo info)
         {
             Undo.RecordObject(client, "Add AvionicsBus watch entry");
 
-            client.watchDataTypes = _AppendInt(client.watchDataTypes, info.DataType);
-            client.watchIds = _AppendInt(client.watchIds, info.Id);
+            client.watchDataTypes = AvionicsBusEditorUtil.AppendInt(client.watchDataTypes, info.DataType);
+            client.watchIds = AvionicsBusEditorUtil.AppendInt(client.watchIds, info.Id);
 
             _PushConfigToUdon(client);
             EditorUtility.SetDirty(client);
@@ -231,8 +219,8 @@ namespace VAU.V320NeoNext.Editor.InspectorEditor.Bus
             int dataType = index < client.watchDataTypes.Length ? client.watchDataTypes[index] : -1;
             int id = client.watchIds[index];
 
-            client.watchDataTypes = _RemoveIntAt(client.watchDataTypes, index);
-            client.watchIds = _RemoveIntAt(client.watchIds, index);
+            client.watchDataTypes = AvionicsBusEditorUtil.RemoveIntAt(client.watchDataTypes, index);
+            client.watchIds = AvionicsBusEditorUtil.RemoveIntAt(client.watchIds, index);
 
             _PushConfigToUdon(client);
             EditorUtility.SetDirty(client);
@@ -240,7 +228,7 @@ namespace VAU.V320NeoNext.Editor.InspectorEditor.Bus
             if (index < _valueTexts.Count) _valueTexts.RemoveAt(index);
             if (index < _writeTexts.Count) _writeTexts.RemoveAt(index);
 
-            _message = "已移除 " + _GetDataIdName(dataType, id);
+            _message = "已移除 " + AvionicsBusEditorUtil.GetDataIdName(dataType, id);
         }
 
         private void _ClearWatchList(AvionicsBusDebugClient client)
@@ -268,9 +256,9 @@ namespace VAU.V320NeoNext.Editor.InspectorEditor.Bus
 
             double now = EditorApplication.timeSinceStartup;
 
-            if (!force && (!_autoRefresh || now < _nextAutoRefreshTime)) return;
-
-            _nextAutoRefreshTime = now + 0.25;
+            // if (!force && (!_autoRefresh || now < _nextAutoRefreshTime)) return;
+            //
+            // _nextAutoRefreshTime = now + 0.25;
 
             UdonBehaviour udon = _GetUdonBehaviour(client);
             if (udon == null) return;
@@ -378,7 +366,7 @@ namespace VAU.V320NeoNext.Editor.InspectorEditor.Bus
             // 顺手读回来，面板立刻显示写入后的值
             if (index < _valueTexts.Count) _valueTexts[index] = _ReadValueText(udon, index);
 
-            _message = "已写入 " + _GetDataIdName(dataType, id) + (notify ? "（并已 Notify）" : "（未 Notify）");
+            _message = "已写入 " + AvionicsBusEditorUtil.GetDataIdName(dataType, id) + (notify ? "（并已 Notify）" : "（未 Notify）");
         }
 
         #endregion
@@ -418,7 +406,7 @@ namespace VAU.V320NeoNext.Editor.InspectorEditor.Bus
         /// </summary>
         private static void _PushConfigToUdon(AvionicsBusDebugClient client)
         {
-            client.ApplyProxyModifications();
+            UdonSharpEditorUtility.CopyProxyToUdon(client);
         }
 
         #endregion
@@ -466,39 +454,6 @@ namespace VAU.V320NeoNext.Editor.InspectorEditor.Bus
             return _valueTexts[index] ?? "";
         }
 
-        private static string _TypeName(int dataType)
-        {
-            if (dataType < 0 || dataType >= TypeNames.Length) return "?";
-
-            return TypeNames[dataType];
-        }
-
-        private static int[] _AppendInt(int[] source, int value)
-        {
-            var result = new int[source.Length + 1];
-            Array.Copy(source, result, source.Length);
-            result[source.Length] = value;
-
-            return result;
-        }
-
-        private static int[] _RemoveIntAt(int[] source, int index)
-        {
-            if (index < 0 || index >= source.Length) return source;
-
-            var result = new int[source.Length - 1];
-
-            for (int i = 0, j = 0; i < source.Length; i++)
-            {
-                if (i == index) continue;
-
-                result[j] = source[i];
-                j++;
-            }
-
-            return result;
-        }
-
         private static bool _TryParseFloat(string text, out float value)
         {
             return float.TryParse(text, NumberStyles.Float, CultureInfo.InvariantCulture, out value);
@@ -530,51 +485,9 @@ namespace VAU.V320NeoNext.Editor.InspectorEditor.Bus
 
         #endregion
 
-        #region data id 目录（从 5 个 enum 反射出来，自动跟着 enum 走）
+        #region data id 目录
 
-        private static List<DataIdInfo> _GetCatalog()
-        {
-            if (_catalog != null) return _catalog;
-
-            _catalog = new List<DataIdInfo>();
-
-            _AddEnumToCatalog(typeof(AvionicsBusFloatDataIds), (int)AvionicsBusDataType.Float);
-            _AddEnumToCatalog(typeof(AvionicsBusByteDataIds), (int)AvionicsBusDataType.Byte);
-            _AddEnumToCatalog(typeof(AvionicsBusIntDataIds), (int)AvionicsBusDataType.Int);
-            _AddEnumToCatalog(typeof(AvionicsBusBoolDataIds), (int)AvionicsBusDataType.Bool);
-            _AddEnumToCatalog(typeof(AvionicsBusStringDataIds), (int)AvionicsBusDataType.String);
-            _AddEnumToCatalog(typeof(AvionicsBusVector3DataIds), (int)AvionicsBusDataType.Vector3);
-
-            return _catalog;
-        }
-
-        private static void _AddEnumToCatalog(Type enumType, int dataType)
-        {
-            foreach (string name in Enum.GetNames(enumType))
-            {
-                // Count 是分配数组用的哨兵，不是真实数据
-                if (name == "Count") continue;
-
-                _catalog.Add(new DataIdInfo
-                {
-                    Name = name,
-                    DataType = dataType,
-                    Id = (int)Enum.Parse(enumType, name)
-                });
-            }
-        }
-
-        private static string _GetDataIdName(int dataType, int id)
-        {
-            foreach (DataIdInfo info in _GetCatalog())
-            {
-                if (info.DataType == dataType && info.Id == id) return info.Name;
-            }
-
-            return "<未知：类型 " + dataType + "，id " + id + ">";
-        }
-
-        private static bool _IsWatched(AvionicsBusDebugClient client, DataIdInfo info)
+        private static bool _IsWatched(AvionicsBusDebugClient client, AvionicsBusEditorUtil.DataIdInfo info)
         {
             for (int i = 0; i < client.watchIds.Length; i++)
             {
